@@ -67,10 +67,10 @@ allprojects { project ->
                 delete(path)
             }
             copy {
-                from sourceSets.main.allSource into(path)
+                from sourceSets.main.allSource.filter { it.name.endsWith(".java") } into(path)
             }
             copy {
-                from sourceSets.test.allSource into(path)
+                from sourceSets.test.allSource.filter { it.name.endsWith(".java") } into(path)
             }
         }
     }
