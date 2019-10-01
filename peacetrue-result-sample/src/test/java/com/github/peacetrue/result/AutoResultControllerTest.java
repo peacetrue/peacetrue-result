@@ -6,9 +6,8 @@ import com.github.peacetrue.spring.expression.MessageExpressionAutoConfiguration
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.HttpMessageConvertersAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -50,15 +49,6 @@ public class AutoResultControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("success"))
                 .andExpect(jsonPath("$.data").value("success"))
-        ;
-    }
-
-    @Test
-    public void failure() throws Exception {
-        this.mockMvc.perform(get("/failure"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("failure"))
-                .andExpect(jsonPath("$.data").value("java.lang.ArithmeticException[/ by zero]"))
         ;
     }
 

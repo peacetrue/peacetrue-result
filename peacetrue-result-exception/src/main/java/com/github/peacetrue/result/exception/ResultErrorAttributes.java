@@ -7,9 +7,10 @@ import com.github.peacetrue.result.payload.PathBean;
 import com.github.peacetrue.spring.expression.MessageFormatter;
 import com.github.peacetrue.spring.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
+import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.Map;
 
@@ -26,16 +27,16 @@ public class ResultErrorAttributes extends DefaultErrorAttributes {
     private MessageFormatter messageFormatter;
 
     @Override
-    public Map<String, Object> getErrorAttributes(RequestAttributes requestAttributes, boolean includeStackTrace) {
-        Throwable error = getError(requestAttributes);
+    public Map<String, Object> getErrorAttributes(WebRequest webRequest, boolean includeStackTrace) {
+        Throwable error = getError(webRequest);
         if (error != null) {
             Result result = exceptionConvertService.convert(error);
             return BeanUtils.map(result);
         }
 
-        Integer status = (Integer) requestAttributes.getAttribute("javax.servlet.error.status_code", RequestAttributes.SCOPE_REQUEST);
+        Integer status = (Integer) webRequest.getAttribute("javax.servlet.error.status_code", RequestAttributes.SCOPE_REQUEST);
         if (status == HttpStatus.NOT_FOUND.value()) {
-            String path = (String) requestAttributes.getAttribute("javax.servlet.error.request_uri", RequestAttributes.SCOPE_REQUEST);
+            String path = (String) webRequest.getAttribute("javax.servlet.error.request_uri", RequestAttributes.SCOPE_REQUEST);
             PathBean bean = new PathBean(path);
 
             DataResultImpl<PathBean> result = new DataResultImpl<>(
