@@ -1,0 +1,14 @@
+description '处理正常状态下的标准响应数据'
+
+dependencies {
+    api rootProject
+    api 'org.slf4j:slf4j-api'
+    implementation 'org.springframework:spring-webmvc'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.springframework.boot:spring-boot-starter-web'
+    testCompile 'org.springframework.boot:spring-boot-starter-logging'
+}

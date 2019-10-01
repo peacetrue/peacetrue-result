@@ -1,0 +1,15 @@
+= 自动转换为成功响应数据
+
+如果控制器能正常的返回数据，那么响应状态就认为是成功。
+我们通过``AutoSuccessResultAutoConfiguration``，
+实现了自动转换所有返回的数据为成功的响应数据。
+
+当然也不是所有，会有一些例外：
+
+* 如果当前返回的已经是``Result``，说明控制器本身已经处理过了，不用再处理
+* 可能有一些方法就是不希望被自动转换，我们可以通过配置例外实现
+
+配置例外的方式：
+
+* 在方法上标注``@DisableResultAutoSuccess``
+* 配置属性``peacetrue.result.auto-success.disabled-methods.\{类名}=\{方法名1},\{方法名2}...``

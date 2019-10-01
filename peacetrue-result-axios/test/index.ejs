@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <script src="../node_modules/axios/dist/axios.js"></script>
+    <script src="../node_modules/qs/dist/qs.js"></script>
+</head>
+<body>
+<script>
+
+    function log(promise) {
+        return promise.then(
+            data => console.info('success:', data),
+            data => console.info('failure:', data)
+        );
+    }
+
+    log(axios.get('http://localhost:8081/calculate/divide'))
+        .finally(() => {
+            log(axios.get('http://localhost:8081/calculate/divide?divisor=10.1'))
+                .finally(() => {
+                    log(axios.get('http://localhost:8081/calculate/divide?divisor=10&dividend=10'))
+                        .finally(() => {
+                            log(axios.get('http://localhost:8081/calculate/divide?divisor=10&dividend=0'));
+                        })
+                })
+        });
+</script>
+</body>
+</html>

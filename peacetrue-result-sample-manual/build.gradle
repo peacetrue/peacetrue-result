@@ -1,0 +1,15 @@
+description '响应数据组件-手动样章'
+
+dependencies {
+    api 'org.slf4j:slf4j-api'
+    api rootProject
+    implementation 'com.github.peacetrue:peacetrue-spring'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+
+    testImplementation 'junit:junit'
+    testImplementation 'org.springframework:spring-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.apache.httpcomponents:httpclient'
+}

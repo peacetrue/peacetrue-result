@@ -1,0 +1,140 @@
+= 异常
+
+== 原始写法
+假设，我们有一个除法运算的接口，示例如下：
+
+.案例1
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample-normal/CalculateController.java[tag=divide]
+----
+除以0异常时会得到如下响应数据：
+[source%nowrap,json]
+----
+{
+  "timestamp": 1569125009977,
+  "status": 500,
+  "error": "Internal Server Error",
+  "exception": "java.lang.ArithmeticException",
+  "message": "/ by zero",
+  "path": "/divide"
+}
+----
+
+为了支持标准响应数据规范，我们可以使用 <<_手动修改>> 或者 <<_自动转换>> 。
+
+== 手动修改
+.案例2
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample-manual/CalculateController.java[tag=divide]
+----
+除以0异常时会得到如下响应数据：
+[source%nowrap,json]
+----
+{
+  "code": "failure",
+  "message": "操作失败",
+  "data": "/ by zero"
+}
+----
+
+== 自动转换
+如果控制器在处理过程中发生异常，那么响应状态就认为是异常。
+自动转换会捕获所有异常，然后将异常转换为标准响应数据。
+
+=== 具体用法
+配置快照资源库：
+[source%nowrap,maven]
+----
+<repository>
+    <id>sonatype-snapshots</id>
+    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+</repository>
+----
+
+引用类库：
+[source%nowrap,maven]
+----
+//基于 spring-boot:1.5.xx
+<dependency>
+    <groupId>com.github.peacetrue.result</groupId>
+    <artifactId>peacetrue-result-exception</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
+----
+
+现在，案例1在除以0异常时会返回和案例2相同的数据。
+
+以下具体介绍异常转换的实现。
+
+=== 异常转换体系
+image::exception_structure.png[]
+
+=== 异常转换逻辑
+异常转换成响应数据的基本思路：
+
+取得异常对应的状态编码::
+通常直接配置就可以
+
+取得异常对应的状态描述::
+状态描述可以包含占位符也可以不包含，
+占位符对应的值从负载数据中获取
+
+取得异常的属性作为负载数据::
+异常通常会包含一些有用的属性，可以直接用来作为负载数据；
+也有一些异常没有提供有用的属性，需要从``message``中解析
+
+根据负载数据填充占位符::
+使用``spel``表达式设置占位符
+
+=== 一些有用的异常转换器
+
+==== AbstractExceptionConverter
+抽象的异常转换器，按照【异常转换逻辑】设计的可被复用的异常转换器。
+你可以继承该转换器实现自己的逻辑。
+
+==== NoPlaceholderExceptionConverter
+无占位符异常转换器，状态描述中没有占位符时使用的异常转换器。
+你可以继承该转换器实现自己的逻辑。
+
+==== ResolveExceptionConverter
+提取异常转换器，异常没有提供有效属性，需要从异常消息中提取有效属性时，使用的异常转换器。
+你可以继承该转换器实现自己的逻辑。
+
+==== ProxyConditionalExceptionConverter
+代理的条件异常转换器，有一些异常它本身不包含有用信息，但它嵌套的异常非常有用。
+我们将某个异常配置为代理异常后，实际转换的是它嵌套的异常。
+
+==== ResultExceptionConverter
+标准响应数据异常转换器，
+用于处理``ResultException``，
+因为``ResultException``本身就是标准响应数据结构，
+所以不作处理原样返回。
+
+==== FallbackExceptionConverter
+备用异常转换器，当没有其他转换器可用时，使用它做默认处理。
+默认处理规则是将所有异常都转换成【请求失败】。
+
+=== 自定义异常转换器
+你可以实现``ExceptionConverter``或者``ConditionalExceptionConverter``，
+然后将实现类作为bean注入spring容器中。
+
+[source%nowrap,java]
+----
+@Bean
+public ExceptionConverter xxxExceptionConverter() {
+//    return ....;
+}
+
+@Bean
+public ConditionalExceptionConverter xxxConditionalExceptionConverter() {
+//    return ....;
+}
+----
+
+
+
+
+
+

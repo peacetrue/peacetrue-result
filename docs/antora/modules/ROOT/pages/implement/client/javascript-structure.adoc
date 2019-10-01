@@ -1,0 +1,16 @@
+= 基于JavaScript的标准结构
+
+具体实现如下：
+
+[source%nowrap,javascript]
+----
+include::example$peacetrue-result-axios/structure.js[]
+----
+
+
+
+
+
+
+
+

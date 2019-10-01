@@ -1,0 +1,20 @@
+description 'used to build i18n result'
+
+sourceSets {
+    test {
+        resources {
+            srcDirs += "src/test/java"
+        }
+    }
+}
+
+dependencies {
+    api rootProject
+    api "com.github.peacetrue:peacetrue-spring"
+    api 'org.springframework:spring-context'
+    api "org.springframework.boot:spring-boot-autoconfigure"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    api 'org.springframework.boot:spring-boot-starter-logging'
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+}

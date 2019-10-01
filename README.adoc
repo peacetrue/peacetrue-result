@@ -1,4 +1,4 @@
-= Gradle项目模板
+= 标准响应数据组件
 xiayx <xiayouxue@hotmail.com>
 v1.0, 2019-08-23: SNAPSHOT
 :doctype: docbook
@@ -10,13 +10,9 @@ v1.0, 2019-08-23: SNAPSHOT
 :testsourcedir: src/test/java
 :source-highlighter: highlightjs
 
-一个基于Gradle的项目模板。
-包含以下内容：
+查看 https://peacetrue.github.io/public/peacetrue-result/index.html[详情^]。
 
-* 基于 gradle-5.4.1 的环境
-* 基于 spring-boot-dependencies:1.5.20.RELEASE 的依赖版本管理
-* 基于 peacetrue-dependencies:1.0-SNAPSHOT 的依赖版本管理
-* 在本地配置 ossrhUsername 和 ossrhPassword 后，可以发布代码到 maven-central
-* 一个``com.github.peacetrue.Placeholder``的空类
-* 一个``docs/README.graffle``的设计图表
-* 一个符合 https://antora.org[antora^] 要求的文档结构
+//== 运行环境
+//
+//* jdk8+
+//* spring-boot-1.5.x

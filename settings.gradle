@@ -1,2 +1,10 @@
-rootProject.name = 'peacetrue-template-gradle'
-                                     
+rootProject.name = 'peacetrue-result'
+//include(':peacetrue-result-builder')
+include(':peacetrue-result-exception')
+include(':peacetrue-result-exception-support')
+//include(':peacetrue-result-extend')
+include(':peacetrue-result-success')
+include(':peacetrue-result-axios')
+include(':peacetrue-result-sample')
+include(':peacetrue-result-sample-normal')
+include(':peacetrue-result-sample-manual')

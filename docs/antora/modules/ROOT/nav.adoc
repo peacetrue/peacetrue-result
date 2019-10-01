@@ -1,1 +1,22 @@
-* xref:index.adoc[index]
+* xref:index.adoc[简介]
+
+* xref:standard.adoc[响应数据规范]
+** xref:standard/structure.adoc[标准结构]
+** xref:standard/client.adoc[客户端的响应数据]
+** xref:standard/server.adoc[服务端的响应数据]
+*** xref:standard/server/success.adoc[正常]
+*** xref:standard/server/failure.adoc[异常]
+*** xref:standard/server/errors.adoc[多项异常]
+*** xref:standard/server/parameter-error.adoc[参数错误]
+*** xref:standard/server/parameter-missing.adoc[参数缺失]
+*** xref:standard/server/parameter-format-error.adoc[参数格式错误]
+*** xref:standard/server/parameter-range-error.adoc[参数范围错误]
+*** xref:standard/server/business.adoc[业务响应数据]
+
+* xref:implement.adoc[响应数据实现]
+** xref:implement/client/javascript-structure.adoc[基于JavaScript的标准结构]
+** xref:implement/client/axios.adoc[基于Axios的客户端实现]
+** xref:implement/server/java-structure.adoc[基于Java的标准结构]
+** 基于Spring的服务端实现
+*** xref:implement/server/spring/success.adoc[正常]
+*** xref:implement/server/spring/failure.adoc[异常]
