@@ -1,22 +1,22 @@
-package com.github.peacetrue.result.payload;
+package com.github.peacetrue.result.data;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 /**
  * 一个请求参数
  *
- * @author xiayx
+ * @author peace
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Parameter<T, V> implements Serializable {
-
-    private static final long serialVersionUID = 0L;
 
     /** 参数名 */
     private String name;

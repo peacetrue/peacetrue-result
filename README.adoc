@@ -1,5 +1,5 @@
-= 标准响应数据组件
-xiayx <xiayouxue@hotmail.com>
+= 响应结果组件
+peace <xiayouxue@hotmail.com>
 v1.0, 2019-08-23: SNAPSHOT
 :doctype: docbook
 :toc: left
@@ -10,7 +10,7 @@ v1.0, 2019-08-23: SNAPSHOT
 :testsourcedir: src/test/java
 :source-highlighter: highlightjs
 
-查看 https://peacetrue.github.io/public/peacetrue-result/index.html[详情^]。
+详情参考 https://peacetrue.cn/summarize/peacetrue-result/index.html[安宁的博客^]。
 
 //== 运行环境
 //

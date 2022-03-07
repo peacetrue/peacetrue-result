@@ -1,4 +1,4 @@
-package com.github.peacetrue.result.payload;
+package com.github.peacetrue.result.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

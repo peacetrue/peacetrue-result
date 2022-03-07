@@ -1,38 +1,30 @@
 package com.github.peacetrue.result;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.annotation.Nullable;
+
 /**
- * 带负载数据的标准响应数据实现
+ * 数据响应结果的基本实现
  *
- * @author xiayx
+ * @author peace
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class DataResultImpl<T> extends ResultImpl implements DataResult<T> {
-
-    private static final long serialVersionUID = 0L;
 
     private T data;
 
-    public DataResultImpl() { }
-
-    public DataResultImpl(String code, String message) {
+    public DataResultImpl(String code, @Nullable String message, @Nullable T data) {
         super(code, message);
-    }
-
-    public DataResultImpl(String code, String message, T data) {
-        this(code, message);
         this.data = data;
     }
 
-    public DataResultImpl(Result result) {
+    public DataResultImpl(Result result, @Nullable T data) {
         super(result);
-    }
-
-    public DataResultImpl(Result result, T data) {
-        this(result);
         this.data = data;
     }
 

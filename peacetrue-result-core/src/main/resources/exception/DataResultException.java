@@ -1,16 +1,17 @@
 package com.github.peacetrue.result.exception;
 
-import com.github.peacetrue.core.DataAware;
+import com.github.peacetrue.beans.properties.data.DataAware;
 import com.github.peacetrue.result.DataResult;
 import com.github.peacetrue.result.Result;
+import com.github.peacetrue.result.ResultException;
 import com.github.peacetrue.result.ResultUtils;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 带负载数据的标准响应数据异常
+ * 带负载数据的响应结果异常
  *
- * @author xiayx
+ * @author peace
  */
 @Getter
 @Setter
@@ -18,6 +19,7 @@ public class DataResultException extends ResultException implements DataResult<O
 
     private static final long serialVersionUID = 0L;
 
+    /** 异常时的上下文信息 */
     private Object data;
 
     public DataResultException(String code, String message, Object data) {

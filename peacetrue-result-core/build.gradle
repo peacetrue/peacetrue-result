@@ -1,0 +1,4 @@
+description "声明响应结果基本数据结构"
+dependencies {
+    api "com.github.peacetrue:peacetrue-beans"
+}
