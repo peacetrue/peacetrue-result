@@ -5,7 +5,7 @@ import lombok.Getter;
 import javax.annotation.Nullable;
 
 /**
- * 响应结果异常
+ * 响应结果异常。
  *
  * @author peace
  */

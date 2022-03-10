@@ -16,7 +16,7 @@
 ///**
 // * for {@link ResourceAccessException}
 // *
-// * @author xiayx
+// * @author peace
 // */
 //public class ResourceAccessExceptionConverter extends ResolveExceptionConverter<ResourceAccessException, String[]> {
 //

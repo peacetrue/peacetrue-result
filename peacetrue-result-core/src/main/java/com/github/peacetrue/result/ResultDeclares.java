@@ -2,15 +2,18 @@ package com.github.peacetrue.result;
 
 import lombok.Getter;
 
+import java.util.Collection;
+
 /**
- * 通用响应结果声明
+ * 通用响应结果声明。
  *
  * @author peace
- * @since 1.0
  **/
 @Getter
 public enum ResultDeclares implements ResultDeclare {
 
+    /** 多项错误，操作返回多项错误 */
+    ERRORS("共'#{#root.size()}'项错误", Collection.class),
     /** 请求资源不存在 */
     RESOURCE_NOT_FOUND("请求资源'{0}'不存在", Object[].class),
     /** 参数缺失，请求时没有传递必须的参数 */

@@ -6,7 +6,7 @@ import lombok.Setter;
 import javax.annotation.Nullable;
 
 /**
- * 数据响应结果异常
+ * 数据响应结果异常。
  *
  * @author peace
  */

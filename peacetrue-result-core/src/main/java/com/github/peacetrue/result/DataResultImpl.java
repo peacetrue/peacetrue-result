@@ -7,7 +7,7 @@ import lombok.Setter;
 import javax.annotation.Nullable;
 
 /**
- * 数据响应结果的基本实现
+ * 数据响应结果的基本实现。
  *
  * @author peace
  */

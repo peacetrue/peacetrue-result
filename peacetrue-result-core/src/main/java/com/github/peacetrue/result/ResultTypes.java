@@ -12,10 +12,12 @@ public enum ResultTypes implements ResultType {
 
     /** 成功 */
     SUCCESS("操作成功"),
-    /** 失败，不确定具体失败原因时使用 */
-    FAILURE("操作失败"),
     /** 请求资源不存在 */
     RESOURCE_NOT_FOUND("请求资源不存在"),
+    /** 失败，不确定具体失败原因时使用 */
+    FAILURE("操作失败"),
+    /** 多项错误，操作返回多项错误 */
+    ERRORS("多项错误"),
     /** 参数错误，不确定参数错误的具体失败原因时使用 */
     PARAMETER_ERROR("参数错误"),
     /** 参数缺失，请求时没有传递必须的参数 */

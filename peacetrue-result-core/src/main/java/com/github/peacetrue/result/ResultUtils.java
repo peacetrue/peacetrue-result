@@ -21,7 +21,7 @@ public abstract class ResultUtils {
      * @return 响应结果的字符串描述
      */
     public static String toString(Result result) {
-        return String.format("%s:%s", result.getCode(), result.getMessage());
+        return String.format("%s: %s", result.getCode(), result.getMessage());
     }
 
     /**
@@ -31,26 +31,61 @@ public abstract class ResultUtils {
      * @return 数据响应结果的字符串描述
      */
     public static String toString(DataResult<?> dataResult) {
-        return String.format("%s[%s]", toString((Result) dataResult), toString(dataResult.getData()));
+        return String.format("%s ( %s )", toString((Result) dataResult), toString(dataResult.getData()));
     }
 
     private static String toString(Object data) {
-        if (data == null) return "null";
-        return data.getClass().isArray()
-                ? Arrays.toString((Object[]) data)
-                : data.toString();
+        if (data == null) return "<null>";
+        return data.getClass().isArray() ? Arrays.toString((Object[]) data) : data.toString();
     }
 
     /**
-     * 构造响应结果
+     * 构造响应结果，根据有无响应结果数据选择不同的响应结果类。
      *
      * @param code    响应结果编码
      * @param message 响应结果描述
      * @param data    响应结果数据
      * @return 响应结果
      */
-    public static Result build(String code, String message, @Nullable Object data) {
+    public static Result build(String code, @Nullable String message, @Nullable Object data) {
         return data == null ? new ResultImpl(code, message) : new DataResultImpl<>(code, message, data);
+    }
+
+    /**
+     * 构造响应结果，用于重新设置响应结果编码。
+     *
+     * @param result 响应结果
+     * @param code   响应结果编码
+     * @return 响应结果
+     */
+    public static Result build(Result result, String code) {
+        return result instanceof DataResult
+                ? new DataResultImpl<>(code, result.getMessage(), ((DataResult<?>) result).getData())
+                : new ResultImpl(code, result.getMessage());
+    }
+
+    /**
+     * 构造响应结果
+     *
+     * @param result 响应结果
+     * @param data   响应结果数据
+     * @return 响应结果
+     */
+    private static Result build(Result result, @Nullable Object data) {
+        return data == null ? result : new DataResultImpl<>(result, data);
+    }
+
+    /**
+     * 构造响应结果，复制一份。
+     * 将异常响应结果转换成非异常响应结果时使用。
+     *
+     * @param result 响应结果
+     * @return 复制的响应结果
+     */
+    public static Result build(Result result) {
+        return result instanceof DataResult
+                ? new DataResultImpl<>((DataResult<?>) result)
+                : new ResultImpl(result);
     }
 
     /**
@@ -65,46 +100,16 @@ public abstract class ResultUtils {
     }
 
     /**
-     * build result
-     *
-     * @param result the result
-     * @param data   the data
-     * @return a result
-     */
-    public static Result build(Result result, @Nullable Object data) {
-        return data == null ? result : new DataResultImpl<>(result, data);
-    }
-
-    /**
-     * wrap result
-     *
-     * @param result the result
-     * @return the wrapped result
-     */
-    public static Result wrap(Result result) {
-        return result instanceof DataResult
-                ? new DataResultImpl<>((DataResult<?>) result)
-                : new ResultImpl(result);
-    }
-
-    /**
-     * 转换响应结果
+     * 获取响应结果的数据
      *
      * @param result 响应结果
-     * @param <T>    数据类型
-     * @return 数据响应结果
+     * @param <T>    响应结果数据类型
+     * @return 响应结果数据
      */
-    @SuppressWarnings("unchecked")
-    public static <T> DataResult<T> cast(Result result) {
-        return (DataResult<T>) result;
-    }
-
-    /** 获取响应结果的数据 */
     @Nullable
     @SuppressWarnings("unchecked")
     public static <T> T getData(Result result) {
-        if (result instanceof DataResult) return (T) ((DataResult<?>) result).getData();
-        return null;
+        return result instanceof DataResult ? (T) ((DataResult<?>) result).getData() : null;
     }
 
 }
