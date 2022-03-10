@@ -1,3 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.github.peacetrue.result.exception.ExceptionResultAutoConfiguration,\
-  com.github.peacetrue.spring.expression.MessageExpressionAutoConfiguration
+  com.github.peacetrue.result.exception.ResultExceptionAutoConfiguration

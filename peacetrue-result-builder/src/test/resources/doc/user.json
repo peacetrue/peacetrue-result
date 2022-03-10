@@ -1,6 +1,8 @@
 {
-  "code": "success",    //<1>
-  "message": "请求成功", //<2>
+  "code": "success",
+  //<1>
+  "message": "请求成功",
+  //<2>
   "data": {
     "id": 1,
     "name": "admin",

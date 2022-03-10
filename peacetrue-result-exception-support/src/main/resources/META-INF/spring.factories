@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.github.peacetrue.result.exception.web.WebExceptionResultAutoConfiguration
+  com.github.peacetrue.result.exception.ResultExceptionSupportAutoConfiguration,\
+  com.github.peacetrue.result.exception.spring.SpringResultExceptionAutoConfiguration

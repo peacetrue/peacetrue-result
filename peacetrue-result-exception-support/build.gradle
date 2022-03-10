@@ -1,28 +1,21 @@
-description '处理异常状态下的标准响应数据'
+description '响应结果异常支持，处理各种具体的异常'
 
 dependencies {
-    api rootProject
+    api project(":peacetrue-result-core")
+    api project(':peacetrue-result-builder')
     api project(':peacetrue-result-exception')
-    implementation "com.github.peacetrue:peacetrue-spring"
     implementation 'org.springframework.boot:spring-boot-autoconfigure'
     compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    compileOnly 'org.springframework:spring-webmvc'
+    compileOnly 'javax.servlet:javax.servlet-api'
 
-//    compileOnly "com.fasterxml.jackson.core:jackson-databind"
-//    compileOnly "mysql:mysql-connector-java"
-//    compileOnly "javax.validation:validation-api"
-//    compileOnly "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final"
-    compileOnly "org.springframework:spring-webmvc"
-    compileOnly "org.apache.tomcat.embed:tomcat-embed-core"
-//    compileOnly "com.alibaba:dubbo:2.6.2"
-//    compileOnly 'javax.servlet:javax.servlet-api'
-
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
-//    testCompile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    testCompile 'org.springframework.boot:spring-boot-starter-validation'
-    testCompile 'org.springframework.boot:spring-boot-starter-web'
-//    testCompile 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    testCompile 'org.springframework.boot:spring-boot-starter-logging'
-    testCompile "com.h2database:h2"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-validation'
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
+    testImplementation 'org.springframework.boot:spring-boot-starter-logging'
+    testImplementation "com.h2database:h2"
+    testImplementation("com.google.guava:guava:31.1-jre")
 
 }

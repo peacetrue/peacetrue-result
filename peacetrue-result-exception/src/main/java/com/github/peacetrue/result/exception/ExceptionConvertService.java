@@ -3,17 +3,20 @@ package com.github.peacetrue.result.exception;
 import com.github.peacetrue.result.Result;
 
 /**
- * the service for exception convert
+ * 异常转换器服务，用于转换系统中所有的异常。
  *
- * @author xiayx
+ * @author peace
+ * @see ExceptionConverter
  */
 public interface ExceptionConvertService {
 
     /**
-     * convert {@link Exception} to {@link Result}
+     * 转换异常为响应结果
      *
-     * @param exception the exception need to converted
-     * @return the result converted by {@code exception}
+     * @param throwable 系统中抛出的异常
+     * @return 转换成的响应结果
      */
-    Result convert(Throwable exception);
+    Result convert(Throwable throwable);
+
+
 }

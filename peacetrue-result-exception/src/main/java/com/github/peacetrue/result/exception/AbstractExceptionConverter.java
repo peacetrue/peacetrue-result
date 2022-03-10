@@ -1,73 +1,67 @@
 package com.github.peacetrue.result.exception;
 
-import com.github.peacetrue.result.DataResultImpl;
+import com.github.peacetrue.beans.properties.name.NameCapable;
 import com.github.peacetrue.result.Result;
-import com.github.peacetrue.result.ResultImpl;
-import com.github.peacetrue.spring.expression.MessageFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.peacetrue.result.ResultUtils;
+import com.github.peacetrue.result.builder.ResultMessageBuilder;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
 
 /**
- * a abstract {@link ExceptionConverter}
+ * 抽象的异常转换器。
  *
- * @author xiayx
+ * @param <T> 异常类型
+ * @author peace
  */
-public abstract class AbstractExceptionConverter<E extends Throwable, D> implements ExceptionConverter<E> {
+@Slf4j
+@Getter
+public abstract class AbstractExceptionConverter<T extends Throwable> implements ExceptionConverter<T> {
 
-    protected Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private MessageFormatter messageFormatter;
+    protected ResultMessageBuilder resultMessageBuilder;
 
     @Override
-    public Result convert(E exception) {
-        logger.info("转换异常[{}]", exception.getClass().getName());
-        return buildResult(
-                resolveCode(exception),
-                resolveMessage(exception),
-                resolveData(exception)
-        );
+    public Result convert(T exception) {
+        log.info("转换异常'{}'", exception.getClass().getSimpleName());
+        String code = resolveCode(exception);
+        log.debug("取得响应结果编码'{}'", code);
+        Object args = resolveArgs(exception);
+        log.debug("取得响应结果描述参数'{}'", args);
+        String message = resultMessageBuilder.build(code, args);
+        log.debug("取得响应结果描述'{}'", message);
+        if (args instanceof NameCapable) {
+            code += "." + ((NameCapable) args).getName();
+            log.debug("响应结果编码添加参数名'{}'", ((NameCapable) args).getName());
+        }
+        return ResultUtils.build(code, message, args);
     }
 
     /**
-     * get standard result code
+     * 解析响应结果编码
      *
-     * @param exception the exception
-     * @return the standard result code
+     * @param throwable 异常
+     * @return 响应结果编码
      */
-    protected String resolveCode(E exception) {
-        return exception.getClass().getSimpleName();
-    }
-
-
-    /**
-     * get standard result code
-     *
-     * @param exception the exception
-     * @return the standard result code
-     */
-    protected String resolveMessage(E exception) {
-        return exception.getMessage();
+    protected String resolveCode(T throwable) {
+        return throwable.getClass().getSimpleName()
+                .replaceFirst("Exception$", "");
     }
 
     /**
-     * convert data
+     * 解析描述参数
      *
-     * @param exception the exception
-     * @return the data
+     * @param throwable 异常
+     * @return 响应结果数据
      */
     @Nullable
-    protected D resolveData(E exception) {
+    protected Object resolveArgs(T throwable) {
         return null;
     }
 
-    protected Result buildResult(String code, String message, D data) {
-        if (data == null) return new ResultImpl(code, message);
-        String formattedMessage = messageFormatter.format(message, data);
-        return new DataResultImpl<>(code, formattedMessage, data);
+    @Autowired
+    public void setResultMessageBuilder(ResultMessageBuilder resultMessageBuilder) {
+        this.resultMessageBuilder = resultMessageBuilder;
     }
-
 }

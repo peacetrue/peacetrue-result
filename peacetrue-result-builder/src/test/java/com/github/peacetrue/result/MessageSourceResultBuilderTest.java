@@ -1,66 +1,38 @@
 package com.github.peacetrue.result;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.github.peacetrue.result.builder.MessageSourceResultMessageBuilder;
+import com.github.peacetrue.result.builder.ResultBuilderAutoConfiguration;
+import com.github.peacetrue.result.builder.ResultMessageSourceAutoConfiguration;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.MessageSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.junit.Assert.assertEquals;
 
 /**
- * the tests for {@link MessageSourceResultBuilder}
+ * {@link MessageSourceResultMessageBuilder} 测试类
  *
- * @author xiayx
+ * @author peace
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(
         classes = {
-                MessageSourceAutoConfiguration.class,
-                BuilderResultAutoConfiguration.class
-        },
-        properties = {
-                "logging.level.root=info",
-                "spring.messages.basename=com/github/peacetrue/result/MessageSourceResultBuilder"
+                ResultMessageSourceAutoConfiguration.class,
+                ResultBuilderAutoConfiguration.class
         }
 )
-public class MessageSourceResultBuilderTest {
+class MessageSourceResultBuilderTest {
 
     @Autowired
-    private MessageSourceResultBuilder resultBuilder;
-    @Autowired
-    private MessageSource messageSource;
+    private MessageSourceResultMessageBuilder resultMessageBuilder;
 
     @Test
-    public void build() throws Exception {
+    void build() {
         String code = "MethodArgumentTypeMismatchException";
-        Object[] arguments = {"id", "a", Long.class};
-        String data = "id";
-        DataResult<String> build = resultBuilder.build(code,  data);
-        assertEquals(code, build.getCode());
+        Object[] arguments = {"id", "a", "数值"};
+        String message = resultMessageBuilder.build(code, arguments);
         String format = "参数\"id\"的值\"a\"无法被转换成\"数值\"类型";
-        assertEquals(format, build.getMessage());
-        assertEquals(data, build.getData());
+        Assertions.assertEquals(format, message);
     }
 
-    @Test
-    public void success() throws Exception {
-        Result success = resultBuilder.success();
-        Assert.assertEquals(ResultType.success.name(), success.getCode());
-        String expected = messageSource.getMessage("Result." + success.getCode(), null, LocaleContextHolder.getLocale());
-        Assert.assertEquals(expected, success.getMessage());
-    }
-
-    @Test
-    public void failure() throws Exception {
-        Result failure = resultBuilder.failure();
-        Assert.assertEquals(ResultType.failure.name(), failure.getCode());
-        String expected = messageSource.getMessage("Result." + failure.getCode(), null, LocaleContextHolder.getLocale());
-        Assert.assertEquals(expected, failure.getMessage());
-    }
 
 }
