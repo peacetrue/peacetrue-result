@@ -1,13 +1,13 @@
 package com.github.peacetrue.result.dubbo;
 
-import com.alibaba.dubbo.common.logger.Logger;
+import com.alibaba.dubbo.common.log.Logger;
 import com.alibaba.dubbo.rpc.Result;
 import com.github.peacetrue.result.exception.ResultException;
 
 /**
  * to support return {@link ResultException} directly.
  *
- * @author xiayx
+ * @author peace
  */
 public class ResultExceptionFilter extends ExceptionFilter {
 
@@ -16,8 +16,8 @@ public class ResultExceptionFilter extends ExceptionFilter {
     public ResultExceptionFilter() {
     }
 
-    public ResultExceptionFilter(Logger logger) {
-        super(logger);
+    public ResultExceptionFilter(Logger log) {
+        super(log);
     }
 
     @Override

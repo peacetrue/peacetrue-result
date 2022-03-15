@@ -21,6 +21,9 @@ public class ResultExceptionSupportProperties {
     }
 
     private void setDefaultClassifiedCodes() {
+        classifiedCodes.put(ResultTypes.FAILURE.getCode(), new HashSet<>(Arrays.asList(
+                "NullPointer"
+        )));
         classifiedCodes.put(ResultTypes.ERRORS.getCode(), new HashSet<>(Arrays.asList(
                 "Bind"
         )));
@@ -28,7 +31,7 @@ public class ResultExceptionSupportProperties {
                 "MissingServletRequestParameter", "MissingPathVariable"
         )));
         classifiedCodes.put(ResultTypes.PARAMETER_INVALID.getCode(), new HashSet<>(Arrays.asList(
-                "MethodArgumentTypeMismatch", "TypeMismatch"
+                "MethodArgumentTypeMismatch", "TypeMismatch", "InvalidFormat", "JsonParse"
         )));
     }
 

@@ -31,12 +31,13 @@ public class ResultCodeCustomizer implements ResultCustomizer {
 
     @Override
     public Object customize(Result result) {
-        log.info("自定义响应结果'{}'", result.getCode());
+        log.trace("customize Result '{}'", result.getCode());
         String code = result.getCode().split("\\.", 2)[0];
-        log.debug("取得不含参数名的编码'{}'", code);
+        log.trace("got Result.code without Parameter.name '{}'", code);
         if (!customCodes.containsKey(code)) return result;
         String customCode = customCodes.get(code);
-        log.debug("取得编码'{}'对应的自定义编码'{}'", code, customCode);
+        customCode = result.getCode().substring(code.length()) + customCode;
+        log.debug("customize Result.code '{}' to '{}'", result.getCode(), customCode);
         if (!(result instanceof CodeAware)) return ResultUtils.build(result, customCode);
         ((CodeAware) result).setCode(customCode);
         return result;

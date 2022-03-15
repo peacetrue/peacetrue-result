@@ -4,16 +4,14 @@ dependencies {
     api project(':peacetrue-result-core')
     api project(':peacetrue-result-builder')
     api 'org.slf4j:slf4j-api'
-//    implementation 'org.springframework:spring-web'
-    implementation 'org.springframework.boot:spring-boot-autoconfigure'
     compileOnly 'org.springframework:spring-webmvc'
-//    compileOnly 'org.springframework:spring-webflux'
-//    compileOnly 'com.fasterxml.jackson.core:jackson-databind'
+    compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
     compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation "org.springframework.boot:spring-boot-starter-test${tailSpringBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-web${tailSpringBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-logging${tailSpringBootVersion}"
 //    testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
-    testImplementation 'org.springframework.boot:spring-boot-starter-logging'
 }
+

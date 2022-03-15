@@ -3,7 +3,7 @@ package com.github.peacetrue.result;
 import com.github.peacetrue.result.exception.ExceptionResultAutoConfiguration;
 import com.github.peacetrue.result.success.SuccessResultAutoConfiguration;
 import com.github.peacetrue.spring.expression.MessageExpressionAutoConfiguration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * @author xiayx
+ * @author peace
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {

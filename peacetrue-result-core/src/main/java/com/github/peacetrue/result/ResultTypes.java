@@ -34,11 +34,6 @@ public enum ResultTypes implements ResultType {
         this.name = name;
     }
 
-    /** 获取响应结果编码，使用小写的枚举名称作为响应结果编码 */
-    public String getCode() {
-        return name().toLowerCase();
-    }
-
     /**
      * 响应结果编码是否为成功
      *
@@ -47,5 +42,10 @@ public enum ResultTypes implements ResultType {
      */
     public static boolean isSuccess(String code) {
         return SUCCESS.getCode().equals(code);
+    }
+
+    /** 获取响应结果编码，使用小写的枚举名称作为响应结果编码 */
+    public String getCode() {
+        return name().toLowerCase();
     }
 }

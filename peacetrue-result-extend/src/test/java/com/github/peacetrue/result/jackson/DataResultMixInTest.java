@@ -8,24 +8,13 @@ import com.github.peacetrue.result.DataResultImpl;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
- * @author xiayx
+ * @author peace
  */
 public class DataResultMixInTest {
 
-
-    @Data
-    @AllArgsConstructor
-    public static class Bean1 {
-        interface View1 {}
-
-        interface View2 extends DataResultView {}
-
-        @JsonView({View1.class, View2.class})
-        private String name;
-    }
 
     @Test
     public void name() throws Exception {
@@ -43,5 +32,18 @@ public class DataResultMixInTest {
         result.setData(null);
         value = objectMapper.writerWithView(Bean1.View2.class).writeValueAsString(result);
         Assert.assertEquals("{\"code\":\"code\",\"message\":\"message\",\"data\":null}", value);
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class Bean1 {
+        @JsonView({View1.class, View2.class})
+        private String name;
+
+        interface View1 {
+        }
+
+        interface View2 extends DataResultView {
+        }
     }
 }

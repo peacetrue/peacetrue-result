@@ -18,16 +18,32 @@ import java.util.*;
 public class ExceptionConvertServiceImpl implements ExceptionConvertService {
 
     private Map<Class<Throwable>, ExceptionConverter<Throwable>> exceptionConverters = Collections.emptyMap();
-    private GenericExceptionConverter genericExceptionConverter;
-    private ResultCodeClassifier resultCodeClassifier;
+    private List<ConditionalExceptionConverter> conditionalExceptionConverters = Collections.emptyList();
+    private FallbackExceptionConverter fallbackExceptionConverter;
+    private ResultCodeClassifier resultCodeClassifier = ResultCodeClassifier.DEFAULT;
 
     @Override
     public Result convert(Throwable throwable) {
-        ExceptionConverter<Throwable> exceptionConverter =
-                exceptionConverters.getOrDefault(throwable.getClass(), genericExceptionConverter);
-        Result result = exceptionConverter.convert(throwable);
+        Result result = mapConvert(throwable)
+                .orElseGet(() -> conditionalConvert(throwable)
+                        .orElseGet(() -> fallbackConvert(throwable)));
         classifyResultCode(result);
         return result;
+    }
+
+    private Optional<Result> mapConvert(Throwable throwable) {
+        return Optional.ofNullable(exceptionConverters.get(throwable.getClass()))
+                .map(item -> item.convert(throwable));
+    }
+
+    private Optional<Result> conditionalConvert(Throwable throwable) {
+        return conditionalExceptionConverters
+                .stream().filter(item -> item.supports(throwable))
+                .findFirst().map(item -> item.convert(throwable));
+    }
+
+    private Result fallbackConvert(Throwable throwable) {
+        return fallbackExceptionConverter.convert(throwable);
     }
 
     private void classifyResultCode(Result result) {
@@ -39,7 +55,7 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
         }
     }
 
-    @Autowired
+    @Autowired(required = false)
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void setExceptionConverters(List<ExceptionConverter> exceptionConverters) {
         if (CollectionUtils.isEmpty(exceptionConverters)) return;
@@ -56,13 +72,18 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
         });
     }
 
-    @Autowired
-    public void setGenericExceptionConverter(GenericExceptionConverter genericExceptionConverter) {
-        this.genericExceptionConverter = genericExceptionConverter;
+    @Autowired(required = false)
+    public void setConditionalExceptionConverters(List<ConditionalExceptionConverter> conditionalExceptionConverters) {
+        this.conditionalExceptionConverters = conditionalExceptionConverters;
     }
 
     @Autowired(required = false)
     public void setResultCodeClassifier(ResultCodeClassifier resultCodeClassifier) {
         this.resultCodeClassifier = resultCodeClassifier;
+    }
+
+    @Autowired
+    public void setFallbackExceptionConverter(FallbackExceptionConverter fallbackExceptionConverter) {
+        this.fallbackExceptionConverter = fallbackExceptionConverter;
     }
 }

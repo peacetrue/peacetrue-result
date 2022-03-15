@@ -5,6 +5,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.expression.BeanFactoryResolver;
@@ -21,6 +22,8 @@ import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.github.peacetrue.result.builder.ResultBuilderAutoConfiguration.CONVERSION_SERVICE_NAME;
 
 /**
  * 基于 {@link MessageSource} 的响应结果描述构建者。
@@ -72,7 +75,7 @@ public class MessageSourceResultMessageBuilder implements ResultMessageBuilder, 
     private String getMessage(String code, @Nullable Object args, Locale locale) {
         boolean isArrayArgs = args instanceof Object[];
         String message = getMessage(code, isArrayArgs ? (Object[]) args : null, locale);
-        log.debug("取得编码'{}'的方言配置值'{}'", code, message);
+        log.debug("取得编码'{}'的方言配置值: '{}'", code, message);
         if (message == null || args == null || isArrayArgs) return message;
         StandardEvaluationContext context = getStandardEvaluationContext(args);
         String parsedMessage = expressionParser
@@ -109,6 +112,7 @@ public class MessageSourceResultMessageBuilder implements ResultMessageBuilder, 
     }
 
     @Autowired
+    @Qualifier(CONVERSION_SERVICE_NAME)
     public void setConversionService(ConversionService conversionService) {
         this.conversionService = conversionService;
     }

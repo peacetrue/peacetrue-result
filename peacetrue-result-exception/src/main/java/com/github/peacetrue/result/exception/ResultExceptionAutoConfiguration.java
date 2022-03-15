@@ -1,15 +1,12 @@
 package com.github.peacetrue.result.exception;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
-import org.springframework.boot.web.servlet.error.ErrorAttributes;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.context.support.AbstractResourceBasedMessageSource;
 
 /**
  * 响应结果异常自动配置
@@ -17,7 +14,21 @@ import org.springframework.web.context.request.WebRequest;
  * @author peace
  */
 @Configuration
+@EnableConfigurationProperties(ResultExceptionProperties.class)
 public class ResultExceptionAutoConfiguration {
+
+    private final ResultExceptionProperties properties;
+
+    public ResultExceptionAutoConfiguration(ResultExceptionProperties properties) {
+        this.properties = properties;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "controllerExceptionHandler")
+    @ConditionalOnProperty(value = "peacetrue.result.exception.enableExceptionHandler", matchIfMissing = true)
+    public ControllerExceptionHandler controllerExceptionHandler() {
+        return new ControllerExceptionHandler();
+    }
 
     @Bean
     @ConditionalOnMissingBean(ExceptionConvertService.class)
@@ -26,8 +37,8 @@ public class ResultExceptionAutoConfiguration {
     }
 
     @Bean
-    public GenericExceptionConverter genericExceptionConverter() {
-        return new GenericExceptionConverter();
+    public FallbackExceptionConverter fallbackExceptionConverter() {
+        return new FallbackExceptionConverter();
     }
 
     @Bean
@@ -36,26 +47,19 @@ public class ResultExceptionAutoConfiguration {
     }
 
     @Bean
+    public NestConditionalExceptionConverter nestConditionalExceptionConverter() {
+        return new NestConditionalExceptionConverter(properties.getNestClasses());
+    }
+
+    @Bean
     @ConditionalOnMissingBean(ResultExceptionThrowService.class)
     public ResultExceptionThrowService exceptionThrowService() {
         return new ResultExceptionThrowServiceImpl();
     }
 
-
     @Autowired
-    public void registerMessageSourceBasename(ResourceBundleMessageSource messageSource) {
+    public void registerMessageSourceBasename(AbstractResourceBasedMessageSource messageSource) {
         messageSource.addBasenames("peacetrue-result-exception");
-    }
-
-    @Configuration
-    @ConditionalOnClass(WebRequest.class)
-    @AutoConfigureBefore(ErrorMvcAutoConfiguration.class)
-    public static class ResultErrorAttributesConfiguration {
-        @Bean
-        @ConditionalOnMissingBean(ErrorAttributes.class)
-        public ErrorAttributes resultErrorAttributes() {
-            return new ResultErrorAttributes();
-        }
     }
 
 }

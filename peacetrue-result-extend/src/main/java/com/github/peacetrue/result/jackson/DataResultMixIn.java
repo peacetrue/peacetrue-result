@@ -3,7 +3,7 @@ package com.github.peacetrue.result.jackson;
 import com.fasterxml.jackson.annotation.JsonView;
 
 /**
- * @author xiayx
+ * @author peace
  * @see com.github.peacetrue.result.DataResult
  */
 public interface DataResultMixIn<T> {

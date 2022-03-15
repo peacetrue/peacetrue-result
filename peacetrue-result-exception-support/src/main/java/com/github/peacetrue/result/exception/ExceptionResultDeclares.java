@@ -14,18 +14,18 @@ import java.util.List;
 @Getter
 public enum ExceptionResultDeclares implements ResultDeclare {
 
-    MISSING_PATH_VARIABLE("缺少路径变量'{name}'", Parameter.class),
+    MISSING_PATH_VARIABLE("缺少路径变量'#{name}'", Parameter.class),
     MISSING_SERVLET_REQUEST_PARAMETER("缺少必须的请求参数'#{name}'", Parameter.class),
-    METHOD_ARGUMENT_TYPE_MISMATCH("参数'#{name}'类型不匹配'#{type}'", Parameter.class),
-    BIND_EXCEPTION("共'#{root.size}'项错误", List.class),
+    METHOD_ARGUMENT_TYPE_MISMATCH("参数'#{name}'的值'#{value}'不是'#{type}'类型", Parameter.class),
+    BIND("共'#{#root.size()}'项错误", List.class),
     ;
 
     private final String messageTemplate;
-    private final Class<?> messageArgsType;
+    private final Class<?> messageTemplateArgsType;
 
-    ExceptionResultDeclares(String messageTemplate, Class<?> messageArgsType) {
+    ExceptionResultDeclares(String messageTemplate, Class<?> messageTemplateArgsType) {
         this.messageTemplate = messageTemplate;
-        this.messageArgsType = messageArgsType;
+        this.messageTemplateArgsType = messageTemplateArgsType;
     }
 
     /** 获取响应结果编码，使用小写的枚举名称作为响应结果编码 */

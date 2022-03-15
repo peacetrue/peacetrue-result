@@ -1,6 +1,6 @@
 subprojects { project ->
     group "com.github.peacetrue.result"
-    version "1.0.0-SNAPSHOT"
+    version "${peaceResultVersion}${tailSnapshot}"
     description "响应结果组件"
 }
 

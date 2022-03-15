@@ -1,7 +1,7 @@
 description '响应数据组件-样章'
 
 dependencies {
-    api rootProject
+    api project(":peacetrue-result-core")
     api 'org.slf4j:slf4j-api'
     implementation 'com.github.peacetrue:peacetrue-spring'
     implementation 'org.springframework.boot:spring-boot-starter-web'

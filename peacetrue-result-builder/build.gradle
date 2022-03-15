@@ -3,10 +3,10 @@ description '响应结果构造者，支持国际化'
 dependencies {
     api project(":peacetrue-result-core")
     api "org.slf4j:slf4j-api"
-    implementation 'org.springframework:spring-context'
-    implementation "org.springframework.boot:spring-boot-autoconfigure"
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    compileOnly "org.springframework:spring-context"
+    compileOnly "org.springframework.boot:spring-boot-autoconfigure${tailSpringBootVersion}"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor${tailSpringBootVersion}"
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-logging'
+    testImplementation "org.springframework.boot:spring-boot-starter-test${tailSpringBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-logging${tailSpringBootVersion}"
 }

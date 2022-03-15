@@ -1,7 +1,7 @@
 package com.github.peacetrue.result.jackson;
 
 /**
- * @author xiayx
+ * @author peace
  * @see DataResultMixIn
  */
 public interface DataResultView {

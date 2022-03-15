@@ -28,7 +28,7 @@ import java.util.Set;
  * 此类不应该被 Spring 扫描到，因为已经在配置 {@link WebMvcSuccessAutowireAutoConfiguration#successAutowireResponseBodyAdvice(SuccessAutowireProperties) WebMvcSuccessAutowireAutoConfiguration} 中声明了。
  * 如果被扫描，会导致 {@link SuccessAutowireProperties#getDisabledMethods() disabledMethods}  配置无效。
  * <p>
- * 此类可能会导致 {@code com.fasterxml.jackson.annotation.JsonView} 失效，有待进一步测试。
+ * 此类可能会导致 {@code JsonView} 失效，有待进一步测试。
  *
  * @author peace
  * @see SuccessAutowire
@@ -99,7 +99,7 @@ public class SuccessAutowireResponseBodyAdvice implements ResponseBodyAdvice<Obj
     protected Result toSuccessResult(@Nullable Object body) {
         String code = ResultTypes.SUCCESS.getCode();
         String message = resultMessageBuilder.build(code, body);
-        return new DataResultImpl<>(code, message, body);
+        return ResultUtils.build(code, message, body);
     }
 
     @Autowired

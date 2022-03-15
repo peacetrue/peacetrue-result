@@ -7,6 +7,9 @@ package com.github.peacetrue.result.exception;
  **/
 public interface ResultCodeClassifier {
 
+    /** 默认的分类器，防止值为 {@code null} 时，占位使用 */
+    ResultCodeClassifier DEFAULT = code -> code;
+
     /**
      * 分类响应结果编码
      *

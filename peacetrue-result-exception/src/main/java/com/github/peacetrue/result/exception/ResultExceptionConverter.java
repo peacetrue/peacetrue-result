@@ -5,7 +5,7 @@ import com.github.peacetrue.result.ResultException;
 import com.github.peacetrue.result.ResultUtils;
 
 /**
- * 转换成非异常的响应结果
+ * 转换成非异常的响应结果。
  *
  * @author peace
  */

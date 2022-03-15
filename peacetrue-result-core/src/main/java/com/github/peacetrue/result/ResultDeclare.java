@@ -17,10 +17,10 @@ public interface ResultDeclare extends CodeCapable {
     String getMessageTemplate();
 
     /**
-     * 获取描述参数类型
+     * 获取描述模板参数类型
      *
-     * @return 描述参数类型
+     * @return 描述模板参数类型
      */
-    Class<?> getMessageArgsType();
+    Class<?> getMessageTemplateArgsType();
 
 }

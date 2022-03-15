@@ -4,18 +4,18 @@ dependencies {
     api project(":peacetrue-result-core")
     api project(':peacetrue-result-builder')
     api project(':peacetrue-result-exception')
-    implementation 'org.springframework.boot:spring-boot-autoconfigure'
-    compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    compileOnly "org.springframework.boot:spring-boot-autoconfigure${tailSpringBootVersion}"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor${tailSpringBootVersion}"
+    compileOnly 'com.fasterxml.jackson.core:jackson-databind'
     compileOnly 'org.springframework:spring-webmvc'
     compileOnly 'javax.servlet:javax.servlet-api'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-validation'
-    testImplementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
-    testImplementation 'org.springframework.boot:spring-boot-starter-logging'
-    testImplementation "com.h2database:h2"
+    testImplementation "org.springframework.boot:spring-boot-starter-test${tailSpringBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-web${tailSpringBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-logging${tailSpringBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-validation${tailSpringBootVersion}"
+    testImplementation("com.github.peacetrue:peacetrue-validation")
+//    testImplementation "com.h2database:h2"
     testImplementation("com.google.guava:guava:31.1-jre")
 
 }

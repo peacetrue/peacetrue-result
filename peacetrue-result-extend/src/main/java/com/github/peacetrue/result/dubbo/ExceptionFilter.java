@@ -1,7 +1,7 @@
 package com.github.peacetrue.result.dubbo;
 
-import com.alibaba.dubbo.common.logger.Logger;
-import com.alibaba.dubbo.common.logger.LoggerFactory;
+import com.alibaba.dubbo.common.log.Logger;
+import com.alibaba.dubbo.common.log.LoggerFactory;
 import com.alibaba.dubbo.common.utils.ReflectUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.dubbo.rpc.*;
@@ -12,19 +12,19 @@ import java.lang.reflect.Method;
 /**
  * copy from {@link com.alibaba.dubbo.rpc.filter.ExceptionFilter} to support other exception
  *
- * @author xiayx
+ * @author peace
  * @see com.alibaba.dubbo.rpc.filter.ExceptionFilter
  */
 public class ExceptionFilter implements Filter {
 
-    private final Logger logger;
+    private final Logger log;
 
     public ExceptionFilter() {
         this(LoggerFactory.getLogger(com.alibaba.dubbo.rpc.filter.ExceptionFilter.class));
     }
 
-    public ExceptionFilter(Logger logger) {
-        this.logger = logger;
+    public ExceptionFilter(Logger log) {
+        this.log = log;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ExceptionFilter implements Filter {
                     }
 
                     // for the exception not found in method's signature, print ERROR message in server's log.
-                    logger.error("Got unchecked and undeclared exception which called by " + RpcContext.getContext().getRemoteHost()
+                    log.error("Got unchecked and undeclared exception which called by " + RpcContext.getContext().getRemoteHost()
                             + ". service: " + invoker.getInterface().getName() + ", method: " + invocation.getMethodName()
                             + ", exception: " + exception.getClass().getName() + ": " + exception.getMessage(), exception);
 
@@ -80,7 +80,7 @@ public class ExceptionFilter implements Filter {
                     // otherwise, wrap with RuntimeException and throw back to the client
                     return new RpcResult(new RuntimeException(StringUtils.toString(exception)));
                 } catch (Throwable e) {
-                    logger.warn("Fail to ExceptionFilter when called by " + RpcContext.getContext().getRemoteHost()
+                    log.warn("Fail to ExceptionFilter when called by " + RpcContext.getContext().getRemoteHost()
                             + ". service: " + invoker.getInterface().getName() + ", method: " + invocation.getMethodName()
                             + ", exception: " + e.getClass().getName() + ": " + e.getMessage(), e);
                     return result;
@@ -88,7 +88,7 @@ public class ExceptionFilter implements Filter {
             }
             return result;
         } catch (RuntimeException e) {
-            logger.error("Got unchecked and undeclared exception which called by " + RpcContext.getContext().getRemoteHost()
+            log.error("Got unchecked and undeclared exception which called by " + RpcContext.getContext().getRemoteHost()
                     + ". service: " + invoker.getInterface().getName() + ", method: " + invocation.getMethodName()
                     + ", exception: " + e.getClass().getName() + ": " + e.getMessage(), e);
             throw e;

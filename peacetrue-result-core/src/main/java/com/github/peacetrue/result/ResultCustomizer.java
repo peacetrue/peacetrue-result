@@ -10,6 +10,9 @@ package com.github.peacetrue.result;
  **/
 public interface ResultCustomizer {
 
+    /** 默认的响应结果定制器，防止值为 {@code null} 时，占位使用 */
+    ResultCustomizer DEFAULT = result -> result;
+
     /**
      * 自定义响应结果
      *

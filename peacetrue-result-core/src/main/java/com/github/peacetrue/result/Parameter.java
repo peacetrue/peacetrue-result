@@ -35,4 +35,16 @@ public class Parameter<T, V> implements NameCapable {
         this.type = type;
         this.value = value;
     }
+
+    /**
+     * 清除参数类型。
+     * 解析描述时类型有用，返回给调用者目前无用，清除掉。
+     *
+     * @param parameter 参数
+     */
+    public static void clearParameterType(@Nullable Object parameter) {
+        if (parameter instanceof Parameter) {
+            ((Parameter<?, ?>) parameter).setType(null);
+        }
+    }
 }

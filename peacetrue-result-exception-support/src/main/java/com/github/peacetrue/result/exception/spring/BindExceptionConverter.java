@@ -3,14 +3,16 @@ package com.github.peacetrue.result.exception.spring;
 import com.github.peacetrue.result.DataResultImpl;
 import com.github.peacetrue.result.Parameter;
 import com.github.peacetrue.result.Result;
+import com.github.peacetrue.result.ResultImpl;
 import com.github.peacetrue.result.exception.AbstractExceptionConverter;
-import com.github.peacetrue.result.exception.ExceptionConvertService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
+import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -23,11 +25,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BindExceptionConverter extends AbstractExceptionConverter<BindException> {
 
-    private ExceptionConvertService exceptionConvertService;
+    /** @see org.springframework.beans.TypeMismatchException */
+    private static final String TYPE_MISMATCH = "TypeMismatch";
 
     @Override
     protected List<Result> resolveArgs(BindException throwable) {
-        return throwable.getAllErrors().stream().map(this::convert).collect(Collectors.toList());
+        return resolveArgs((BindingResult) throwable);
+    }
+
+    protected List<Result> resolveArgs(BindingResult bindingResult) {
+        return bindingResult.getAllErrors().stream().map(this::convert).collect(Collectors.toList());
     }
 
     /**
@@ -40,40 +47,60 @@ public class BindExceptionConverter extends AbstractExceptionConverter<BindExcep
         if (objectError instanceof FieldError) {
             return convert((FieldError) objectError);
         } else {
-            log.debug("转换'{}'对象错误为响应结果", objectError.getObjectName());
-            ParameterConstraint<Class<?>, Object> parameter = new ParameterConstraint<>();
-            parameter.setName(objectError.getObjectName());
-            parameter.setConstraint(objectError.getArguments());
-            return new DataResultImpl<>(objectError.getCode(), objectError.getDefaultMessage(), parameter);
+            log.debug("convert ObjectError '{}' to Result", objectError.getObjectName());
+            //对象名称返回给调用者无意义，不是一个接口要求的参数。
+//            ParameterConstraint<Class<?>, Object> parameter = new ParameterConstraint<>();
+//            parameter.setName(objectError.getObjectName());
+//            parameter.setConstraint(objectError.getArguments());
+            return new ResultImpl(objectError.getCode(), objectError.getDefaultMessage());
         }
     }
 
     private Result convert(FieldError fieldError) {
-        log.debug("转换'{}'字段错误为响应结果", fieldError.getField());
-        Object source = fieldError.unwrap(Object.class);
-        if (source instanceof Throwable) {
-            return exceptionConvertService.convert((Throwable) source);
+        log.debug("convert FieldError '{}' to Result", fieldError.getField());
+        Parameter<Class<?>, Object> parameter = new Parameter<>();
+        parameter.setName(fieldError.getField());
+        parameter.setValue(fieldError.getRejectedValue());
+        if (TYPE_MISMATCH.equalsIgnoreCase(fieldError.getCode())) {
+            parameter.setType(resolveClass(fieldError.getCodes()));
+            String message = resultMessageBuilder.build(TYPE_MISMATCH, parameter);
+            Parameter.clearParameterType(parameter);
+            return new DataResultImpl<>(TYPE_MISMATCH + "." + parameter.getName(), message, parameter);
         }
-
+        Parameter.clearParameterType(parameter);
         //TODO 有待进一步观察，什么时候不返回 codes
         return new DataResultImpl<>(
                 Objects.requireNonNull(fieldError.getCodes())[1],
-                getMessage(fieldError),
-                new Parameter<>(fieldError.getField(), null, fieldError.getRejectedValue())
+                getNamedMessage(fieldError),
+                parameter
         );
     }
 
-    private String getMessage(FieldError fieldError) {
-        NamedMessage namedMessage = new NamedMessage(
-                fieldError.getField(),
-                Objects.requireNonNull(fieldError.getDefaultMessage())
-        );
-        return resultMessageBuilder.build("NamedMessage", namedMessage);
+    @Nullable
+    private Class<?> resolveClass(String[] codes) {
+        try {
+            String typeCode = codes[codes.length - 2];
+            String type = typeCode.split("\\.", 2)[1];
+            log.debug("got type '{}' from codes '{}'", type, Arrays.toString(codes));
+            return Class.forName(type);
+        } catch (Exception e) {
+            log.warn("can't resolve class from '{}'", Arrays.toString(codes));
+            return null;
+        }
     }
 
-    @Autowired
-    public void setExceptionConvertService(ExceptionConvertService exceptionConvertService) {
-        this.exceptionConvertService = exceptionConvertService;
+    private String getNamedMessage(ObjectError error) {
+        return getNamedMessage(error.getObjectName(), error.getDefaultMessage());
+    }
+
+    private String getNamedMessage(FieldError error) {
+        return getNamedMessage(error.getField(), error.getDefaultMessage());
+    }
+
+    private String getNamedMessage(String name, String message) {
+        return resultMessageBuilder.build("NamedMessage", new NamedMessage(
+                name, Objects.requireNonNull(message)
+        ));
     }
 
 }

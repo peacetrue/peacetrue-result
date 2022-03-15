@@ -1,6 +1,7 @@
 package com.github.peacetrue.result.exception;
 
 import com.github.peacetrue.beans.properties.name.NameCapable;
+import com.github.peacetrue.result.Parameter;
 import com.github.peacetrue.result.Result;
 import com.github.peacetrue.result.ResultUtils;
 import com.github.peacetrue.result.builder.ResultMessageBuilder;
@@ -35,6 +36,7 @@ public abstract class AbstractExceptionConverter<T extends Throwable> implements
             code += "." + ((NameCapable) args).getName();
             log.debug("响应结果编码添加参数名'{}'", ((NameCapable) args).getName());
         }
+        Parameter.clearParameterType(args);
         return ResultUtils.build(code, message, args);
     }
 

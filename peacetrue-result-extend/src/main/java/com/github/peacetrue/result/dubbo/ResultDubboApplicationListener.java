@@ -10,7 +10,7 @@ import org.springframework.core.env.PropertiesPropertySource;
 import java.util.Properties;
 
 /**
- * @author xiayx
+ * @author peace
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ResultDubboApplicationListener implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
