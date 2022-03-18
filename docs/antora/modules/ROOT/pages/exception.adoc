@@ -1,0 +1,41 @@
+= 异常分析
+
+本文总结各种常见异常，分析其出现的场景。
+
+
+== DataIntegrityViolationException
+
+=== org.hibernate.exception.ConstraintViolationException
+
+==== org.h2.jdbc.JdbcSQLException extends SQLException
+
+insert into test_entity (name, id) values (?, ?) [23505-196]
+org.springframework.dao.DataIntegrityViolationException: could not execute statement; SQL [n/a]; constraint ["UK_TKJUT8JY3HKXAMR8T5WKT91GT_INDEX_F ON PUBLIC.TEST_ENTITY(NAME) VALUES ('name', 1)"; SQL statement:
+insert into test_entity (name, id) values (?, ?) [23505-196]]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
+
+== PersistenceException
+
+=== IdentifierGenerationException
+
+javax.persistence.PersistenceException: org.hibernate.id.IdentifierGenerationException: ids for this class must be manually assigned before calling save(): com.github.peacetrue.result.exception.TestEntity
+
+保存 `TestEntity` 实体时，没有指定自动生成主键值，也没有手动设置主键值。
+
+[source%nowrap,java]
+----
+class TestEntity {
+    @Id //<1>
+    private Long id;
+}
+
+class TestEntityService {
+    @Transactional
+    public void add() {
+        TestEntity entity = new TestEntity(null, "name"); //<2>
+        entityManager.persist(entity);
+    }
+}
+----
+
+<1> 没有添加 @GeneratedValue 注解
+<2> 没有设置主键值

@@ -1,0 +1,174 @@
+= 用户手册
+:version: 1.0.0
+
+本文用于指导 Java 开发者使用 *响应结果组件*。
+//@formatter:off
+
+== 快速上手
+
+请参考示例 https://github.com/peacetrue/peacetrue-result-sample 。
+
+== 类库说明
+
+.核心类库，提供响应结果的数据结构和常用类型。
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-core</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+.构建类库，构造响应结果描述信息，支持国际化
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-builder</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+.成功类库，封装成功时返回的数据
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-success</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+.异常类库，封装异常时返回的数据，提供抽象的异常转换体系
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-exception</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+.异常支持类库，实现具体的异常转换逻辑
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-exception-support</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+== 最佳实践
+
+=== 禁用 成功响应结果封装 特性
+
+引入 *peacetrue-result-success* 类库，会自动启用 *成功响应结果封装* 特性。
+
+该特性在新项目中比较友好。
+如果是存在的项目，有些接口已经自行处理了响应结果，不需要使用该特性。如何禁用呢？
+如果有源码，可以直接在方法上标注 `SuccessAutowire` ；
+如果没有源码，可以使用如下配置：
+
+[source%nowrap,yml]
+.application.yml
+----
+peacetrue:
+    result:
+        success:
+            disabled-methods:
+                - com.github.peacetrue.result.success.SuccessAutowireController.disableSuccessAutowireByConfiguration //<1>
+                - com.github.peacetrue.result.success.SuccessAutowireController //<2>
+                - com.github.peacetrue.result.success //<3>
+----
+<1> 精确定位到方法名，无法区分重载方法
+<2> 定位到类名，禁用该类下的所有方法
+<3> 定位到包名，禁用该包下的所有方法
+
+=== 避免 'messages not found' 警告
+
+如果在控制台发现如下日志：
+
+[source%nowrap,log]
+----
+2022-03-17 05:31:10.902  WARN 5731 --- [    Test worker] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages] not found for MessageSource: Can't find bundle for base name messages, locale en
+----
+
+可通过以下配置解决：
+
+.application.yml
+[source%nowrap,yml]
+----
+spring:
+    messages:
+        basename: ''
+----
+
+=== 自定义描述内容
+
+组件中包含以下描述配置文件：
+
+* peacetrue-result-builder
+* peacetrue-result-success
+* peacetrue-result-exception
+* peacetrue-result-exception-support
+
+支持中文和英文，默认为中文（非英文全部采用中文）。
+操作成功的中文描述为 *操作成功*，如果想要修改默认的描述，可以提供自己的描述配置文件。
+
+指定描述配置文件的名称：
+
+.application.yml
+[source%nowrap,yml]
+----
+include::example$peacetrue-result-success/src/test/resources/application.yml[tags=custom-messages]
+----
+
+在描述配置文件中添加成功描述：
+
+.custom-messages
+[source%nowrap,properties]
+----
+include::example$peacetrue-result-success/src/test/resources/custom-messages.properties[]
+----
+
+*Result* 前缀是必须的，用于区分不同类型的描述。
+*success* 是此次操作响应结果的编码。
+//对于支持国际化的系统来说，会有各种类型的描述，比如：展示页面上字段。
+
+如果想修改 *Result* 前缀，可以通过如下配置实现：
+
+.application.yml
+[source%nowrap,properties]
+----
+include::example$peacetrue-result-success/src/test/resources/application.yml[tags=custom-code-prefix]
+----
+
+.custom-code-prefix-messages.properties
+[source%nowrap,properties]
+----
+include::example$peacetrue-result-success/src/test/resources/custom-code-prefix-messages.properties[]
+----
+
+WARNING: 修改 Result 前缀之后，将导致组件默认的描述配置失效，需要重新定义一整套的描述配置。
+
+== 抛出异常
+
+处理业务逻辑时，如果需要抛出异常，可以使用自定义异常，也可以使用 *响应结果异常*。
+使用自定义异常，需要提供对应的异常转换器；
+使用 *响应结果异常* 不需要提供异常转换器，因为 *响应结果异常* 本身也是一种 *响应结果*。
+
+如何自定义异常转换器？参考 <<_自定义异常转换器>>；
+如何抛出 *响应结果异常*？可以使用 `ResultExceptionThrowService`。
+
+== 自定义异常转换器
+
+可以通过实现接口 `ExceptionConverter` 或 `ConditionalExceptionConverter` 自定义异常转换器。
+如果需要支持国际化，可以配合使用 `ResultMessageBuilder`。
+
+也可以继承 `AbstractExceptionConverter`，
+使用异常名称（删除结尾的 Exception）作为编码，
+配置编码的 *具化描述模板*，
+实现 `resolveArgs` 方法解析出 *具化描述模板参数* 。
+
