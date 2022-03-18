@@ -60,11 +60,11 @@ public class MessageSourceResultMessageBuilder implements ResultMessageBuilder, 
 
     @Override
     public String build(String code, @Nullable Object args, Locale locale) {
-        log.info("构建'{}'编码'{}'方言对应的描述", code, locale);
+        log.info("build '{}' Result message with locale '{}'", code, locale);
         String localCode = code;
         if (StringUtils.hasText(this.codePrefix)) {
             localCode = this.codePrefix + "." + code;
-            log.debug("设置编码前缀'{}'", this.codePrefix);
+            log.debug("set code prefix '{}'", this.codePrefix);
         }
         return Optional.ofNullable(getMessage(localCode, args, locale))
                 .orElseGet(() -> String.format(Objects.toString(defaultMessage, DEFAULT_MESSAGE), code));
@@ -75,13 +75,13 @@ public class MessageSourceResultMessageBuilder implements ResultMessageBuilder, 
     private String getMessage(String code, @Nullable Object args, Locale locale) {
         boolean isArrayArgs = args instanceof Object[];
         String message = getMessage(code, isArrayArgs ? (Object[]) args : null, locale);
-        log.debug("取得编码'{}'的方言配置值: '{}'", code, message);
+        log.debug("get property from i18n resource: '{}' = '{}'", code, message);
         if (message == null || args == null || isArrayArgs) return message;
         StandardEvaluationContext context = getStandardEvaluationContext(args);
         String parsedMessage = expressionParser
                 .parseExpression(message, ParserContext.TEMPLATE_EXPRESSION)
                 .getValue(context, String.class);
-        log.debug("解析方言配置值: '{}' -> '{}'", message, parsedMessage);
+        log.debug("resolve message template placeholder: '{}' -> '{}'", message, parsedMessage);
         return parsedMessage;
     }
 

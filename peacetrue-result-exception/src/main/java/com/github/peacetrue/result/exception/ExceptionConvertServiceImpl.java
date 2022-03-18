@@ -24,6 +24,7 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
 
     @Override
     public Result convert(Throwable throwable) {
+        log.debug("convert '{}'", throwable.getClass().getName());
         Result result = mapConvert(throwable)
                 .orElseGet(() -> conditionalConvert(throwable)
                         .orElseGet(() -> fallbackConvert(throwable)));
@@ -31,14 +32,20 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
         return result;
     }
 
+    @SuppressWarnings("java:S3864")
     private Optional<Result> mapConvert(Throwable throwable) {
-        return Optional.ofNullable(exceptionConverters.get(throwable.getClass()))
-                .map(item -> item.convert(throwable));
+        //优先使用子类处理，子类不支持再使用父类处理
+        return exceptionConverters.entrySet().stream()
+                .filter(entry -> entry.getKey().isAssignableFrom(throwable.getClass()))
+                .peek(entry -> log.debug("converted by {}", entry.getValue()))
+                .findFirst().map(item -> item.getValue().convert(throwable));
     }
 
+    @SuppressWarnings("java:S3864")
     private Optional<Result> conditionalConvert(Throwable throwable) {
         return conditionalExceptionConverters
                 .stream().filter(item -> item.supports(throwable))
+                .peek(converter -> log.debug("converted by {}", converter))
                 .findFirst().map(item -> item.convert(throwable));
     }
 
@@ -60,14 +67,19 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
     public void setExceptionConverters(List<ExceptionConverter> exceptionConverters) {
         if (CollectionUtils.isEmpty(exceptionConverters)) return;
         log.debug("register '{}' ExceptionConverters", exceptionConverters.size());
-        this.exceptionConverters = new LinkedHashMap<>(exceptionConverters.size());
+        //子类排在最前面，查找是优先匹配子类
+        this.exceptionConverters = new TreeMap<>((class1, class2) -> {
+            if (class1.isAssignableFrom(class2)) return 1;
+            else if (class2.isAssignableFrom(class1)) return -1;
+            else return class1.getName().compareTo(class2.getName());
+        });
         exceptionConverters.forEach(exceptionConverter -> {
             ResolvableType resolvableType = ResolvableType.forClass(
                     ExceptionConverter.class, exceptionConverter.getClass()
             );
             Class<?> exceptionClass = Objects.requireNonNull(resolvableType.resolveGeneric(0));
             if (Throwable.class.equals(exceptionClass)) return;//排除通用的异常转换器
-            log.debug("register ExceptionConverter '{}' to support convert '{}'", exceptionConverter, exceptionClass.getName());
+            log.debug("register ExceptionConverter: '{}' -> '{}'", exceptionConverter, exceptionClass.getName());
             this.exceptionConverters.put((Class<Throwable>) exceptionClass, exceptionConverter);
         });
     }
@@ -77,13 +89,13 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
         this.conditionalExceptionConverters = conditionalExceptionConverters;
     }
 
-    @Autowired(required = false)
-    public void setResultCodeClassifier(ResultCodeClassifier resultCodeClassifier) {
-        this.resultCodeClassifier = resultCodeClassifier;
-    }
-
     @Autowired
     public void setFallbackExceptionConverter(FallbackExceptionConverter fallbackExceptionConverter) {
         this.fallbackExceptionConverter = fallbackExceptionConverter;
+    }
+
+    @Autowired(required = false)
+    public void setResultCodeClassifier(ResultCodeClassifier resultCodeClassifier) {
+        this.resultCodeClassifier = resultCodeClassifier;
     }
 }
