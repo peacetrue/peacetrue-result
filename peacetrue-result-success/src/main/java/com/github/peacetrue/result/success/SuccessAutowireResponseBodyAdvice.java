@@ -85,8 +85,8 @@ public class SuccessAutowireResponseBodyAdvice implements ResponseBodyAdvice<Obj
     public Object beforeBodyWrite(@Nullable Object body, MethodParameter returnType, MediaType selectedContentType,
                                   Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   ServerHttpRequest request, ServerHttpResponse response) {
-        log.debug("将不是 Result 的响应数据 [{}] 转换为成功的 DataResult", body);
         Result result = this.toSuccessResult(body);
+        log.debug("convert response data which is not a Result to Result: '{}' -> '{}'", body, result);
         return resultCustomizer.customize(result);
     }
 

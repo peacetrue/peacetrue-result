@@ -8,8 +8,10 @@ import com.github.peacetrue.result.builder.ResultBuilderAutoConfiguration;
 import com.github.peacetrue.result.builder.ResultMessageSourceAutoConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration;
@@ -17,12 +19,14 @@ import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguratio
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.function.Function;
 
 /**
  * @author peace
  */
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(
         classes = {
                 MessageSourceAutoConfiguration.class,
@@ -30,8 +34,9 @@ import java.util.function.Function;
                 ResultBuilderAutoConfiguration.class,
                 SuccessAutowireAutoConfiguration.class,
                 SuccessAutowireTestController.class,
-                JacksonAutoConfiguration.class,
                 JacksonAtFirstAutoConfiguration.class,
+                HttpMessageConvertersAutoConfiguration.class,
+                JacksonAutoConfiguration.class,
                 DispatcherServletAutoConfiguration.class,
                 ErrorMvcAutoConfiguration.class,
                 WebMvcAutoConfiguration.class,
