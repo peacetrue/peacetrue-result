@@ -9,12 +9,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-//import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
  * @author peace
  */
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(
         classes = {
                 ResultMessageSourceAutoConfiguration.class,
@@ -22,13 +22,13 @@ import org.springframework.test.context.ActiveProfiles;
                 ResultBuilderAutoConfiguration.class,
         }
 )
-public class ResultBuilderTest {
+class ResultBuilderTest {
 
     @Autowired
     private ResultMessageBuilder resultMessageBuilder;
 
     @Test
-    public void build() {
+    void build() {
         String code = "MethodArgumentTypeMismatchException";
         Parameter<Class<?>, String> parameter = new Parameter<>("id", Long.class, "a");
         String message = resultMessageBuilder.build(code, parameter);
