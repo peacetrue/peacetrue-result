@@ -19,9 +19,9 @@ public enum ResultDeclares implements ResultDeclare {
     ERRORS("共'#{#root.size()}'项错误", List.class),
     /** 参数缺失，请求时没有传递必须的参数 */
     PARAMETER_MISSING("缺少必须的参数'#{name}'", Parameter.class),
-    /** 参数无效，请求时传递的参数无法转换成后台需要的类型，比如：传递的字符 'h' 无法被转换为数值 */
+    /** 参数无效，请求时传递的参数无法转换成接口需要的类型，比如：传递的字符 'h' 无法被转换为数值 */
     PARAMETER_INVALID("参数'#{name}'的值'#{value}'不是'#{type}'类型", Parameter.class),
-    /** 参数非法，请求时传递的参数不满足后台的校验规则，比如：传递的数字 '10' 不在要求的 [0,3] 之间 */
+    /** 参数非法，请求时传递的参数不满足接口的校验规则，比如：传递的数字 '10' 不在要求的 [0,3] 之间 */
     PARAMETER_ILLEGAL("参数'#{name}'的值'#{value}'非法", Parameter.class),
     ;
 

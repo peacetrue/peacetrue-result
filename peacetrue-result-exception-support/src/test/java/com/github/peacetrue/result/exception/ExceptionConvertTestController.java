@@ -1,5 +1,6 @@
 package com.github.peacetrue.result.exception;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,18 +38,28 @@ public class ExceptionConvertTestController {
     }
     //end::missingServletRequestParameter[]
 
-    /** Bean 参数非法 */
+    /** Bean 参数非法（form） */
     @ResponseBody
     @RequestMapping("/bindException")
     public TestBean bindException(@Validated TestBean bean) {
         return bean;
     }
 
-    /** Bean 参数非法 */
+    /** Bean 参数非法（body） */
     @ResponseBody
     @RequestMapping("/methodArgumentNotValid")
     public TestBean methodArgumentNotValid(@Validated @RequestBody TestBean bean) {
         return bean;
+    }
+
+    @Autowired
+    private ExceptionConvertTestService testService;
+
+    /** 重复 SQL 异常 */
+    @ResponseBody
+    @RequestMapping("/duplicateSQLException")
+    public void duplicateSQLException() {
+        testService.duplicateSQLException();
     }
 
 }

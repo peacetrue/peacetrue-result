@@ -22,7 +22,7 @@ class ConfiguredResultCodeClassifierTest {
         ConfiguredResultCodeClassifier classifier = new ConfiguredResultCodeClassifier(ImmutableMap.of(
                 superCode, new HashSet<>(Collections.singletonList(code))
         ));
-        code = classifier.classifyResultCode(code + ".code");
+        code = classifier.classifyResultCode(code + ".code").get();
         Assertions.assertEquals(superCode + ".code", code);
     }
 

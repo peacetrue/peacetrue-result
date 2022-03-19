@@ -1,14 +1,16 @@
 package com.github.peacetrue.result.exception;
 
+import java.util.Optional;
+
 /**
- * 响应结果编码分类器
+ * 响应结果编码分类器。
  *
  * @author peace
  **/
 public interface ResultCodeClassifier {
 
     /** 默认的分类器，防止值为 {@code null} 时，占位使用 */
-    ResultCodeClassifier DEFAULT = code -> code;
+    ResultCodeClassifier DEFAULT = code -> Optional.empty();
 
     /**
      * 分类响应结果编码
@@ -16,6 +18,6 @@ public interface ResultCodeClassifier {
      * @param code 响应结果编码子类
      * @return 响应结果编码父类
      */
-    String classifyResultCode(String code);
+    Optional<String> classifyResultCode(String code);
 
 }

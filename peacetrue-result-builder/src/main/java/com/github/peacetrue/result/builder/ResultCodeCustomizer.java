@@ -33,11 +33,14 @@ public class ResultCodeCustomizer implements ResultCustomizer {
     public Object customize(Result result) {
         log.trace("customize '{}' Result", result.getCode());
         String code = result.getCode().split("\\.", 2)[0];
-        log.trace("got Result.code without Parameter.name: '{}'", code);
-        if (!customCodes.containsKey(code)) return result;
+        log.trace("got Result.code without Parameter.name: {}", code);
+        if (!customCodes.containsKey(code)) {
+            log.trace("not configured to customize Result.code: {}", code);
+            return result;
+        }
         String customCode = customCodes.get(code);
         customCode = result.getCode().substring(code.length()) + customCode;
-        log.debug("customize Result.code: '{}' -> '{}'", result.getCode(), customCode);
+        log.debug("customize Result.code: {} -> {}", result.getCode(), customCode);
         if (!(result instanceof CodeAware)) return ResultUtils.build(result, customCode);
         ((CodeAware) result).setCode(customCode);
         return result;

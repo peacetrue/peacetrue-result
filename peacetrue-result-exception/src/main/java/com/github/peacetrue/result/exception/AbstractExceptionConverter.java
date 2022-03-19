@@ -25,42 +25,38 @@ public abstract class AbstractExceptionConverter<T extends Throwable> implements
 
     @Override
     public Result convert(T exception) {
-        log.info("转换异常'{}'", exception.getClass().getSimpleName());
         String code = resolveCode(exception);
-        log.debug("取得响应结果编码'{}'", code);
+        log.debug("got Result.code: {}", code);
         Object args = resolveArgs(exception);
-        log.debug("取得响应结果描述参数'{}'", args);
+        log.debug("got Result.messageTemplateArgs: {}", args);
         String message = resultMessageBuilder.build(code, args);
-        log.debug("取得响应结果描述'{}'", message);
+        log.debug("got Result.message: {}", message);
         if (args instanceof NameCapable) {
             code += "." + ((NameCapable) args).getName();
-            log.debug("响应结果编码添加参数名'{}'", ((NameCapable) args).getName());
+            log.debug("got Result.code after appended parameter name: {}", code);
         }
         Parameter.clearParameterType(args);
         return ResultUtils.build(code, message, args);
     }
 
     /**
-     * 解析响应结果编码
+     * 解析响应结果编码。
      *
-     * @param throwable 异常
+     * @param exception 异常
      * @return 响应结果编码
      */
-    protected String resolveCode(T throwable) {
-        return throwable.getClass().getSimpleName()
-                .replaceFirst("Exception$", "");
+    protected String resolveCode(T exception) {
+        return exception.getClass().getSimpleName().replaceFirst("Exception$", "");
     }
 
     /**
-     * 解析描述参数
+     * 解析描述模板参数。
      *
-     * @param throwable 异常
+     * @param exception 异常
      * @return 响应结果数据
      */
     @Nullable
-    protected Object resolveArgs(T throwable) {
-        return null;
-    }
+    protected abstract Object resolveArgs(T exception);
 
     @Autowired
     public void setResultMessageBuilder(ResultMessageBuilder resultMessageBuilder) {

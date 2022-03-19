@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractResourceBasedMessageSource;
 
 /**
- * 响应结果异常自动配置
+ * 响应结果异常自动配置。
  *
  * @author peace
  */

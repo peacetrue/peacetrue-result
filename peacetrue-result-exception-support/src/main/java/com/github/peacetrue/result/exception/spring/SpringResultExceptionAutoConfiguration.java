@@ -1,12 +1,11 @@
 package com.github.peacetrue.result.exception.spring;
 
-import com.github.peacetrue.result.exception.NestConditionalExceptionConverter;
+import com.github.peacetrue.result.exception.NestExceptionRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.FrameworkServlet;
 
 /**
@@ -54,9 +53,8 @@ public class SpringResultExceptionAutoConfiguration {
     }
 
     @Autowired
-    public void registerNestExceptions(NestConditionalExceptionConverter exceptionConverter) {
-        exceptionConverter.getNestClasses().add(HttpMessageNotReadableException.class);
-//        exceptionConverter.getNestClasses().add(MethodArgumentTypeMismatchException.class);
+    public void registerNestExceptions(NestExceptionRegistry nestExceptionRegistry) {
+        nestExceptionRegistry.registerNestException(HttpMessageNotReadableException.class);
     }
 
 }

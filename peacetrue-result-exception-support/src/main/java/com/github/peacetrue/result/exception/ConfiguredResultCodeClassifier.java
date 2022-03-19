@@ -1,5 +1,7 @@
 package com.github.peacetrue.result.exception;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.*;
 
 /**
@@ -7,6 +9,7 @@ import java.util.*;
  *
  * @author peace
  **/
+@Slf4j
 public class ConfiguredResultCodeClassifier implements ResultCodeClassifier {
 
     private final Map<String, Set<String>> classifiedCodes;
@@ -20,11 +23,13 @@ public class ConfiguredResultCodeClassifier implements ResultCodeClassifier {
     }
 
     @Override
-    public String classifyResultCode(String code) {
+    @SuppressWarnings("java:S3864")
+    public Optional<String> classifyResultCode(String code) {
         String[] parts = code.split("\\.", 2);
         return classifiedCodes.entrySet().stream()
                 .filter(entry -> entry.getValue().stream().anyMatch(item -> item.equals(parts[0])))
                 .map(entry -> code.replaceFirst("^[^.]*", entry.getKey()))
-                .findAny().orElse(code);
+                .peek(superCode -> log.debug("classify Result.code: {} -> {}", code, superCode))
+                .findAny();
     }
 }

@@ -26,8 +26,8 @@ public class ControllerExceptionHandler {
         try {
             return resultCustomizer.customize(exceptionConvertService.convert(throwable));
         } catch (Exception exception) {
-            log.error("handle ExceptionConvertService exception", exception);//兜底
-            return new ResultImpl(ResultTypes.FAILURE.getCode(), "unknown server error");
+            log.error("handle Result process exception", exception);//兜底
+            return new ResultImpl(ResultTypes.FAILURE.getCode(), "The operation failed");
         }
     }
 

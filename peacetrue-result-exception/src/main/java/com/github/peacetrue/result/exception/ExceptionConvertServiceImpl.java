@@ -24,7 +24,7 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
 
     @Override
     public Result convert(Throwable throwable) {
-        log.debug("convert '{}'", throwable.getClass().getName());
+        log.info("convert '{}'", throwable.getClass().getName());
         Result result = mapConvert(throwable)
                 .orElseGet(() -> conditionalConvert(throwable)
                         .orElseGet(() -> fallbackConvert(throwable)));
@@ -54,11 +54,9 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
     }
 
     private void classifyResultCode(Result result) {
-        if (resultCodeClassifier != null && result instanceof CodeAware) {
-            String code = result.getCode();
-            String superCode = resultCodeClassifier.classifyResultCode(code);
-            ((CodeAware) result).setCode(superCode);
-            log.debug("classify code '{}' to '{}'", code, superCode);
+        if (result instanceof CodeAware) {
+            resultCodeClassifier.classifyResultCode(result.getCode())
+                    .ifPresent(((CodeAware) result)::setCode);
         }
     }
 

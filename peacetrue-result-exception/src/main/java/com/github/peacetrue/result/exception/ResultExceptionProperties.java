@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * 响应结果异常配置属性
+ * 响应结果异常配置属性。
  *
  * @author peace
  */

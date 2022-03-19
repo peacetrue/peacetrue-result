@@ -21,9 +21,6 @@ public class ResultExceptionSupportProperties {
     }
 
     private void setDefaultClassifiedCodes() {
-        classifiedCodes.put(ResultTypes.FAILURE.getCode(), new HashSet<>(Arrays.asList(
-                "NullPointer"
-        )));
         classifiedCodes.put(ResultTypes.ERRORS.getCode(), new HashSet<>(Arrays.asList(
                 "Bind"
         )));
@@ -32,6 +29,9 @@ public class ResultExceptionSupportProperties {
         )));
         classifiedCodes.put(ResultTypes.PARAMETER_INVALID.getCode(), new HashSet<>(Arrays.asList(
                 "MethodArgumentTypeMismatch", "TypeMismatch", "InvalidFormat", "JsonParse"
+        )));
+        classifiedCodes.put("unique", new HashSet<>(Arrays.asList(
+                "SQL_23000", "SQL_23505"
         )));
     }
 

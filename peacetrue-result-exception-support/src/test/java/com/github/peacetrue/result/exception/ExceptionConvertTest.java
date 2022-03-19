@@ -7,21 +7,30 @@ import com.github.peacetrue.result.builder.ResultBuilderAutoConfiguration;
 import com.github.peacetrue.result.builder.ResultMessageSourceAutoConfiguration;
 import com.github.peacetrue.result.exception.jackson.JacksonResultExceptionAutoConfiguration;
 import com.github.peacetrue.result.exception.spring.SpringResultExceptionAutoConfiguration;
+import com.github.peacetrue.result.exception.sql.SQLResultExceptionAutoConfiguration;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManagerAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -34,22 +43,34 @@ import java.util.Map;
  * @author peace
  */
 @Slf4j
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(
         classes = {
 //                ResultErrorAttributesAutoConfiguration.class,
-                ExceptionConvertTestController.class,
+                DataSourceAutoConfiguration.class,
+                HibernateJpaAutoConfiguration.class,
+                TransactionAutoConfiguration.class,
+                TestEntityManagerAutoConfiguration.class,
+
+                HttpMessageConvertersAutoConfiguration.class,
+                DispatcherServletAutoConfiguration.class,
+                WebMvcAutoConfiguration.class,
+                ServletWebServerFactoryAutoConfiguration.class,
+
                 ResultMessageSourceAutoConfiguration.class,
                 ResultBuilderAutoConfiguration.class,
                 ResultExceptionAutoConfiguration.class,
                 ResultExceptionSupportAutoConfiguration.class,
                 JacksonResultExceptionAutoConfiguration.class,
                 SpringResultExceptionAutoConfiguration.class,
-                DispatcherServletAutoConfiguration.class,
-                WebMvcAutoConfiguration.class,
-                ServletWebServerFactoryAutoConfiguration.class
+                SQLResultExceptionAutoConfiguration.class,
+
+                ExceptionConvertTestService.class,
+                ExceptionConvertTestController.class,
         },
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
+@EntityScan
 public class ExceptionConvertTest {
 
     private static final EasyRandom EASY_RANDOM = new EasyRandom();
@@ -134,6 +155,13 @@ public class ExceptionConvertTest {
         HttpHeaders httpHeaders = new HttpHeaders();
         headers.forEach(httpHeaders::add);
         return httpHeaders;
+    }
+
+    @Test
+    public void duplicateSQLException() throws IOException {
+        GenericDataResult result = this.restTemplate.postForObject("/duplicateSQLException", HttpMethod.POST, GenericDataResult.class);
+        log.info("result: \n{}", new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(result));
+        Assertions.assertTrue(result.getCode().startsWith("unique"));
     }
 
 }

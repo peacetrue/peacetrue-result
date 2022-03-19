@@ -35,7 +35,7 @@ public class NestConditionalExceptionConverter implements ConditionalExceptionCo
 
     @Override
     public Result convert(Throwable throwable) {
-        log.trace("delegate nest exception: '{}' -> '{}'", getName(throwable), getName(throwable.getCause()));
+        log.debug("delegate nest exception: '{}' -> '{}'", getName(throwable), getName(throwable.getCause()));
         return exceptionConvertService.convert(throwable.getCause());
     }
 
