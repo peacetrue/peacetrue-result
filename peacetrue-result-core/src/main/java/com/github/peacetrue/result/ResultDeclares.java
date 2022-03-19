@@ -28,9 +28,9 @@ public enum ResultDeclares implements ResultDeclare {
     private final String messageTemplate;
     private final Class<?> messageTemplateArgsType;
 
-    ResultDeclares(String messageTemplate, Class<?> messageArgs) {
+    ResultDeclares(String messageTemplate, Class<?> messageTemplateArgsType) {
         this.messageTemplate = messageTemplate;
-        this.messageTemplateArgsType = messageArgs;
+        this.messageTemplateArgsType = messageTemplateArgsType;
     }
 
     /** 获取响应结果编码，使用小写的枚举名称作为响应结果编码 */
