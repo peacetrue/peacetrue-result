@@ -14,3 +14,9 @@
 使用 Spring 4.x 和 Spring Boot 1.x 编译，
 使用 Spring 5.x 和 Spring Boot 2.x 测试，
 因为使用 JUnit5 执行测试，Spring 4 不支持 JUnit5。
+
+== 2.0.0
+
+1.x 版本依赖于 Spring Boot 1.x，
+2.x 版本依赖于 Spring Boot 2 系列最低版本。
+特性上没有差异。
