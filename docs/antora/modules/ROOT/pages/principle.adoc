@@ -90,7 +90,7 @@ stop
 
 |resource_not_found
 |请求资源不存在
-|请求资源'{0}'不存在
+|请求资源'\{0}'不存在
 |数组
 |数组第一个元素为资源路径
 
@@ -102,7 +102,7 @@ stop
 
 |errors
 |多项错误
-|共'#{#root.size()}'项错误
+|共'#\{#root.size()}'项错误
 |<<Result>> 集合
 |上层指示错误数，具体错误在数据中体现
 
@@ -114,19 +114,19 @@ stop
 
 |parameter_missing
 |缺少参数
-|缺少必须的参数'#{name}'
+|缺少必须的参数'#\{name}'
 |<<Parameter>>
 |请求时没有传入必须的参数
 
 |parameter_invalid
 |参数无效
-|参数'#{name}'的值'#{value}'不是'#{type}'类型
+|参数'#\{name}'的值'#\{value}'不是'#\{type}'类型
 |<<Parameter>>
 |请求时传入的参数无法转换成接口需要的类型，比如：传入的字符 'h' 无法被转换为数值
 
 |parameter_illegal
 |参数非法
-|参数'#{name}'的值'#{value}'非法
+|参数'#\{name}'的值'#\{value}'非法
 |<<Parameter>>
 |请求时传入的参数不满足校验规则，比如：传入的数字 '10' 不在要求的 [0,3] 之间
 |===
