@@ -1,4 +1,4 @@
-description '自动装配失败响应结果'
+description '自动装配异常响应结果'
 
 dependencies {
     api project(":peacetrue-result-core")

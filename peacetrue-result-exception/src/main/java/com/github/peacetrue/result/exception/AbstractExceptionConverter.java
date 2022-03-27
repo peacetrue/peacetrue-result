@@ -1,15 +1,16 @@
 package com.github.peacetrue.result.exception;
 
 import com.github.peacetrue.beans.properties.name.NameCapable;
-import com.github.peacetrue.result.Parameter;
 import com.github.peacetrue.result.Result;
 import com.github.peacetrue.result.ResultUtils;
 import com.github.peacetrue.result.builder.ResultMessageBuilder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ResolvableType;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * 抽象的异常转换器。
@@ -35,7 +36,6 @@ public abstract class AbstractExceptionConverter<T extends Throwable> implements
             code += "." + ((NameCapable) args).getName();
             log.debug("got Result.code after appended parameter name: {}", code);
         }
-        Parameter.clearParameterType(args);
         return ResultUtils.build(code, message, args);
     }
 
@@ -46,7 +46,7 @@ public abstract class AbstractExceptionConverter<T extends Throwable> implements
      * @return 响应结果编码
      */
     protected String resolveCode(T exception) {
-        return exception.getClass().getSimpleName().replaceFirst("Exception$", "");
+        return resolveCode(exception.getClass());
     }
 
     /**
@@ -57,6 +57,21 @@ public abstract class AbstractExceptionConverter<T extends Throwable> implements
      */
     @Nullable
     protected abstract Object resolveArgs(T exception);
+
+    public String getCode() {
+        Class<?> exceptionType = ResolvableType.forClass(ExceptionConverter.class, getClass()).resolveGeneric(0);
+        return resolveCode(Objects.requireNonNull(exceptionType));
+    }
+
+    /**
+     * 解析异常对应的响应结果编码，使用删除结尾 Exception 的异常类名作为编码
+     *
+     * @param clazz 异常类
+     * @return 响应结果编码
+     */
+    public static String resolveCode(Class<?> clazz) {
+        return clazz.getSimpleName().replaceFirst("Exception$", "");
+    }
 
     @Autowired
     public void setResultMessageBuilder(ResultMessageBuilder resultMessageBuilder) {

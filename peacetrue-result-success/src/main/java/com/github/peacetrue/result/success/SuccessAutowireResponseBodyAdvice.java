@@ -2,7 +2,7 @@ package com.github.peacetrue.result.success;
 
 import com.github.peacetrue.result.*;
 import com.github.peacetrue.result.builder.ResultMessageBuilder;
-import com.github.peacetrue.result.success.SuccessAutowireAutoConfiguration.WebMvcSuccessAutowireAutoConfiguration;
+import com.github.peacetrue.result.success.SuccessResultAutoConfiguration.WebMvcSuccessAutowireAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -23,10 +23,10 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * 自动将不是 {@link Result} 的响应数据转换为成功的 {@link DataResult} 。
+ * 自动将不是 {@link Result} 的响应数据转换为成功 {@link DataResult} 。
  * <p>
- * 此类不应该被 Spring 扫描到，因为已经在配置 {@link WebMvcSuccessAutowireAutoConfiguration#successAutowireResponseBodyAdvice(SuccessAutowireProperties) WebMvcSuccessAutowireAutoConfiguration} 中声明了。
- * 如果被扫描，会导致 {@link SuccessAutowireProperties#getDisabledMethods() disabledMethods}  配置无效。
+ * 此类不应该被 Spring 扫描到，因为已经在配置 {@link WebMvcSuccessAutowireAutoConfiguration#successAutowireResponseBodyAdvice(SuccessResultProperties) WebMvcSuccessAutowireAutoConfiguration} 中声明了。
+ * 如果被扫描，会导致 {@link SuccessResultProperties#getDisabledMethods() disabledMethods}  配置无效。
  * <p>
  * 此类可能会导致 {@code JsonView} 失效，有待进一步测试。
  *

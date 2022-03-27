@@ -15,7 +15,7 @@ import org.springframework.web.servlet.FrameworkServlet;
  */
 @Configuration
 @ConditionalOnClass(FrameworkServlet.class)
-public class SpringResultExceptionAutoConfiguration {
+public class SpringExceptionResultAutoConfiguration {
 
     @Bean
     public MissingServletRequestParameterExceptionConverter missingServletRequestParameterExceptionConverter() {
@@ -53,8 +53,8 @@ public class SpringResultExceptionAutoConfiguration {
     }
 
     @Autowired
-    public void registerNestExceptions(NestExceptionRegistry nestExceptionRegistry) {
-        nestExceptionRegistry.registerNestException(HttpMessageNotReadableException.class);
+    public void registerNestExceptions(NestExceptionRegistry registry) {
+        registry.registerNestException(HttpMessageNotReadableException.class);
     }
 
 }

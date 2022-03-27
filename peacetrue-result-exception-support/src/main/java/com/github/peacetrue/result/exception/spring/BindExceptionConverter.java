@@ -1,10 +1,8 @@
 package com.github.peacetrue.result.exception.spring;
 
-import com.github.peacetrue.result.DataResultImpl;
-import com.github.peacetrue.result.Parameter;
-import com.github.peacetrue.result.Result;
-import com.github.peacetrue.result.ResultImpl;
+import com.github.peacetrue.result.*;
 import com.github.peacetrue.result.exception.AbstractExceptionConverter;
+import com.github.peacetrue.result.exception.ClassifiedResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -23,7 +21,7 @@ import java.util.stream.Collectors;
  * @author peace
  */
 @Slf4j
-public class BindExceptionConverter extends AbstractExceptionConverter<BindException> {
+public class BindExceptionConverter extends AbstractExceptionConverter<BindException> implements ClassifiedResultCode {
 
     /** @see org.springframework.beans.TypeMismatchException */
     private static final String TYPE_MISMATCH = "TypeMismatch";
@@ -64,10 +62,8 @@ public class BindExceptionConverter extends AbstractExceptionConverter<BindExcep
         if (TYPE_MISMATCH.equalsIgnoreCase(fieldError.getCode())) {
             parameter.setType(resolveClass(fieldError.getCodes()));
             String message = resultMessageBuilder.build(TYPE_MISMATCH, parameter);
-            Parameter.clearParameterType(parameter);
             return new DataResultImpl<>(TYPE_MISMATCH + "." + parameter.getName(), message, parameter);
         }
-        Parameter.clearParameterType(parameter);
         //TODO 有待进一步观察，什么时候不返回 codes
         return new DataResultImpl<>(
                 Objects.requireNonNull(fieldError.getCodes())[1],
@@ -103,4 +99,8 @@ public class BindExceptionConverter extends AbstractExceptionConverter<BindExcep
         ));
     }
 
+    @Override
+    public String getSupperCode() {
+        return ResultTypes.ERRORS.getCode();
+    }
 }

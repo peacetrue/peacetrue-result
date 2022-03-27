@@ -1,7 +1,8 @@
 package com.github.peacetrue.result.exception.sql;
 
+import com.github.peacetrue.result.exception.ClassifiedResultCodeRegistry;
+import com.github.peacetrue.result.exception.ExceptionResultAutoConfiguration;
 import com.github.peacetrue.result.exception.NestExceptionRegistry;
-import com.github.peacetrue.result.exception.ResultExceptionAutoConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -16,7 +17,7 @@ import java.util.stream.Stream;
  * @author peace
  */
 @Configuration
-@AutoConfigureAfter(ResultExceptionAutoConfiguration.class)
+@AutoConfigureAfter(ExceptionResultAutoConfiguration.class)
 @EnableConfigurationProperties(SQLResultExceptionProperties.class)
 public class SQLResultExceptionAutoConfiguration {
 
@@ -27,8 +28,8 @@ public class SQLResultExceptionAutoConfiguration {
     }
 
     @Bean
-    public SQLExceptionConverter sqlExceptionConverter() {
-        return new SQLExceptionConverter(properties.getMessagePatterns());
+    public SQLConditionalExceptionConverter sqlExceptionConverter() {
+        return new SQLConditionalExceptionConverter(properties.getMessagePatterns());
     }
 
     @Autowired
@@ -40,6 +41,11 @@ public class SQLResultExceptionAutoConfiguration {
                 "javax.persistence.PersistenceException"
         )
                 .forEach(registry::registerNestException);
+    }
+
+    @Autowired
+    public void registerDefaultClassifiedResultCode(ClassifiedResultCodeRegistry registry) {
+        registry.registerClassifiedResultCode("unique", "SQL_23000", "SQL_23505");
     }
 
 }

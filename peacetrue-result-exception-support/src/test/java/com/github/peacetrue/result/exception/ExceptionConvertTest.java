@@ -2,11 +2,14 @@ package com.github.peacetrue.result.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.peacetrue.result.GenericDataResult;
+import com.github.peacetrue.result.Result;
+import com.github.peacetrue.result.ResultImpl;
 import com.github.peacetrue.result.ResultTypes;
 import com.github.peacetrue.result.builder.ResultBuilderAutoConfiguration;
 import com.github.peacetrue.result.builder.ResultMessageSourceAutoConfiguration;
 import com.github.peacetrue.result.exception.jackson.JacksonResultExceptionAutoConfiguration;
-import com.github.peacetrue.result.exception.spring.SpringResultExceptionAutoConfiguration;
+import com.github.peacetrue.result.exception.persistence.PersistenceResultExceptionAutoConfiguration;
+import com.github.peacetrue.result.exception.spring.SpringExceptionResultAutoConfiguration;
 import com.github.peacetrue.result.exception.sql.SQLResultExceptionAutoConfiguration;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +49,6 @@ import java.util.Map;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
         classes = {
-//                ResultErrorAttributesAutoConfiguration.class,
                 DataSourceAutoConfiguration.class,
                 HibernateJpaAutoConfiguration.class,
                 TransactionAutoConfiguration.class,
@@ -59,11 +61,12 @@ import java.util.Map;
 
                 ResultMessageSourceAutoConfiguration.class,
                 ResultBuilderAutoConfiguration.class,
-                ResultExceptionAutoConfiguration.class,
+                ExceptionResultAutoConfiguration.class,
                 ResultExceptionSupportAutoConfiguration.class,
                 JacksonResultExceptionAutoConfiguration.class,
-                SpringResultExceptionAutoConfiguration.class,
+                SpringExceptionResultAutoConfiguration.class,
                 SQLResultExceptionAutoConfiguration.class,
+                PersistenceResultExceptionAutoConfiguration.class,
 
                 ExceptionConvertTestService.class,
                 ExceptionConvertTestController.class,
@@ -78,8 +81,8 @@ public class ExceptionConvertTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    //    @Test
-    public void ResourceNotFound() {
+//    @Test
+    public void resourceNotFound() {
         GenericDataResult result = this.restTemplate.getForObject("/resource_not_found", GenericDataResult.class);
         Assertions.assertEquals(result.getCode(), ResultTypes.RESOURCE_NOT_FOUND.getCode());
     }
@@ -162,6 +165,13 @@ public class ExceptionConvertTest {
         GenericDataResult result = this.restTemplate.postForObject("/duplicateSQLException", HttpMethod.POST, GenericDataResult.class);
         log.info("result: \n{}", new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(result));
         Assertions.assertTrue(result.getCode().startsWith("unique"));
+    }
+
+    @Test
+    public void entityNotFoundException() throws IOException {
+        Result result = this.restTemplate.getForObject("/entityNotFoundException", ResultImpl.class);
+        log.info("result: \n{}", new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(result));
+        Assertions.assertTrue(result.getCode().startsWith(ResultTypes.RECORD_NOT_FOUND.getCode()));
     }
 
 }

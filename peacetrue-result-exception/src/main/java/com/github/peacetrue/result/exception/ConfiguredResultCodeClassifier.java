@@ -10,12 +10,12 @@ import java.util.*;
  * @author peace
  **/
 @Slf4j
-public class ConfiguredResultCodeClassifier implements ResultCodeClassifier {
+public class ConfiguredResultCodeClassifier implements ResultCodeClassifier, ClassifiedResultCodeRegistry {
 
     private final Map<String, Set<String>> classifiedCodes;
 
     public ConfiguredResultCodeClassifier() {
-        this(Collections.emptyMap());
+        this(new HashMap<>());
     }
 
     public ConfiguredResultCodeClassifier(Map<String, Set<String>> classifiedCodes) {
@@ -31,5 +31,16 @@ public class ConfiguredResultCodeClassifier implements ResultCodeClassifier {
                 .map(entry -> code.replaceFirst("^[^.]*", entry.getKey()))
                 .peek(superCode -> log.debug("classify Result.code: {} -> {}", code, superCode))
                 .findAny();
+    }
+
+    @Override
+    public void registerClassifiedResultCode(String superCode, String... codes) {
+        log.debug("register classified Result.code: {} <- {}", superCode, codes);
+        Set<String> existSubCodes = classifiedCodes.get(superCode);
+        if (existSubCodes == null) {
+            classifiedCodes.put(superCode, new HashSet<>(Arrays.asList(codes)));
+        } else {
+            existSubCodes.addAll(Arrays.asList(codes));
+        }
     }
 }

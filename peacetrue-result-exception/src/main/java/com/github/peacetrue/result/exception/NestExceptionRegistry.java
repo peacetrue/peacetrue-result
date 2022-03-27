@@ -1,7 +1,7 @@
 package com.github.peacetrue.result.exception;
 
 /**
- * 嵌套异常登记处。
+ * 嵌套异常注册处。
  *
  * @author peace
  **/

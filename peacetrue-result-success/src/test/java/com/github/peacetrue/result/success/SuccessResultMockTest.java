@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author peace
  **/
-class SuccessAutowireMockTest extends AbstractSuccessAutowireMockTest {
+class SuccessResultMockTest extends AbstractSuccessResultMockTest {
 
     @Test
     void enableSuccessAutowire() throws Exception {
@@ -59,7 +59,7 @@ class SuccessAutowireMockTest extends AbstractSuccessAutowireMockTest {
     }
 
     @ActiveProfiles("custom-messages")
-    static class CustomMessage extends AbstractSuccessAutowireMockTest {
+    static class CustomMessage extends AbstractSuccessResultMockTest {
         @Test
         void customMessage() throws Exception {
             String input = "1";
@@ -75,7 +75,7 @@ class SuccessAutowireMockTest extends AbstractSuccessAutowireMockTest {
     }
 
     @ActiveProfiles("custom-code-prefix")
-    static class CustomCodePrefix extends AbstractSuccessAutowireMockTest {
+    static class CustomCodePrefix extends AbstractSuccessResultMockTest {
         @Test
         void customCodePrefix() throws Exception {
             String input = "1";

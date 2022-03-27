@@ -40,7 +40,7 @@ public class MessageSourceClassPrinter implements ClassPrinter {
      */
     @Override
     public String print(Class<?> clazz, Locale locale) {
-        log.info("获取类'{}'的'{}'描述", clazz.getName(), locale);
+        log.info("get '{}' message' for class '{}'", locale, clazz.getName());
         String message;
         String localClassPrefix = StringUtils.hasLength(classPrefix) ? (classPrefix + ".") : "";
         Set<String> codes = new LinkedHashSet<>();
@@ -48,14 +48,14 @@ public class MessageSourceClassPrinter implements ClassPrinter {
             String code = localClassPrefix + clazz.getName();
             message = getMessage(code, locale);
             if (message != null) {
-                log.debug("通过编码'{}'取得描述'{}'", code, message);
+                log.debug("got message: {} = {}", code, message);
                 return message;
             }
             codes.add(code);
             if (clazz == Object.class) break;
             clazz = clazz.getSuperclass();
         }
-        log.warn("未能通过编码'{}'找到描述，使用类名'{}'作为描述", codes, clazz.getSimpleName());
+        log.warn("unable to get message by {}, default to Class.simpleName '{}'", codes, clazz.getSimpleName());
         return clazz.getSimpleName();
     }
 

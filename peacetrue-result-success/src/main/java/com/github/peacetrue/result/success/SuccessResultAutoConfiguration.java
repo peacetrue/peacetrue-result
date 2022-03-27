@@ -19,8 +19,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 @AutoConfigureAfter(ResultMessageSourceAutoConfiguration.class)
-@EnableConfigurationProperties(SuccessAutowireProperties.class)
-public class SuccessAutowireAutoConfiguration {
+@EnableConfigurationProperties(SuccessResultProperties.class)
+public class SuccessResultAutoConfiguration {
 
     @Autowired
     public void registerMessageSourceBasename(AbstractResourceBasedMessageSource messageSource) {
@@ -34,7 +34,7 @@ public class SuccessAutowireAutoConfiguration {
     public static class WebMvcSuccessAutowireAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean(SuccessAutowireResponseBodyAdvice.class)
-        public SuccessAutowireResponseBodyAdvice successAutowireResponseBodyAdvice(SuccessAutowireProperties properties) {
+        public SuccessAutowireResponseBodyAdvice successAutowireResponseBodyAdvice(SuccessResultProperties properties) {
             log.info("the SuccessAutowireResponseBodyAdvice is instance by @Bean rather than @ComponentScan");
             return new SuccessAutowireResponseBodyAdvice(properties.getDisabledMethods());
         }

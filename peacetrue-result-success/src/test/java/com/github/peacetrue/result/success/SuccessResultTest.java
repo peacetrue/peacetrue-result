@@ -32,8 +32,8 @@ import java.util.function.Function;
                 MessageSourceAutoConfiguration.class,
                 ResultMessageSourceAutoConfiguration.class,
                 ResultBuilderAutoConfiguration.class,
-                SuccessAutowireAutoConfiguration.class,
-                SuccessAutowireTestController.class,
+                SuccessResultAutoConfiguration.class,
+                SuccessResultTestController.class,
                 JacksonAtFirstAutoConfiguration.class,
                 HttpMessageConvertersAutoConfiguration.class,
                 JacksonAutoConfiguration.class,
@@ -44,7 +44,7 @@ import java.util.function.Function;
         },
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
-class SuccessAutowireTest {
+class SuccessResultTest {
 
     @Autowired
     private TestRestTemplate restTemplate;

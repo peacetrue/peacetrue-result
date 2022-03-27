@@ -3,9 +3,11 @@ package com.github.peacetrue.result.exception.jackson;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.github.peacetrue.result.Parameter;
+import com.github.peacetrue.result.ResultTypes;
 import com.github.peacetrue.result.exception.AbstractExceptionConverter;
+import com.github.peacetrue.result.exception.ClassifiedResultCode;
 import com.github.peacetrue.result.exception.NestExceptionRegistry;
-import com.github.peacetrue.result.exception.spring.SpringResultExceptionAutoConfiguration;
+import com.github.peacetrue.result.exception.spring.SpringExceptionResultAutoConfiguration;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -17,10 +19,11 @@ import java.util.stream.Collectors;
  * {@link HttpMessageNotReadableException#getCause()} 为 {@link InvalidFormatException}。
  *
  * @author peace
- * @see SpringResultExceptionAutoConfiguration#registerNestExceptions(NestExceptionRegistry)
+ * @see SpringExceptionResultAutoConfiguration#registerNestExceptions(NestExceptionRegistry)
  **/
 public class InvalidFormatExceptionConverter
-        extends AbstractExceptionConverter<InvalidFormatException> {
+        extends AbstractExceptionConverter<InvalidFormatException>
+        implements ClassifiedResultCode {
 
     @Override
     protected Object resolveArgs(InvalidFormatException exception) {
@@ -42,5 +45,11 @@ public class InvalidFormatExceptionConverter
                 ? reference.getFieldName()
                 : (reference.getFieldName() + "[" + reference.getIndex() + "]");
     }
+
+    @Override
+    public String getSupperCode() {
+        return ResultTypes.PARAMETER_INVALID.getCode();
+    }
+
 
 }

@@ -18,14 +18,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @SpringBootTest(classes = {
         ResultMessageSourceAutoConfiguration.class,
         ResultBuilderAutoConfiguration.class,
-        SuccessAutowireAutoConfiguration.class,
-        SuccessAutowireTestController.class
+        SuccessResultAutoConfiguration.class,
+        SuccessResultTestController.class
 })
-public class AbstractSuccessAutowireMockTest {
+public class AbstractSuccessResultMockTest {
 
     protected MockMvc mockMvc;
     @Autowired
-    protected SuccessAutowireTestController testController;
+    protected SuccessResultTestController testController;
     @Autowired
     protected SuccessAutowireResponseBodyAdvice bodyAdvice;
 

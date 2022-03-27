@@ -10,6 +10,7 @@ dependencies {
     compileOnly 'javax.servlet:javax.servlet-api'
     compileOnly 'com.fasterxml.jackson.core:jackson-databind'
     compileOnly 'mysql:mysql-connector-java'
+    compileOnly 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final'
 
     testImplementation "org.springframework.boot:spring-boot-starter-test${tailSpringBootVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-web${tailSpringBootVersion}"

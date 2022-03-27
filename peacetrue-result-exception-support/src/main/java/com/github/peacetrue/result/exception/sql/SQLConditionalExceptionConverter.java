@@ -18,17 +18,17 @@ import java.util.*;
  * @author peace
  */
 @Slf4j
-public class SQLExceptionConverter implements ConditionalExceptionConverter {
+public class SQLConditionalExceptionConverter implements ConditionalExceptionConverter {
 
     /** SQL 状态对应的描述模板 */
     private final Map<String, String> messagePatterns;
     private ResultMessageBuilder resultMessageBuilder;
 
-    public SQLExceptionConverter() {
+    public SQLConditionalExceptionConverter() {
         this(Collections.emptyMap());
     }
 
-    public SQLExceptionConverter(Map<String, String> messagePatterns) {
+    public SQLConditionalExceptionConverter(Map<String, String> messagePatterns) {
         this.messagePatterns = new HashMap<>(Objects.requireNonNull(messagePatterns));
     }
 

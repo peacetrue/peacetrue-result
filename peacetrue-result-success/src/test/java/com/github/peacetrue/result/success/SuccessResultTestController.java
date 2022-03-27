@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-public class SuccessAutowireTestController {
+public class SuccessResultTestController {
 
     //tag::enableSuccessAutowire[]
 
@@ -30,7 +30,7 @@ public class SuccessAutowireTestController {
     //tag::disableSuccessAutowireByAnnotation[]
 
     /** 通过注解禁用成功自动封装 */
-    @SuccessAutowire
+    @SuccessAutowire(disabled = true)
     @RequestMapping(value = "/disableSuccessAutowireByAnnotation")
     public String disableSuccessAutowireByAnnotation(String input) {
         return input;
@@ -40,7 +40,6 @@ public class SuccessAutowireTestController {
     //tag::disableSuccessAutowireByConfiguration[]
 
     /** 通过配置禁用成功自动封装 */
-    @SuccessAutowire
     @RequestMapping(value = "/disableSuccessAutowireByConfiguration")
     public String disableSuccessAutowireByConfiguration(String input) {
         return input;

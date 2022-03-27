@@ -23,6 +23,8 @@ public enum ResultDeclares implements ResultDeclare {
     PARAMETER_INVALID("参数'#{name}'的值'#{value}'不是'#{type}'类型", Parameter.class),
     /** 参数非法，请求时传递的参数不满足接口的校验规则，比如：传递的数字 '10' 不在要求的 [0,3] 之间 */
     PARAMETER_ILLEGAL("参数'#{name}'的值'#{value}'非法", Parameter.class),
+    /** 记录不存在 */
+    RECORD_NOT_FOUND("#{type}'#{value}'不存在", Parameter.class),
     ;
 
     private final String messageTemplate;

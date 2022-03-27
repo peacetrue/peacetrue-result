@@ -3,7 +3,7 @@ package com.github.peacetrue.result.exception;
 import java.util.Optional;
 
 /**
- * 响应结果编码分类器。
+ * 响应结果编码分类器。分类响应结果编码，将过于具体的编码分类在通用编码下。
  *
  * @author peace
  **/

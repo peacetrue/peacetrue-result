@@ -62,4 +62,11 @@ public class ExceptionConvertTestController {
         testService.duplicateSQLException();
     }
 
+    /** 重复 SQL 异常 */
+    @ResponseBody
+    @RequestMapping("/entityNotFoundException")
+    public void entityNotFoundException() {
+        testService.entityNotFoundException();
+    }
+
 }

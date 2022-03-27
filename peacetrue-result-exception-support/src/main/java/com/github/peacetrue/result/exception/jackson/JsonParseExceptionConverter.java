@@ -1,7 +1,9 @@
 package com.github.peacetrue.result.exception.jackson;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.github.peacetrue.result.ResultTypes;
 import com.github.peacetrue.result.exception.AbstractExceptionConverter;
+import com.github.peacetrue.result.exception.ClassifiedResultCode;
 
 import javax.annotation.Nullable;
 
@@ -12,7 +14,8 @@ import javax.annotation.Nullable;
  * @see InvalidFormatExceptionConverter
  */
 public class JsonParseExceptionConverter
-        extends AbstractExceptionConverter<JsonParseException> {
+        extends AbstractExceptionConverter<JsonParseException>
+        implements ClassifiedResultCode {
 
     @Nullable
     @Override
@@ -25,4 +28,10 @@ public class JsonParseExceptionConverter
                 exception.getLocation().getColumnNr()
         };
     }
+
+    @Override
+    public String getSupperCode() {
+        return ResultTypes.PARAMETER_INVALID.getCode();
+    }
+
 }
