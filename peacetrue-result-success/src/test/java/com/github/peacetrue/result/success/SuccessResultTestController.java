@@ -14,7 +14,7 @@ public class SuccessResultTestController {
     //tag::enableSuccessAutowire[]
 
     /** 启用成功自动封装 */
-    @RequestMapping("/enableSuccessAutowire")
+    @RequestMapping(value = "/enableSuccessAutowire", produces = MediaType.APPLICATION_JSON_VALUE)
     public String enableSuccessAutowire(String input) {
         return input;
     }

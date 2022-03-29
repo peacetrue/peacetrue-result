@@ -22,6 +22,7 @@
 
 封装响应状态之后，返回的数据如下：
 
+.响应结果
 [source%nowrap,json]
 ----
 {
@@ -37,34 +38,70 @@
 <2> 描述：用于操作失败时分析具体原因
 <3> 数据：存放实际需要返回的数据
 
-响应状态是客户端调用接口时非常关注的信息，
-但在服务端的业务处理逻辑中，并不需要关注响应状态，需要关注的是异常。
-
-是否曾经写过类似下面的代码：
-[source%nowrap,java]
-----
-class UserController {
-     public Result add(User user){
-         //....
-     }
-}
-----
-
-如果能不使用 `Result`，代码看起来会更清晰：
-[source%nowrap,java]
-----
-class UserController {
-     public UserVO add(User user){
-         //....
-     }
-}
-----
-
 响应结果组件提供了标准的响应结果数据结构，
 封装了成功时的数据和失败时的异常，
 优化了失败时的提示信息，使调用者可以快速定位原因。
 
-== 一些案例
+.特性
+. 简化响应结果编码体系
+. 国际化响应结果描述
+. 自动装配成功响应结果
+. 自动装配异常响应结果
 
-=== 获取记录时，记录不存在
+== 运行环境
 
+* JDK 1.8 及以上
+* Spring Boot 1 系列最高版本 1.5.22.RELEASE，对应 Peacetrue Result 1 系列版本
+* Spring Boot 2 系列最低版本  2.0.0.RELEASE，对应 Peacetrue Result 2 系列版本
+
+== 类库说明
+
+.核心类库，提供响应结果的数据结构和常用类型。
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-core</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+.构建类库，构造响应结果描述信息，支持国际化
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-builder</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+.成功类库，封装成功时返回的数据
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-success</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+.异常类库，封装异常时返回的数据，提供抽象的异常转换体系
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-exception</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+.异常支持类库，实现具体的异常转换逻辑
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-exception-support</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----

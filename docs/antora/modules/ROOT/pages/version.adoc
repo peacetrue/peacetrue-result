@@ -17,6 +17,6 @@
 
 == 2.0.0
 
-1.x 版本依赖于 Spring Boot 1.x，
+1.x 版本依赖于 Spring Boot 1 系列最高版本，
 2.x 版本依赖于 Spring Boot 2 系列最低版本。
 特性上没有差异。

@@ -1,0 +1,37 @@
+= 自动装配成功响应结果
+
+编写接口时返回实际数据，自动转换为响应结果格式，无需手动封装响应结果。
+
+//@formatter:off
+
+== 案例分析
+
+编写一个常规的控制层方法：
+
+.SuccessResultTestController
+[source%nowrap,properties]
+----
+include::example$peacetrue-result-success/src/test/java/com/github/peacetrue/result/success/SuccessAutowireTestController.java[tags=enableSuccessAutowire]
+----
+
+请求该接口，传入参数 `input=test`，
+正常情况下返回结果为：`'test'`，不是响应结果格式。
+如何才能返回响应结果格式呢？
+
+== 配置依赖
+
+在 maven 的 pom.xml 中添加如下依赖：
+
+.peacetrue-result-success
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-success</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+
+
+
