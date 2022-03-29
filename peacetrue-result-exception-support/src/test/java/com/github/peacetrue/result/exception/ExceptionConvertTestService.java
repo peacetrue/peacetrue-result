@@ -18,15 +18,15 @@ public class ExceptionConvertTestService {
     private EntityManager entityManager;
 
     @Transactional
-    public void duplicateSQLException() {
+    public void duplicate() {
         entityManager.persist(new TestEntity(null, "name"));
         entityManager.persist(new TestEntity(null, "name"));
     }
 
     @Transactional(readOnly = true)
-    public void entityNotFoundException() {
+    public void entityNotFound() {
         TestEntity entity = entityManager.getReference(TestEntity.class, -1L);
         //返回的是懒加载对象，必须访问一次，才能抛出异常
-        log.trace("entityNotFoundException.name: {}", entity.getName());
+        log.trace("entityNotFound.name: {}", entity.getName());
     }
 }

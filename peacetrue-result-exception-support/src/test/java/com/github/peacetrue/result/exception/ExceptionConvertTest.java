@@ -1,7 +1,6 @@
 package com.github.peacetrue.result.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.peacetrue.result.GenericDataResult;
 import com.github.peacetrue.result.Result;
 import com.github.peacetrue.result.ResultImpl;
 import com.github.peacetrue.result.ResultTypes;
@@ -11,6 +10,7 @@ import com.github.peacetrue.result.exception.jackson.JacksonResultExceptionAutoC
 import com.github.peacetrue.result.exception.persistence.PersistenceResultExceptionAutoConfiguration;
 import com.github.peacetrue.result.exception.spring.SpringExceptionResultAutoConfiguration;
 import com.github.peacetrue.result.exception.sql.SQLResultExceptionAutoConfiguration;
+import com.github.peacetrue.test.SourcePathUtils;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.jeasy.random.EasyRandom;
@@ -37,7 +37,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -81,32 +83,35 @@ public class ExceptionConvertTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-//    @Test
-    public void resourceNotFound() {
-        GenericDataResult result = this.restTemplate.getForObject("/resource_not_found", GenericDataResult.class);
+    //    @Test
+    void resourceNotFound() {
+        Result result = this.restTemplate.getForObject("/resource_not_found", ResultImpl.class);
         Assertions.assertEquals(result.getCode(), ResultTypes.RESOURCE_NOT_FOUND.getCode());
     }
 
     @Test
-    public void missingServletRequestParameter() {
-        GenericDataResult result = this.restTemplate.getForObject("/missingServletRequestParameter", GenericDataResult.class);
+    void missingServletRequestParameter() {
+        Result result = this.restTemplate.getForObject("/missingServletRequestParameter", ResultImpl.class);
+        generateDocument("missingServletRequestParameter", result);
         Assertions.assertTrue(result.getCode().startsWith(ResultTypes.PARAMETER_MISSING.getCode()));
     }
 
     @Test
     void missingPathVariable() {
-        GenericDataResult result = this.restTemplate.getForObject("/missingPathVariable", GenericDataResult.class);
+        Result result = this.restTemplate.getForObject("/missingPathVariable", ResultImpl.class);
+        generateDocument("missingPathVariable", result);
         Assertions.assertTrue(result.getCode().startsWith(ResultTypes.PARAMETER_MISSING.getCode()));
     }
 
     @Test
     void methodArgumentTypeMismatch() {
-        GenericDataResult result = this.restTemplate.getForObject("/methodArgumentTypeMismatch?input=a", GenericDataResult.class);
+        Result result = this.restTemplate.getForObject("/methodArgumentTypeMismatch?input=a", ResultImpl.class);
+        generateDocument("methodArgumentTypeMismatch", result);
         Assertions.assertTrue(result.getCode().startsWith(ResultTypes.PARAMETER_INVALID.getCode()));
     }
 
     @Test
-    public void bindException() throws IOException {
+    void beanInvalid() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("string", "string");
         params.add("bytes", "3");
@@ -117,40 +122,41 @@ public class ExceptionConvertTest {
         params.add("doubles", "3.3");
         params.add("booleans", "1");
         params.add("date", DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now().plusDays(1)));
-        GenericDataResult result = this.restTemplate.postForObject("/bindException", params, GenericDataResult.class);
-        log.info("result: {}", new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(result));
+        Result result = this.restTemplate.postForObject("/beanInvalid", params, ResultImpl.class);
+        generateDocument("beanInvalid", result);
         Assertions.assertEquals(ResultTypes.ERRORS.getCode(), result.getCode());
     }
 
+
     @Test
-    public void methodArgumentNotValid() throws IOException {
+    void methodArgumentNotValid() {
         TestBean testBean = EASY_RANDOM.nextObject(TestBean.class);
         HttpEntity<Object> requestEntity = new HttpEntity<>(testBean, headers(ImmutableMap.of(
                 HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE
         )));
-        GenericDataResult result = this.restTemplate.exchange("/methodArgumentNotValid", HttpMethod.POST, requestEntity, GenericDataResult.class).getBody();
-        log.info("result: {}", new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(result));
+        Result result = this.restTemplate.exchange("/methodArgumentNotValid", HttpMethod.POST, requestEntity, ResultImpl.class).getBody();
+        generateDocument("methodArgumentNotValid", result);
         Assertions.assertEquals(ResultTypes.ERRORS.getCode(), result.getCode());
     }
 
     @Test
-    public void JsonProcessingException() throws IOException {
+    void jsonProcessingException() {
         HttpEntity<String> requestEntity = new HttpEntity<>("{x}", headers(ImmutableMap.of(
                 HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE
         )));
-        GenericDataResult result = this.restTemplate.exchange("/methodArgumentNotValid", HttpMethod.POST, requestEntity, GenericDataResult.class).getBody();
-        log.info("result: {}", new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(result));
+        Result result = this.restTemplate.exchange("/methodArgumentNotValid", HttpMethod.POST, requestEntity, ResultImpl.class).getBody();
+        generateDocument("jsonProcessingException", result);
         Assertions.assertEquals(ResultTypes.PARAMETER_INVALID.getCode(), result.getCode());
     }
 
     @Test
-    public void InvalidFormatExceptionConverter() throws IOException {
+    void invalidFormatException() {
         HttpEntity<String> requestEntity = new HttpEntity<>("{a:x}", headers(ImmutableMap.of(
                 HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
                 HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.5"
         )));
-        GenericDataResult result = this.restTemplate.exchange("/methodArgumentNotValid", HttpMethod.POST, requestEntity, GenericDataResult.class).getBody();
-        log.info("result: {}", new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(result));
+        Result result = this.restTemplate.exchange("/methodArgumentNotValid", HttpMethod.POST, requestEntity, ResultImpl.class).getBody();
+        generateDocument("invalidFormatException", result);
         Assertions.assertEquals(ResultTypes.PARAMETER_INVALID.getCode(), result.getCode());
     }
 
@@ -161,17 +167,29 @@ public class ExceptionConvertTest {
     }
 
     @Test
-    public void duplicateSQLException() throws IOException {
-        GenericDataResult result = this.restTemplate.postForObject("/duplicateSQLException", HttpMethod.POST, GenericDataResult.class);
-        log.info("result: \n{}", new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(result));
-        Assertions.assertTrue(result.getCode().startsWith("unique"));
-    }
-
-    @Test
-    public void entityNotFoundException() throws IOException {
-        Result result = this.restTemplate.getForObject("/entityNotFoundException", ResultImpl.class);
-        log.info("result: \n{}", new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(result));
+    void entityNotFound() {
+        Result result = this.restTemplate.getForObject("/entityNotFound", ResultImpl.class);
+        generateDocument("entityNotFound", result);
         Assertions.assertTrue(result.getCode().startsWith(ResultTypes.RECORD_NOT_FOUND.getCode()));
     }
 
+    @Test
+    void duplicate() {
+        Result result = this.restTemplate.postForObject("/duplicate", HttpMethod.POST, ResultImpl.class);
+        generateDocument("duplicate", result);
+        Assertions.assertTrue(result.getCode().startsWith("unique"));
+    }
+
+    private static void generateDocument(String name, Object result) {
+        try {
+            String stringPath = SourcePathUtils.getTestResourceAbsolutePath(
+                    "/com/github/peacetrue/result/exception/", name, ".json"
+            );
+            Path path = Paths.get(stringPath);
+            if (Files.notExists(path)) Files.createFile(path);
+            new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(path.toFile(), result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

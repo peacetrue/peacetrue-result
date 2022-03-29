@@ -12,7 +12,6 @@ public class ExceptionConvertTestController {
 
     //tag::missingServletRequestParameter[]
 
-    /** 除法运算 */
     @RequestMapping("/missingServletRequestParameter")
     public String missingServletRequestParameter(@RequestParam String input) {
         return input;
@@ -20,53 +19,59 @@ public class ExceptionConvertTestController {
     //end::missingServletRequestParameter[]
 
 
-    // tag::divide[]
+    // tag::missingPathVariable[]
 
-    /** 除法运算 */
     @RequestMapping("/missingPathVariable")
     public String missingPathVariable(@PathVariable String input) {
         return input;
     }
-    //end::divide[]
+    //end::missingPathVariable[]
 
-    //tag::missingServletRequestParameter[]
+    //tag::methodArgumentTypeMismatch[]
 
-    /** 除法运算 */
     @RequestMapping("/methodArgumentTypeMismatch")
     public Integer methodArgumentTypeMismatch(@RequestParam Integer input) {
         return input;
     }
-    //end::missingServletRequestParameter[]
+    //end::methodArgumentTypeMismatch[]
 
-    /** Bean 参数非法（form） */
+    //tag::beanInvalid[]
+
     @ResponseBody
-    @RequestMapping("/bindException")
-    public TestBean bindException(@Validated TestBean bean) {
+    @RequestMapping("/beanInvalid")
+    public TestBean beanInvalid(@Validated TestBean bean) {
         return bean;
     }
+    //end::beanInvalid[]
 
-    /** Bean 参数非法（body） */
+    //tag::methodArgumentNotValid[]
+
     @ResponseBody
     @RequestMapping("/methodArgumentNotValid")
     public TestBean methodArgumentNotValid(@Validated @RequestBody TestBean bean) {
         return bean;
     }
+    //end::methodArgumentNotValid[]
 
     @Autowired
     private ExceptionConvertTestService testService;
 
-    /** 重复 SQL 异常 */
-    @ResponseBody
-    @RequestMapping("/duplicateSQLException")
-    public void duplicateSQLException() {
-        testService.duplicateSQLException();
-    }
+    //tag::methodArgumentNotValid[]
 
-    /** 重复 SQL 异常 */
     @ResponseBody
-    @RequestMapping("/entityNotFoundException")
-    public void entityNotFoundException() {
-        testService.entityNotFoundException();
+    @RequestMapping("/entityNotFound")
+    public void entityNotFound() {
+        testService.entityNotFound();
     }
+    //end::entityNotFound[]
+
+    //tag::duplicate[]
+
+    @ResponseBody
+    @RequestMapping("/duplicate")
+    public void duplicate() {
+        testService.duplicate();
+    }
+    //end::duplicate[]
 
 }

@@ -7,7 +7,7 @@ peacetrue:
     result:
         success:
             disabled-methods:
-                - com.github.peacetrue.result.success.SuccessAutowireController.disableSuccessAutowireByConfiguration
+            - com.github.peacetrue.result.success.SuccessResultTestController.disableSuccessAutowireByConfiguration
 
 # tag::avoid-warning[]
 spring:

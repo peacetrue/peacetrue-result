@@ -69,23 +69,19 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
         }
     }
 
-    private String getStackTrace(Throwable throwable) {
+    private static String getStackTrace(Throwable throwable) {
         StringWriter stringWriter = new StringWriter();
         throwable.printStackTrace(new PrintWriter(stringWriter));
         return stringWriter.toString();
     }
 
     @Autowired(required = false)
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings("all")
     public void setExceptionConverters(List<ExceptionConverter> exceptionConverters) {
         if (CollectionUtils.isEmpty(exceptionConverters)) return;
         log.debug("register '{}' ExceptionConverters", exceptionConverters.size());
-        //子类排在最前面，查找是优先匹配子类
-        this.exceptionConverters = new TreeMap<>((class1, class2) -> {
-            if (class1.isAssignableFrom(class2)) return 1;
-            else if (class2.isAssignableFrom(class1)) return -1;
-            else return class1.getName().compareTo(class2.getName());
-        });
+        //子类排在最前面，查找时优先匹配子类
+        this.exceptionConverters = new TreeMap<>((parent, child) -> parent.isAssignableFrom(child) ? 1 : -1);
         exceptionConverters.forEach(exceptionConverter -> {
             ResolvableType resolvableType = ResolvableType.forClass(
                     ExceptionConverter.class, exceptionConverter.getClass()

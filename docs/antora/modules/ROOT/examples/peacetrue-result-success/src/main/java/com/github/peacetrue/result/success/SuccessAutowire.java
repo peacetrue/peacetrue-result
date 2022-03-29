@@ -20,6 +20,6 @@ public @interface SuccessAutowire {
      *
      * @return true 表示禁用
      */
-    boolean disabled() default true;
+    boolean disabled() default false;
 
 }

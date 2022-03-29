@@ -1,0 +1,128 @@
+= 快速上手
+
+//@formatter:off
+
+== 自动装配成功响应结果
+
+自动将返回数据转换为响应结果格式，无需手动封装。
+
+添加如下依赖：
+
+.peacetrue-result-success
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-success</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+请求接口 */enableSuccessAutowire*：
+
+.SuccessResultTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-success/src/test/java/com/github/peacetrue/result/success/SuccessResultTestController.java[tags=enableSuccessAutowire]
+----
+
+传入参数 `input=test`，返回数据为：
+
+.响应结果
+[source%nowrap,json]
+----
+{
+    "code": "success",
+    "message": "操作成功",
+    "data": "test"
+}
+----
+
+
+== 自动装配异常响应结果
+
+发生异常时，自动捕获异常，并将异常转换为响应结果。
+
+添加如下依赖：
+
+.peacetrue-result-exception-support
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-exception-support</artifactId>
+  <version>1.0.0</version>
+</dependency>
+----
+
+=== 缺少必须的请求参数
+
+请求接口 */missingServletRequestParameter*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=missingServletRequestParameter]
+----
+
+不传入参数，触发 `MissingServletRequestParameterException`，返回数据为：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/missingServletRequestParameter.json[]
+----
+
+=== 缺少路径变量
+
+请求接口 */missingPathVariable*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=missingPathVariable]
+----
+
+触发 `MissingPathVariableException`，返回数据为：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/missingPathVariable.json[]
+----
+
+=== 方法参数类型不匹配
+
+请求接口 */methodArgumentTypeMismatch*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=methodArgumentTypeMismatch]
+----
+
+触发 `MethodArgumentTypeMismatchException`，返回数据为：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/methodArgumentTypeMismatch.json[]
+----
+
+=== 方法参数类型不匹配
+
+请求接口 */methodArgumentTypeMismatch*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=methodArgumentTypeMismatch]
+----
+
+触发 `MethodArgumentTypeMismatchException`，返回数据为：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/methodArgumentTypeMismatch.json[]
+----
