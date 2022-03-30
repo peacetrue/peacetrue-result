@@ -16,7 +16,7 @@ public enum ExceptionResultDeclares implements ResultDeclare {
 
     MISSING_PATH_VARIABLE("缺少路径变量'#{name}'", Parameter.class),
     MISSING_SERVLET_REQUEST_PARAMETER("缺少必须的请求参数'#{name}'", Parameter.class),
-    METHOD_ARGUMENT_TYPE_MISMATCH("参数'#{name}'的值'#{value}'不是'#{type}'类型", Parameter.class),
+    METHOD_ARGUMENT_TYPE_MISMATCH("参数'#{name}'的值'#{value}'不是（无法转换为）'#{type}'类型", Parameter.class),
     BIND("共'#{#root.size()}'项错误", List.class),
     ;
 

@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 /**
  * @author peace
- * 
  **/
 public class UniqueCheckImpl implements UniqueChecker {
 
