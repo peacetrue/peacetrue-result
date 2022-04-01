@@ -1,0 +1,4 @@
+{
+  "code" : "parameter_invalid.input",
+  "message" : "参数'input'的值'a'不是'整数'类型"
+}

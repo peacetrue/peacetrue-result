@@ -1,0 +1,4 @@
+{
+  "code" : "record_not_found.TestEntity",
+  "message" : "测试实体 '-1' 不存在"
+}

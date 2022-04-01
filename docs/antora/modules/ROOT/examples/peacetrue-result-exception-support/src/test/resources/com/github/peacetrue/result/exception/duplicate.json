@@ -1,0 +1,4 @@
+{
+  "code" : "unique.name",
+  "message" : "参数 name 必须是唯一的"
+}

@@ -26,7 +26,7 @@
 include::example$peacetrue-result-success/src/test/java/com/github/peacetrue/result/success/SuccessResultTestController.java[tags=enableSuccessAutowire]
 ----
 
-传入参数 `input=test`，返回数据为：
+传入参数 `input=test`，返回数据如下：
 
 .响应结果
 [source%nowrap,json]
@@ -65,7 +65,7 @@ include::example$peacetrue-result-success/src/test/java/com/github/peacetrue/res
 include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=missingServletRequestParameter]
 ----
 
-不传入参数，触发 `MissingServletRequestParameterException`，返回数据为：
+不传入参数，触发 `MissingServletRequestParameterException`，返回数据如下：
 
 .响应结果
 [source%nowrap,json]
@@ -83,7 +83,7 @@ include::example$peacetrue-result-exception-support/src/test/resources/com/githu
 include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=missingPathVariable]
 ----
 
-触发 `MissingPathVariableException`，返回数据为：
+触发 `MissingPathVariableException`，返回数据如下：
 
 .响应结果
 [source%nowrap,json]
@@ -101,7 +101,7 @@ include::example$peacetrue-result-exception-support/src/test/resources/com/githu
 include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=methodArgumentTypeMismatch]
 ----
 
-传入参数 `input=a`，触发 `MethodArgumentTypeMismatchException`，返回数据为：
+传入参数 `input=a`，触发 `MethodArgumentTypeMismatchException`，返回数据如下：
 
 .响应结果
 [source%nowrap,json]
@@ -109,7 +109,7 @@ include::example$peacetrue-result-exception-support/src/test/java/com/github/pea
 include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/methodArgumentTypeMismatch.json[]
 ----
 
-=== Bean 无效
+=== Bean 验证失败
 
 请求接口 */beanInvalid*：
 
@@ -119,10 +119,18 @@ include::example$peacetrue-result-exception-support/src/test/resources/com/githu
 include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=beanInvalid]
 ----
 
-触发 `MethodArgumentTypeMismatchException`，返回数据为：
+Bean 验证规则如下：
+
+.TestBean
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/TestBean.java[tags=TestBean]
+----
+
+传入违反上述所有规则的参数，触发 `BindException`，返回数据如下：
 
 .响应结果
 [source%nowrap,json]
 ----
-include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/methodArgumentTypeMismatch.json[]
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/beanInvalid.json[]
 ----
