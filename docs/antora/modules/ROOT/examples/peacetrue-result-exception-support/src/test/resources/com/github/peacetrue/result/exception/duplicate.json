@@ -1,4 +1,4 @@
 {
-  "code": "unique.name",
-  "message": "参数'name'必须是唯一的，值'test'已存在"
+  "code" : "unique.name",
+  "message" : "参数'name'必须是唯一的，值'test'已存在"
 }

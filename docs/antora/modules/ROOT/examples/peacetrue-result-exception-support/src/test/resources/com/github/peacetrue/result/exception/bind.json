@@ -1,94 +1,71 @@
 {
-  "code": "errors",
-  "message": "共'22'项错误",
-  "data": [
-    {
-      "code": "Past.past",
-      "message": "参数'past'需要是一个过去的时间"
-    },
-    {
-      "code": "AssertTrue.assertTrue",
-      "message": "参数'assertTrue'只能为true"
-    },
-    {
-      "code": "Null.nulls",
-      "message": "参数'nulls'必须为null"
-    },
-    {
-      "code": "Negative.negative",
-      "message": "参数'negative'必须是负数"
-    },
-    {
-      "code": "DecimalMax.decimalMax",
-      "message": "参数'decimalMax'必须小于或等于0.0"
-    },
-    {
-      "code": "NotBlank.notBlank",
-      "message": "参数'notBlank'不能为空"
-    },
-    {
-      "code": "Pattern.pattern",
-      "message": "参数'pattern'需要匹配正则表达式\"\\w\""
-    },
-    {
-      "code": "AssertFalse.assertFalse",
-      "message": "参数'assertFalse'只能为false"
-    },
-    {
-      "code": "Email.email",
-      "message": "参数'email'不是一个合法的电子邮件地址"
-    },
-    {
-      "code": "NotNull.notNull",
-      "message": "参数'notNull'不能为null"
-    },
-    {
-      "code": "FutureOrPresent.futureOrPresent",
-      "message": "参数'futureOrPresent'需要是一个将来或现在的时间"
-    },
-    {
-      "code": "Future.future",
-      "message": "参数'future'需要是一个将来的时间"
-    },
-    {
-      "code": "PositiveOrZero.positiveOrZero",
-      "message": "参数'positiveOrZero'必须是正数或零"
-    },
-    {
-      "code": "Positive.positive",
-      "message": "参数'positive'必须是正数"
-    },
-    {
-      "code": "Digits.digits",
-      "message": "参数'digits'数字的值超出了允许范围(只允许在1位整数和1位小数范围内)"
-    },
-    {
-      "code": "PastOrPresent.pastOrPresent",
-      "message": "参数'pastOrPresent'需要是一个过去或现在的时间"
-    },
-    {
-      "code": "Size.size",
-      "message": "参数'size'个数必须在0和1之间"
-    },
-    {
-      "code": "Max.max",
-      "message": "参数'max'最大不能超过0"
-    },
-    {
-      "code": "Min.min",
-      "message": "参数'min'最小不能小于0"
-    },
-    {
-      "code": "NotEmpty.notEmpty",
-      "message": "参数'notEmpty'不能为空"
-    },
-    {
-      "code": "DecimalMin.decimalMin",
-      "message": "参数'decimalMin'必须大于或等于0.0"
-    },
-    {
-      "code": "NegativeOrZero.negativeOrZero",
-      "message": "参数'negativeOrZero'必须是负数或零"
-    }
-  ]
+  "code" : "errors",
+  "message" : "共'22'项错误",
+  "data" : [ {
+    "code" : "PastOrPresent.pastOrPresent",
+    "message" : "参数'pastOrPresent'需要是一个过去或现在的时间"
+  }, {
+    "code" : "Null.nulls",
+    "message" : "参数'nulls'必须为null"
+  }, {
+    "code" : "Negative.negative",
+    "message" : "参数'negative'必须是负数"
+  }, {
+    "code" : "Email.email",
+    "message" : "参数'email'不是一个合法的电子邮件地址"
+  }, {
+    "code" : "PositiveOrZero.positiveOrZero",
+    "message" : "参数'positiveOrZero'必须是正数或零"
+  }, {
+    "code" : "Pattern.pattern",
+    "message" : "参数'pattern'需要匹配正则表达式\"\\w\""
+  }, {
+    "code" : "NotBlank.notBlank",
+    "message" : "参数'notBlank'不能为空"
+  }, {
+    "code" : "NotEmpty.notEmpty",
+    "message" : "参数'notEmpty'不能为空"
+  }, {
+    "code" : "Future.future",
+    "message" : "参数'future'需要是一个将来的时间"
+  }, {
+    "code" : "Past.past",
+    "message" : "参数'past'需要是一个过去的时间"
+  }, {
+    "code" : "Digits.digits",
+    "message" : "参数'digits'数字的值超出了允许范围(只允许在1位整数和1位小数范围内)"
+  }, {
+    "code" : "Positive.positive",
+    "message" : "参数'positive'必须是正数"
+  }, {
+    "code" : "FutureOrPresent.futureOrPresent",
+    "message" : "参数'futureOrPresent'需要是一个将来或现在的时间"
+  }, {
+    "code" : "AssertFalse.assertFalse",
+    "message" : "参数'assertFalse'只能为false"
+  }, {
+    "code" : "DecimalMax.decimalMax",
+    "message" : "参数'decimalMax'必须小于或等于0.0"
+  }, {
+    "code" : "DecimalMin.decimalMin",
+    "message" : "参数'decimalMin'必须大于或等于0.0"
+  }, {
+    "code" : "NegativeOrZero.negativeOrZero",
+    "message" : "参数'negativeOrZero'必须是负数或零"
+  }, {
+    "code" : "AssertTrue.assertTrue",
+    "message" : "参数'assertTrue'只能为true"
+  }, {
+    "code" : "NotNull.notNull",
+    "message" : "参数'notNull'不能为null"
+  }, {
+    "code" : "Min.min",
+    "message" : "参数'min'最小不能小于0"
+  }, {
+    "code" : "Size.size",
+    "message" : "参数'size'个数必须在0和1之间"
+  }, {
+    "code" : "Max.max",
+    "message" : "参数'max'最大不能超过0"
+  } ]
 }

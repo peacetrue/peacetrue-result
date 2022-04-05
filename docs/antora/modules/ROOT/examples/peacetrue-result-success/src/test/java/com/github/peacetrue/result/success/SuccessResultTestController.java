@@ -22,6 +22,17 @@ public class SuccessResultTestController {
     }
     //end::enableSuccessAutowire[]
 
+    //tag::disableSuccessAutowireByResultType[]
+
+    /** 通过配置禁用成功自动封装 */
+    @ResponseBody
+    @RequestMapping(value = "/disableSuccessAutowireByResultType")
+    public Integer disableSuccessAutowireByResultType(String input) {
+        return Integer.parseInt(input);
+    }
+    //end::disableSuccessAutowireByResultType[]
+
+
     //tag::disableSuccessAutowireByConfiguration[]
 
     /** 通过配置禁用成功自动封装 */

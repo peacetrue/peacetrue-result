@@ -1,4 +1,4 @@
 {
-  "code": "server_error.input",
-  "message": "参数'input'的值'test'不支持转换为'TestBean'"
+  "code" : "server_error.input",
+  "message" : "参数'input'的值'test'不支持转换为'TestBean'"
 }

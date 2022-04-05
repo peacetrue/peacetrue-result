@@ -23,7 +23,11 @@ public class SQLDuplicateConditionalExceptionConverter
     public static final String SQL_STATE_DUPLICATE = "23000";
     private IndexParameterNameResolver indexParameterNameResolver;
 
-    /** 获取重复响应结果编码 */
+    /**
+     * 获取重复响应结果编码
+     *
+     * @return 属性值重复时响应结果编码
+     */
     public static String getDuplicateResultCode() {
         return resolveCode(SQL_STATE_DUPLICATE);
     }

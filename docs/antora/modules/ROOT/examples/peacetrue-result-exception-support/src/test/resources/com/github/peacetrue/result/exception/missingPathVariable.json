@@ -1,4 +1,4 @@
 {
-  "code": "server_error.input",
-  "message": "缺少路径变量'input'"
+  "code" : "server_error.input",
+  "message" : "缺少路径变量'input'"
 }

@@ -1,4 +1,4 @@
 {
-  "code": "parameter_invalid.input",
-  "message": "参数'input'的值'test'不是（无法转换为）'整数'类型"
+  "code" : "parameter_invalid.input",
+  "message" : "参数'input'的值'test'不是（无法转换为）'整数'类型"
 }
