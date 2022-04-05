@@ -27,16 +27,16 @@ public class NestConditionalExceptionConverter implements ConditionalExceptionCo
     }
 
     @Override
-    public boolean supports(Throwable throwable) {
-        Throwable cause = throwable.getCause();
-        if (cause == null || cause.equals(throwable)) return false;
-        return exceptionClasses.contains(throwable.getClass());
+    public boolean supports(Throwable exception) {
+        Throwable cause = exception.getCause();
+        if (cause == null || cause.equals(exception)) return false;
+        return exceptionClasses.contains(exception.getClass());
     }
 
     @Override
-    public Result convert(Throwable throwable) {
-        log.debug("delegate nest exception: '{}' -> '{}'", getName(throwable), getName(throwable.getCause()));
-        return exceptionConvertService.convert(throwable.getCause());
+    public Result convert(Throwable exception) {
+        log.debug("delegate nest exception: '{}' -> '{}'", getName(exception), getName(exception.getCause()));
+        return exceptionConvertService.convert(exception.getCause());
     }
 
     private String getName(Throwable throwable) {
@@ -49,6 +49,7 @@ public class NestConditionalExceptionConverter implements ConditionalExceptionCo
     }
 
     public void registerNestException(Class<? extends Throwable> exceptionClass) {
+        log.debug("register nest exception: '{}'", exceptionClass.getName());
         exceptionClasses.add(exceptionClass);
     }
 }

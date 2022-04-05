@@ -25,9 +25,15 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
     private Map<Class<Throwable>, ExceptionConverter<Throwable>> exceptionConverters = Collections.emptyMap();
     private List<ConditionalExceptionConverter> conditionalExceptionConverters = Collections.emptyList();
     private FallbackExceptionConverter fallbackExceptionConverter;
-    private ResultCodeClassifier resultCodeClassifier = ResultCodeClassifier.DEFAULT;
+    private ResultCodeClassifier resultCodeClassifier;
     private boolean includeStackTrace;
-    private boolean retainResultData;
+    private boolean includeMessageTemplateArgs;
+
+    private static String getStackTrace(Throwable throwable) {
+        StringWriter stringWriter = new StringWriter();
+        throwable.printStackTrace(new PrintWriter(stringWriter));
+        return stringWriter.toString();
+    }
 
     @Override
     public Result convert(Throwable throwable) {
@@ -38,10 +44,9 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
         classifyResultCode(result);
         if (ERRORS.getCode().equals(result.getCode())) return clearErrorsResultData(result);
         if (includeStackTrace) return new DataResultImpl<>(result, getStackTrace(throwable));
-        if (needClearResultData(result)) return new ResultImpl(result);
+        if (clearMessageTemplateArgs(result)) return new ResultImpl(result);
         return result;
     }
-
 
     @SuppressWarnings("java:S3864")
     private Optional<Result> mapConvert(Throwable throwable) {
@@ -81,26 +86,20 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
         List<Result> results = (List<Result>) data;
         IntStream.range(0, results.size()).forEach(index -> {
             Result childResult = results.get(index);
-            if (needClearResultData(childResult)) results.set(index, new ResultImpl(childResult));
+            if (clearMessageTemplateArgs(childResult)) results.set(index, new ResultImpl(childResult));
         });
         return result;
     }
 
-    private boolean needClearResultData(Object result) {
-        return !retainResultData && result instanceof DataResult;
-    }
-
-    private static String getStackTrace(Throwable throwable) {
-        StringWriter stringWriter = new StringWriter();
-        throwable.printStackTrace(new PrintWriter(stringWriter));
-        return stringWriter.toString();
+    private boolean clearMessageTemplateArgs(Object result) {
+        return !includeMessageTemplateArgs && result instanceof DataResult;
     }
 
     @Autowired(required = false)
     @SuppressWarnings("all")
     public void setExceptionConverters(List<ExceptionConverter> exceptionConverters) {
         if (CollectionUtils.isEmpty(exceptionConverters)) return;
-        log.debug("register '{}' ExceptionConverters", exceptionConverters.size());
+        log.debug("register '{}' ExceptionConverter", exceptionConverters.size());
         //子类排在最前面，查找时优先匹配子类
         this.exceptionConverters = new TreeMap<>((parent, child) -> parent.isAssignableFrom(child) ? 1 : -1);
         exceptionConverters.forEach(exceptionConverter -> {
@@ -108,7 +107,11 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
                     ExceptionConverter.class, exceptionConverter.getClass()
             );
             Class<?> exceptionClass = Objects.requireNonNull(resolvableType.resolveGeneric(0));
-            if (Throwable.class.equals(exceptionClass)) return;//排除通用的异常转换器
+            if (Throwable.class.equals(exceptionClass)) {
+                //排除通用的异常转换器
+                log.debug("ignore generic ExceptionConverter which supports Throwable: '{}'", exceptionConverter);
+                return;
+            }
             log.debug("register ExceptionConverter: '{}' -> '{}'", exceptionConverter, exceptionClass.getName());
             this.exceptionConverters.put((Class<Throwable>) exceptionClass, exceptionConverter);
         });
@@ -116,6 +119,9 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
 
     @Autowired(required = false)
     public void setConditionalExceptionConverters(List<ConditionalExceptionConverter> conditionalExceptionConverters) {
+        if (CollectionUtils.isEmpty(conditionalExceptionConverters)) return;
+        log.debug("register '{}' ConditionalExceptionConverter: {}",
+                conditionalExceptionConverters.size(), conditionalExceptionConverters);
         this.conditionalExceptionConverters = conditionalExceptionConverters;
     }
 
@@ -124,7 +130,7 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
         this.fallbackExceptionConverter = fallbackExceptionConverter;
     }
 
-    @Autowired(required = false)
+    @Autowired
     public void setResultCodeClassifier(ResultCodeClassifier resultCodeClassifier) {
         this.resultCodeClassifier = resultCodeClassifier;
     }
@@ -133,7 +139,7 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
         this.includeStackTrace = includeStackTrace;
     }
 
-    public void setRetainResultData(boolean retainResultData) {
-        this.retainResultData = retainResultData;
+    public void setIncludeMessageTemplateArgs(boolean includeMessageTemplateArgs) {
+        this.includeMessageTemplateArgs = includeMessageTemplateArgs;
     }
 }

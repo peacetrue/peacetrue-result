@@ -1,12 +1,10 @@
 package com.github.peacetrue.result.exception;
 
 import com.github.peacetrue.result.ResultTypes;
-import com.github.peacetrue.result.exception.ConfiguredResultCodeClassifier;
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 

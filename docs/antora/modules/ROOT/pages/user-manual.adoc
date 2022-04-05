@@ -1,36 +1,14 @@
 = 用户手册
-:version: 1.0.0
 
-本文用于指导 Java 开发者使用 *响应结果组件*。
 //@formatter:off
 
-== 快速上手
+== 自动装配成功响应结果
 
-请参考示例 https://peacetrue.cn/summarize/peacetrue-result-sample/index.html[响应结果样章^] 。
+自动将返回数据转换成响应结果格式，无需手动封装。
 
-== 类库说明
+添加如下依赖：
 
-.核心类库，提供响应结果的数据结构和常用类型。
-[source%nowrap,maven]
-----
-<dependency>
-  <groupId>com.github.peacetrue.result</groupId>
-  <artifactId>peacetrue-result-core</artifactId>
-  <version>1.0.0</version>
-</dependency>
-----
-
-.构建类库，构造响应结果描述信息，支持国际化
-[source%nowrap,maven]
-----
-<dependency>
-  <groupId>com.github.peacetrue.result</groupId>
-  <artifactId>peacetrue-result-builder</artifactId>
-  <version>1.0.0</version>
-</dependency>
-----
-
-.成功类库，封装成功时返回的数据
+.peacetrue-result-success
 [source%nowrap,maven]
 ----
 <dependency>
@@ -40,17 +18,34 @@
 </dependency>
 ----
 
-.异常类库，封装异常时返回的数据，提供抽象的异常转换体系
-[source%nowrap,maven]
+请求接口 */enableSuccessAutowire*：
+
+.SuccessResultTestController
+[source%nowrap,java]
 ----
-<dependency>
-  <groupId>com.github.peacetrue.result</groupId>
-  <artifactId>peacetrue-result-exception</artifactId>
-  <version>1.0.0</version>
-</dependency>
+include::example$peacetrue-result-success/src/test/java/com/github/peacetrue/result/success/SuccessResultTestController.java[tags=enableSuccessAutowire]
 ----
 
-.异常支持类库，实现具体的异常转换逻辑
+传入参数 `input=test`，返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+{
+    "code": "success",
+    "message": "操作成功",
+    "data": "test"
+}
+----
+
+[[ExceptionConvert]]
+== 自动装配异常响应结果
+
+发生异常时，自动捕获异常，并将异常转换成响应结果。
+
+添加如下依赖：
+
+.peacetrue-result-exception-support
 [source%nowrap,maven]
 ----
 <dependency>
@@ -60,33 +55,346 @@
 </dependency>
 ----
 
-== 最佳实践
+以下详细介绍目前支持的异常。
 
-=== 禁用 成功响应结果封装 特性
+=== 缺少必须的请求参数
 
-引入 *peacetrue-result-success* 类库，会自动启用 *成功响应结果封装* 特性。
+请求接口 */missingServletRequestParameter*：
 
-该特性在新项目中比较友好。
-如果是存在的项目，有些接口已经自行处理了响应结果，不需要使用该特性。如何禁用呢？
-如果有源码，可以直接在方法上标注 `SuccessAutowire` ；
-如果没有源码，可以使用如下配置：
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=missingServletRequestParameter]
+----
 
-[source%nowrap,yml]
+不传入 `input` 参数，触发 `MissingServletRequestParameterException`，返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/missingServletRequestParameter.json[]
+----
+
+=== 缺少路径变量
+
+请求接口 */missingPathVariable*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=missingPathVariable]
+----
+
+触发 `MissingPathVariableException`，返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/missingPathVariable.json[]
+----
+
+=== 方法参数转换不支持
+
+请求接口 */methodArgumentConversionNotSupported*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=methodArgumentConversionNotSupported]
+----
+
+传入参数 `input=test`，触发 `MethodArgumentConversionNotSupportedException`，返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/methodArgumentConversionNotSupported.json[]
+----
+
+=== 方法参数类型不匹配
+
+请求接口 */methodArgumentTypeMismatch*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=methodArgumentTypeMismatch]
+----
+
+传入参数 `input=test`，触发 `MethodArgumentTypeMismatchException`，返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/methodArgumentTypeMismatch.json[]
+----
+
+=== Bean 验证失败(表单)
+
+请求接口 */bind*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=bind]
+----
+
+Bean 验证规则如下：
+
+[[TestBeanRules]]
+.TestBean
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/TestBean.java[tags=TestBean]
+----
+
+传入违反上述规则的参数：
+
+.ExceptionConvertTest
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTest.java[tags=bind]
+----
+
+触发 `BindException`，返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/bind.json[]
+----
+
+=== 请求体缺失
+
+请求接口 */httpMessageNotReadable*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=httpMessageNotReadable]
+----
+
+//Bean 验证规则同 <<TestBeanRules>>。
+
+传入空的请求体：
+
+.ExceptionConvertTest
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTest.java[tags=requestBodyMissing]
+----
+
+触发 `HttpMessageNotReadableException`，返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/requestBodyMissing.json[]
+----
+
+=== 请求体无效
+
+请求接口 */httpMessageNotReadable*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=httpMessageNotReadable]
+----
+
+传入无效的请求体：
+
+.ExceptionConvertTest
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTest.java[tags=requestBodyJsonInvalid]
+----
+
+触发 `HttpMessageNotReadableException`、`JsonParseException`、`JsonEOFException`，返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/requestBodyJsonInvalid.json[]
+----
+
+NOTE: 理想情况下，期望能拿到整个请求体的内容，错误的字符、位置及其原因；
+目前，无法获取到完整的请求体内容，所以只提示了一个大概的错误。
+如果想要准确定位该问题，客户端需要记录请求体的内容，
+将请求体内容拷贝到一个 json 文件，IDE 会提示存在的语法错误。
+
+=== 请求体格式无效
+
+请求体中包含无法转换的属性。
+
+请求接口 */httpMessageNotReadable*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=httpMessageNotReadable]
+----
+
+传入格式无效的请求体：
+
+.ExceptionConvertTest
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTest.java[tags=requestBodyJsonFormatInvalid]
+----
+
+触发 `HttpMessageNotReadableException`、`InvalidFormatException`，返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/requestBodyJsonFormatInvalid.json[]
+----
+
+=== Bean 验证失败(请求体)
+
+请求接口 */methodArgumentNotValid*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=methodArgumentNotValid]
+----
+
+传入违反上述规则的参数，触发 `MethodArgumentNotValidException`。
+该异常与 <<_bean_验证失败表单>> 类似，区别在于一个是表单参数，一个是请求体参数。
+
+=== 记录不存在
+
+根据唯一标志，查询记录时，记录不存在。
+
+请求接口 */entityNotFound*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=entityNotFound]
+----
+
+传入不存在的主键值 `id=0`：
+
+.ExceptionConvertTest
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTest.java[tags=entityNotFound]
+----
+
+触发 `EntityNotFoundException`，返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/entityNotFound.json[]
+----
+
+NOTE: `EntityNotFoundException` 是 JPA 中的异常，其他 ORM 框架，有待进一步支持。
+
+=== 属性值唯一
+
+在数据库建立唯一索引：
+
+image::image-2022-04-04-11-54-56-647.png[]
+
+请求接口 */duplicate*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=duplicate]
+----
+
+传入已存在的名称 `name=test`：
+
+.ExceptionConvertTest
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTest.java[tags=duplicate]
+----
+
+触发 `SQLException`，SQLState 为 23000，返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/duplicate.json[]
+----
+
+NOTE: 目前，仅在 MySQL 数据库中测试，其他数据库需要进一步观察。
+
+== 业务异常处理
+
+在实际业务中，如果需要处理异常场景，可以使用 `ResultExceptionThrowService`。
+
+首先，确定响应结果编码，假设为 *user_disabled*；
+然后，在 *messages.properties* 中配置描述模板：
+
+.messages.properties
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/messages.properties[tags=userDisabled]
+----
+
+请求接口 */userDisabled*：
+
+.ExceptionConvertTestController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-exception-support/src/test/java/com/github/peacetrue/result/exception/ExceptionConvertTestController.java[tags=userDisabled]
+----
+
+触发 `ResultException`，返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/userDisabled.json[]
+----
+
+== 配置说明
+
+=== 禁用成功特性
+
+引入 *peacetrue-result-success* 类库，会自动启用**成功响应结果封装**特性。
+
+该特性在新项目中比较友好；如果是已存在的项目，有些接口自行处理了响应结果，不需要使用该特性。
+该如何禁用呢？共有 3 种方法：
+
+. 使用配置 `peacetrue.result.success.result-types`
+. 使用配置 `peacetrue.result.success.disabled-methods`
+. 使用注解 `SuccessAutowire`
+
 .application.yml
+[source%nowrap,yml]
 ----
 peacetrue:
     result:
         success:
+            result-types:
+            - com.github.peacetrue.result.Result <1>
             disabled-methods:
-                - com.github.peacetrue.result.success.SuccessAutowireController.disableSuccessAutowireByConfiguration //<1>
-                - com.github.peacetrue.result.success.SuccessAutowireController //<2>
-                - com.github.peacetrue.result.success //<3>
+            - com.github.peacetrue.result.success.SuccessAutowireController.disableSuccessAutowireByConfiguration //<2>
+            - com.github.peacetrue.result.success.SuccessAutowireController //<3>
+            - com.github.peacetrue.result.success //<4>
 ----
-<1> 精确定位到方法名，无法区分重载方法
-<2> 定位到类名，禁用该类下的所有方法
-<3> 定位到包名，禁用该包下的所有方法
+<1> 默认设置该类型为响应结果类型，返回该类型的子类都不会再自动封装响应结果
+<2> 定位到方法名，禁用该方法，无法区分重载方法
+<3> 定位到类名，禁用该类下的所有方法
+<4> 定位到包名，禁用该包下的所有方法
 
-=== 避免 'messages not found' 警告
+如果配置不能满足，可以使用注解 `SuccessAutowire`：
+
+.SuccessResultTestController.java
+[source%nowrap,java]
+----
+include::example$peacetrue-result-success/src/test/java/com/github/peacetrue/result/success/SuccessResultTestController.java[tags=disableSuccessAutowireByAnnotation]
+----
+
+=== messages not found
 
 如果在控制台发现如下日志：
 
@@ -105,19 +413,20 @@ spring:
         basename: ''
 ----
 
-=== 自定义描述内容
+== 自定义描述
 
-组件中包含以下描述配置文件：
+组件中包含以下 i18n 配置文件：
 
-* peacetrue-result-builder
-* peacetrue-result-success
-* peacetrue-result-exception
-* peacetrue-result-exception-support
+* peacetrue-result-builder.properties
+* peacetrue-result-success.properties
+* peacetrue-result-exception.properties
+* peacetrue-result-exception-support.properties
 
-支持中文和英文，默认为中文（非英文全部采用中文）。
-操作成功的中文描述为 *操作成功*，如果想要修改默认的描述，可以提供自己的描述配置文件。
+支持中文和英文，默认为中文（非英文全部使用中文）。
+如果想要修改默认的描述模板，可以在 i18n 配置文件中修改。
+下面以修改成功响应结果描述为例说明。
 
-指定描述配置文件的名称：
+指定 i18n 配置文件的名称：
 
 .application.yml
 [source%nowrap,yml]
@@ -125,18 +434,26 @@ spring:
 include::example$peacetrue-result-success/src/test/resources/application.yml[tags=custom-messages]
 ----
 
-在描述配置文件中添加成功描述：
+在 i18n 配置文件中添加成功描述：
 
-.custom-messages
+.custom-messages.properties（中文）
 [source%nowrap,properties]
 ----
 include::example$peacetrue-result-success/src/test/resources/custom-messages.properties[]
 ----
 
-*Result* 前缀是必须的，用于区分不同类型的描述。
-*success* 是此次操作响应结果的编码。
+.custom-messages_en.properties（英文）
+[source%nowrap,properties]
+----
+include::example$peacetrue-result-success/src/test/resources/custom-messages_en.properties[]
+----
+
+*Result* 前缀是固定的，用于区分不同类型的配置。
+*success* 是此次操作响应结果描述模板配置键。
 //对于支持国际化的系统来说，会有各种类型的描述，比如：展示页面上字段。
 
+
+////
 如果想修改 *Result* 前缀，可以通过如下配置实现：
 
 .application.yml
@@ -153,22 +470,109 @@ include::example$peacetrue-result-success/src/test/resources/custom-code-prefix-
 
 WARNING: 修改 Result 前缀之后，将导致组件默认的描述配置失效，需要重新定义一整套的描述配置。
 
-== 抛出异常
+////
 
-处理业务逻辑时，如果需要抛出异常，可以使用自定义异常，也可以使用 *响应结果异常*。
-使用自定义异常，需要提供对应的异常转换器；
-使用 *响应结果异常* 不需要提供异常转换器，因为 *响应结果异常* 本身也是一种 *响应结果*。
 
-如何自定义异常转换器？参考 <<_自定义异常转换器>>；
-如何抛出 *响应结果异常*？可以使用 `ResultExceptionThrowService`。
-
+[[custom-exception-converter]]
 == 自定义异常转换器
 
-可以通过实现接口 `ExceptionConverter` 或 `ConditionalExceptionConverter` 自定义异常转换器。
-如果需要支持国际化，可以配合使用 `ResultMessageBuilder`。
+目前，组件支持的异常转换器还极其有限，大多数场景需要自定义异常转换器。
+可以通过实现接口 `ExceptionConverter` 或 `ConditionalExceptionConverter` 实现自定义异常转换器。
 
-也可以继承 `AbstractExceptionConverter`，
-使用异常名称（删除结尾的 Exception）作为编码，
-配置编码的 *具化描述模板*，
-实现 `resolveArgs` 方法解析出 *具化描述模板参数* 。
+下面，以 `MissingServletRequestParameterException` 为例说明：
+
+.实现 `ExceptionConverter` 接口
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/main/java/com/github/peacetrue/result/exception/user_manual/MissingServletRequestParameterExceptionConverter.java[tags=class]
+----
+
+.实现 `ConditionalExceptionConverter` 接口
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/main/java/com/github/peacetrue/result/exception/user_manual/MissingServletRequestParameterConditionalExceptionConverter.java[tags=class]
+----
+
+返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+{
+  "code" : "parameter_missing",
+  "message" : "缺少必须的请求参数'xxxxx'"
+}
+----
+
+以上写法不支持响应结果描述的国际化，如果需要支持国际化，可以使用 `ResultMessageBuilder`：
+
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/main/java/com/github/peacetrue/result/exception/user_manual/MissingServletRequestParameterExceptionConverter1.java[tags=class]
+----
+
+在 *messages.properties* 中配置描述模板：
+
+.messages.properties
+[source%nowrap,properties]
+----
+include::example$peacetrue-result-sample/src/test/resources/messages.properties[tags=MissingServletRequestParameter]
+----
+
+也可以直接继承 `AbstractExceptionConverter`，该类封装了一些通用逻辑：
+
+* 支持（且必须使用）国际化响应结果描述
+* 使用异常名称（删除结尾的 Exception）作为"响应结果编码"和"描述模板配置键"
+* 如果"描述模板参数"实现了 `NameCapable` 接口，则响应结果编码后追加参数名
+
+剩下的就是实现 `resolveArgs` 方法，构建"描述模板参数"：
+
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/main/java/com/github/peacetrue/result/exception/user_manual/MissingServletRequestParameterExceptionConverter2.java[tags=class]
+----
+
+返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+{
+  "code" : "MissingServletRequestParameter.xxxxx",
+  "message" : "缺少必须的请求参数'xxxxx'"
+}
+----
+
+如果响应结果编码 *MissingServletRequestParameter* 不合适，
+可实现接口 `ClassifiedResultCode`，更换响应结果编码：
+
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/main/java/com/github/peacetrue/result/exception/user_manual/MissingServletRequestParameterExceptionConverter3.java[tags=class]
+----
+
+返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+{
+  "code" : "parameter_missing.xxxxx",
+  "message" : "缺少必须的请求参数'xxxxx'"
+}
+----
+
+== 自定义响应结果
+
+组件返回的响应结果，固定使用 `code`、`message`、`data` 三个属性。
+可能不满足需求，比如需要修改属性名、添加额外属性；
+此时，可以实现 `ResultCustomizer` 接口，自定义响应结果：
+
+.ResultCustomizerImpl
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/main/java/com/github/peacetrue/result/exception/user_manual/ResultCustomizerImpl.java[tags=class]
+----
+
+
 

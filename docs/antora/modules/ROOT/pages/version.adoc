@@ -1,4 +1,4 @@
-= 版本
+= 版本说明
 
 :numbered!: ''
 //@formatter:off
@@ -7,6 +7,7 @@
 
 实现基本功能。
 
+////
 支持 Spring 4.x 和 Spring Boot 1.x。
 发布时不能使用 build 命令，单元测试会报错，
 依次执行 jar\javadocJar\sourcesJar。
@@ -14,6 +15,7 @@
 使用 Spring 4.x 和 Spring Boot 1.x 编译，
 使用 Spring 5.x 和 Spring Boot 2.x 测试，
 因为使用 JUnit5 执行测试，Spring 4 不支持 JUnit5。
+////
 
 == 2.0.0
 

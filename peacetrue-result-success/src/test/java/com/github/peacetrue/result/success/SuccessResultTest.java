@@ -32,7 +32,7 @@ import java.util.function.Function;
                 MessageSourceAutoConfiguration.class,
                 ResultMessageSourceAutoConfiguration.class,
                 ResultBuilderAutoConfiguration.class,
-                SuccessResultAutoConfiguration.class,
+                ResultSuccessAutoConfiguration.class,
                 SuccessResultTestController.class,
                 JacksonAtFirstAutoConfiguration.class,
                 HttpMessageConvertersAutoConfiguration.class,

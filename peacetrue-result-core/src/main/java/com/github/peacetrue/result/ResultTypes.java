@@ -26,8 +26,10 @@ public enum ResultTypes implements ResultType {
     PARAMETER_INVALID("参数无效"),
     /** 参数非法，请求时传递的参数不满足接口的校验规则，比如：传递的数字 '10' 不在要求的 [0,3] 之间 */
     PARAMETER_ILLEGAL("参数非法"),
-    /** 记录不存在，通过唯一标志获取实体对象时，找不到指定对象 */
-    RECORD_NOT_FOUND("记录不存在"),
+    /** 服务端的内部错误，斩杀程序员祭天 */
+    SERVER_ERROR("服务内部错误"),
+//    /** 记录不存在，通过唯一标志获取实体对象时，找不到指定对象 */
+//    RECORD_NOT_FOUND("记录不存在"),
     ;
 
     private final String name;

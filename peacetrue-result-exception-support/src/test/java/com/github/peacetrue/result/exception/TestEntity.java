@@ -11,13 +11,19 @@ import javax.persistence.*;
  **/
 @Data
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(name = "uk_name", columnNames = "name"))
 @NoArgsConstructor
 @AllArgsConstructor
-public class TestEntity {
+@Table(uniqueConstraints = @UniqueConstraint(name = "uk_name", columnNames = "name"))
+public class TestEntity implements Cloneable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 100, unique = true)
+    @Column(length = 100)
     private String name;
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

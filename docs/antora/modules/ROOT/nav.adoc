@@ -1,4 +1,5 @@
 * xref:index.adoc[]
+* xref:quick-start.adoc[]
 * xref:user-manual.adoc[]
 * xref:principle.adoc[]
 * xref:version.adoc[]

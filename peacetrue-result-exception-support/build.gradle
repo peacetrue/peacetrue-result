@@ -1,26 +1,24 @@
-description '响应结果异常支持，处理各种具体的异常'
+description "响应结果异常支持，处理各种具体的异常"
 
 dependencies {
     api project(":peacetrue-result-core")
-    api project(':peacetrue-result-builder')
-    api project(':peacetrue-result-exception')
+    api project(":peacetrue-result-builder")
+    api project(":peacetrue-result-exception")
     compileOnly "org.springframework.boot:spring-boot-autoconfigure${tailSpringBootVersion}"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor${tailSpringBootVersion}"
-    compileOnly 'org.springframework:spring-webmvc'
-    compileOnly 'javax.servlet:javax.servlet-api'
-    compileOnly 'com.fasterxml.jackson.core:jackson-databind'
-    compileOnly 'mysql:mysql-connector-java'
-    compileOnly 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final'
+    compileOnly "org.springframework:spring-webmvc"
+    compileOnly "javax.servlet:javax.servlet-api"
+    compileOnly "com.fasterxml.jackson.core:jackson-databind"
+    compileOnly "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test${tailSpringBootVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-web${tailSpringBootVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-data-jpa${tailSpringBootVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-logging${tailSpringBootVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-validation${tailSpringBootVersion}"
-    testImplementation("com.github.peacetrue:peacetrue-validation")
-    testImplementation("com.github.peacetrue:peacetrue-test:1+")
+    testImplementation "com.github.peacetrue:peacetrue-validation"
+    testImplementation "com.github.peacetrue:peacetrue-test:1+"
     testImplementation "com.h2database:h2"
     testImplementation "mysql:mysql-connector-java"
-    testImplementation("com.google.guava:guava:31.1-jre")
 
 }

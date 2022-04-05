@@ -18,13 +18,13 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "peacetrue.result.builder")
 public class ResultBuilderProperties {
 
-    /** 响应结果编码前缀 */
+    /**描述模板配置键前缀，默认为 {@code Result} */
     private String codePrefix = MessageSourceResultMessageBuilder.DEFAULT_CODE_PREFIX;
-    /** 类名前缀 */
+    /** 类名前缀，默认为 {@code Class} */
     private String classPrefix = MessageSourceClassPrinter.DEFAULT_CLASS_PREFIX;
-    /** 默认描述。通过编码找不到描述时，返回默认描述 */
+    /** 默认描述模板。通过描述模板配置键找不到值时，使用默认描述 */
     private String defaultMessage = MessageSourceResultMessageBuilder.DEFAULT_MESSAGE;
-    /** 默认编码和自定义编码的映射 */
+    /** 默认响应结果编码和自定义编码的映射 */
     private Map<String, String> customCodes = Collections.emptyMap();
 
 }

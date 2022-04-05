@@ -23,18 +23,6 @@ public class EntityNotFoundExceptionConverter
         extends AbstractExceptionConverter<EntityNotFoundException>
         implements ClassifiedResultCode {
 
-    @Nullable
-    @Override
-    protected Parameter<Class<?>, String> resolveArgs(EntityNotFoundException exception) {
-        String message = exception.getMessage();
-        String[] values = RegexUtils.extractValue("Unable to find (.+)? with id (.+)", message);
-        if (ObjectUtils.isEmpty(values)) {
-            throw new IllegalStateException("Can't extract values from message '" + message + "'");
-        }
-        Class<?> clazz = forName(values[0]);
-        return new Parameter<>(clazz.getSimpleName(), clazz, values[1]);
-    }
-
     private static Class<?> forName(String className) {
         try {
             return Class.forName(className);
@@ -43,8 +31,20 @@ public class EntityNotFoundExceptionConverter
         }
     }
 
+    @Nullable
+    @Override
+    protected Parameter<Class<?>, String> resolveArgs(EntityNotFoundException exception) {
+        String message = exception.getMessage();
+        String[] values = RegexUtils.extractValue(message, "Unable to find (.+)? with id (.+)");
+        if (ObjectUtils.isEmpty(values)) {
+            throw new IllegalStateException("Can't extract values from message '" + message + "'");
+        }
+        Class<?> clazz = forName(values[0]);
+        return new Parameter<>(clazz.getSimpleName(), clazz, values[1]);
+    }
+
     @Override
     public String getSupperCode() {
-        return ResultTypes.RECORD_NOT_FOUND.getCode();
+        return ResultTypes.PARAMETER_ILLEGAL.getCode();
     }
 }

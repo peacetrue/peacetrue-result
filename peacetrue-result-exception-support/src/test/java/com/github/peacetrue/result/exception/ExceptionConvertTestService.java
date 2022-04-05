@@ -17,16 +17,20 @@ public class ExceptionConvertTestService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Transactional
-    public void duplicate() {
-        entityManager.persist(new TestEntity(null, "name"));
-        entityManager.persist(new TestEntity(null, "name"));
-    }
-
     @Transactional(readOnly = true)
-    public void entityNotFound() {
-        TestEntity entity = entityManager.getReference(TestEntity.class, -1L);
+    public void entityNotFound(Long id) {
+        TestEntity entity = entityManager.getReference(TestEntity.class, id);
         //返回的是懒加载对象，必须访问一次，才能抛出异常
         log.trace("entityNotFound.name: {}", entity.getName());
+    }
+
+    @Transactional
+    public void duplicate(TestEntity entity) {
+        try {
+            entityManager.persist(entity.clone());
+            entityManager.persist(entity);
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -44,16 +44,17 @@ public class MessageSourceClassPrinter implements ClassPrinter {
         String message;
         String localClassPrefix = StringUtils.hasLength(classPrefix) ? (classPrefix + ".") : "";
         Set<String> codes = new LinkedHashSet<>();
+        Class<?> currentClass = clazz;
         while (true) {
-            String code = localClassPrefix + clazz.getName();
+            String code = localClassPrefix + currentClass.getName();
             message = getMessage(code, locale);
             if (message != null) {
                 log.debug("got message: {} = {}", code, message);
                 return message;
             }
             codes.add(code);
-            if (clazz == Object.class) break;
-            clazz = clazz.getSuperclass();
+            if (currentClass == Object.class) break;
+            currentClass = currentClass.getSuperclass();
         }
         log.warn("unable to get message by {}, default to Class.simpleName '{}'", codes, clazz.getSimpleName());
         return clazz.getSimpleName();

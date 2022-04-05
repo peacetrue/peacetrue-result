@@ -30,7 +30,7 @@ public class PatternExceptionConverter<T extends Throwable> extends AbstractExce
     @Override
     protected Object resolveArgs(T exception) {
         return patterns.stream()
-                .map(item -> RegexUtils.extractValue(item, exception.getMessage()))
+                .map(item -> RegexUtils.extractValue(exception.getMessage(), item))
                 .filter(item -> !ObjectUtils.isEmpty(item))
                 .findFirst().orElse(null);
     }

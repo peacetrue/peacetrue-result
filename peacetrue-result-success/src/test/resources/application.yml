@@ -1,18 +1,21 @@
 logging:
-    level:
-        org.springframework: warn
-        com.github.peacetrue: trace
+  level:
+    org.springframework: warn
+    com.github.peacetrue: trace
 
 peacetrue:
-    result:
-        success:
-            disabled-methods:
-            - com.github.peacetrue.result.success.SuccessResultTestController.disableSuccessAutowireByConfiguration
+  result:
+    success:
+      result-types:
+        - com.github.peacetrue.result.Result
+        - java.lang.Integer
+      disabled-methods:
+        - com.github.peacetrue.result.success.SuccessResultTestController.disableSuccessAutowireByConfiguration
 
 # tag::avoid-warning[]
 spring:
-    messages:
-        basename: ''
+  messages:
+    basename: ''
 
 # end::avoid-warning[]
 
@@ -22,21 +25,20 @@ spring.profiles: custom-messages
 
 # tag::custom-messages[]
 spring:
-    messages:
-        basename: 'custom-messages'
+  messages:
+    basename: 'custom-messages'
 # end::custom-messages[]
 
 ---
-
 spring.profiles: custom-code-prefix
 
 # tag::custom-code-prefix[]
 peacetrue:
-    result:
-        builder:
-            code-prefix: CustomResult
+  result:
+    builder:
+      code-prefix: CustomResult
 
 spring:
-    messages:
-        basename: 'custom-code-prefix-messages'
+  messages:
+    basename: 'custom-code-prefix-messages'
 # end::custom-code-prefix[]

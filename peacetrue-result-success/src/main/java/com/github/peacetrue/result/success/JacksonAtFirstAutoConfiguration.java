@@ -25,20 +25,6 @@ import java.util.function.Predicate;
 public class JacksonAtFirstAutoConfiguration {
 
     /**
-     * 控制器返回一个字符串，会被一组消息转换器处理，
-     * 一组消息转换器中，{@link StringHttpMessageConverter} 排在 {@link MappingJackson2HttpMessageConverter} 之前，所以会优先处理这个字符串；
-     * 我们要把这个字符串转换成 {@link Result}，但是 {@link StringHttpMessageConverter} 又不支持转换 {@link Result}，导致自动转换逻辑不会被执行。
-     * 所以我们不能使用 {@link StringHttpMessageConverter} 转换字符串，应该优先使用 {@link MappingJackson2HttpMessageConverter}。
-     *
-     * @return 自定义的配置
-     * @see RequestResponseBodyMethodProcessor
-     */
-    @Bean
-    public WebMvcConfigurer jacksonAtFirstWebMvcConfigurer() {
-        return getSortedWebMvcConfigurer(AbstractJackson2HttpMessageConverter.class::isInstance);
-    }
-
-    /**
      * 将符合条件的 {@link HttpMessageConverter} 排在最前面。
      *
      * @param predicate 判断条件
@@ -55,5 +41,19 @@ public class JacksonAtFirstAutoConfiguration {
                 });
             }
         };
+    }
+
+    /**
+     * 控制器返回一个字符串，会被一组消息转换器处理，
+     * 一组消息转换器中，{@link StringHttpMessageConverter} 排在 {@link MappingJackson2HttpMessageConverter} 之前，所以会优先处理这个字符串；
+     * 我们要把这个字符串转换成 {@link Result}，但是 {@link StringHttpMessageConverter} 又不支持转换 {@link Result}，导致自动转换逻辑不会被执行。
+     * 所以我们不能使用 {@link StringHttpMessageConverter} 转换字符串，应该优先使用 {@link MappingJackson2HttpMessageConverter}。
+     *
+     * @return 自定义的配置
+     * @see RequestResponseBodyMethodProcessor
+     */
+    @Bean
+    public WebMvcConfigurer jacksonAtFirstWebMvcConfigurer() {
+        return getSortedWebMvcConfigurer(AbstractJackson2HttpMessageConverter.class::isInstance);
     }
 }

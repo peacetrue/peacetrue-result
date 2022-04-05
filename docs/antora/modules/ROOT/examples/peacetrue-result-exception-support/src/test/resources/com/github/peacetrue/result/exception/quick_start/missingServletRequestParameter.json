@@ -1,0 +1,4 @@
+{
+  "code": "parameter_missing.id",
+  "message": "缺少必须的请求参数'id'"
+}

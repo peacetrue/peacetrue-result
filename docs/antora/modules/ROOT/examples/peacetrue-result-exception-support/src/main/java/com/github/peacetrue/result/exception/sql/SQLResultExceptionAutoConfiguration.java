@@ -1,15 +1,17 @@
 package com.github.peacetrue.result.exception.sql;
 
 import com.github.peacetrue.result.exception.ClassifiedResultCodeRegistry;
-import com.github.peacetrue.result.exception.ExceptionResultAutoConfiguration;
 import com.github.peacetrue.result.exception.NestExceptionRegistry;
+import com.github.peacetrue.result.exception.ResultExceptionAutoConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.stream.Stream;
+
+import static com.github.peacetrue.result.exception.sql.SQLDuplicateConditionalExceptionConverter.getDuplicateResultCode;
 
 /**
  * SQL 相关的异常响应结果自动配置。
@@ -17,19 +19,18 @@ import java.util.stream.Stream;
  * @author peace
  */
 @Configuration
-@AutoConfigureAfter(ExceptionResultAutoConfiguration.class)
-@EnableConfigurationProperties(SQLResultExceptionProperties.class)
+@AutoConfigureAfter(ResultExceptionAutoConfiguration.class)
 public class SQLResultExceptionAutoConfiguration {
 
-    private final SQLResultExceptionProperties properties;
-
-    public SQLResultExceptionAutoConfiguration(SQLResultExceptionProperties properties) {
-        this.properties = properties;
+    @Bean
+    public SQLDuplicateConditionalExceptionConverter duplicateConditionalExceptionConverter() {
+        return new SQLDuplicateConditionalExceptionConverter();
     }
 
     @Bean
-    public SQLConditionalExceptionConverter sqlExceptionConverter() {
-        return new SQLConditionalExceptionConverter(properties.getMessagePatterns());
+    @ConditionalOnMissingBean(IndexParameterNameResolver.class)
+    public IndexParameterNameResolver parameterNameResolver() {
+        return new IndexParameterNameResolverImpl();
     }
 
     @Autowired
@@ -44,8 +45,8 @@ public class SQLResultExceptionAutoConfiguration {
     }
 
     @Autowired
-    public void registerDefaultClassifiedResultCode(ClassifiedResultCodeRegistry registry) {
-        registry.registerClassifiedResultCode("unique", "SQL_23000", "SQL_23505");
+    public void registerClassifiedResultCode(ClassifiedResultCodeRegistry registry) {
+        registry.registerClassifiedResultCode("unique", getDuplicateResultCode());
     }
 
 }

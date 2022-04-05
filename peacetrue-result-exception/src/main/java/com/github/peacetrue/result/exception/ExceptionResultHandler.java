@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ExceptionResultHandler {
 
     private ExceptionConvertService exceptionConvertService;
-    private ResultCustomizer resultCustomizer = ResultCustomizer.DEFAULT;
+    private ResultCustomizer resultCustomizer;
 
     public Object handleException(Throwable throwable) {
         log.warn("handle controller exception", throwable);
@@ -34,7 +34,7 @@ public class ExceptionResultHandler {
         this.exceptionConvertService = exceptionConvertService;
     }
 
-    @Autowired(required = false)
+    @Autowired
     public void setResultCustomizer(ResultCustomizer resultCustomizer) {
         this.resultCustomizer = resultCustomizer;
     }

@@ -1,8 +1,11 @@
 package com.github.peacetrue.result.success;
 
-import com.github.peacetrue.result.*;
+import com.github.peacetrue.result.Result;
+import com.github.peacetrue.result.ResultCustomizer;
+import com.github.peacetrue.result.ResultTypes;
+import com.github.peacetrue.result.ResultUtils;
 import com.github.peacetrue.result.builder.ResultMessageBuilder;
-import com.github.peacetrue.result.success.SuccessResultAutoConfiguration.WebMvcSuccessAutowireAutoConfiguration;
+import com.github.peacetrue.result.success.ResultSuccessAutoConfiguration.WebMvcSuccessAutowireAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -23,10 +26,10 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * 自动将不是 {@link Result} 的响应数据转换为成功 {@link DataResult} 。
+ * 自动将不是响应结果的返回数据转换为成功响应结果。
  * <p>
- * 此类不应该被 Spring 扫描到，因为已经在配置 {@link WebMvcSuccessAutowireAutoConfiguration#successAutowireResponseBodyAdvice(SuccessResultProperties) WebMvcSuccessAutowireAutoConfiguration} 中声明了。
- * 如果被扫描，会导致 {@link SuccessResultProperties#getDisabledMethods() disabledMethods}  配置无效。
+ * 此类不应该被 Spring 扫描到，因为已经在配置 {@link WebMvcSuccessAutowireAutoConfiguration#successAutowireResponseBodyAdvice(ResultSuccessProperties) WebMvcSuccessAutowireAutoConfiguration} 中声明了。
+ * 如果被扫描，会导致 {@link ResultSuccessProperties} 中配置失效。
  * <p>
  * 此类可能会导致 {@code JsonView} 失效，有待进一步测试。
  *
@@ -40,23 +43,30 @@ public class SuccessAutowireResponseBodyAdvice implements ResponseBodyAdvice<Obj
 
     /** 遗留的系统，无法使用注解 {@link SuccessAutowire}，可通过配置禁用 */
     private final Set<String> disabledMethods;
+    private final Set<Class<?>> resultTypes;
     private ResultCustomizer resultCustomizer;
     private ResultMessageBuilder resultMessageBuilder;
 
     public SuccessAutowireResponseBodyAdvice() {
-        this(Collections.emptySet());
+        this(Collections.singleton(Result.class), Collections.emptySet());
     }
 
-    public SuccessAutowireResponseBodyAdvice(Set<String> disabledMethods) {
+    public SuccessAutowireResponseBodyAdvice(Set<Class<?>> resultTypes, Set<String> disabledMethods) {
+        this.resultTypes = Objects.requireNonNull(resultTypes);
         this.disabledMethods = Objects.requireNonNull(disabledMethods);
     }
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return !Result.class.isAssignableFrom(returnType.getParameterType())
+        return !isAlreadyResult(returnType)
                 && !isDisabledAutowire(returnType)
                 && canConvertResult(converterType)
                 && !isDisabledMethod(returnType);
+    }
+
+    private boolean isAlreadyResult(MethodParameter returnType) {
+        Class<?> parameterType = returnType.getParameterType();
+        return resultTypes.stream().anyMatch(item -> item.isAssignableFrom(parameterType));
     }
 
     private boolean isDisabledAutowire(MethodParameter returnType) {

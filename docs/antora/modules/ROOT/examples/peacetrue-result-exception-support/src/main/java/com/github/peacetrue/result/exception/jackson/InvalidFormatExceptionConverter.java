@@ -6,8 +6,6 @@ import com.github.peacetrue.result.Parameter;
 import com.github.peacetrue.result.ResultTypes;
 import com.github.peacetrue.result.exception.AbstractExceptionConverter;
 import com.github.peacetrue.result.exception.ClassifiedResultCode;
-import com.github.peacetrue.result.exception.NestExceptionRegistry;
-import com.github.peacetrue.result.exception.spring.SpringExceptionResultAutoConfiguration;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -19,20 +17,11 @@ import java.util.stream.Collectors;
  * {@link HttpMessageNotReadableException#getCause()} 为 {@link InvalidFormatException}。
  *
  * @author peace
- * @see SpringExceptionResultAutoConfiguration#registerNestExceptions(NestExceptionRegistry)
+ * @see com.github.peacetrue.result.exception.spring.HttpMessageNotReadableExceptionConverter
  **/
 public class InvalidFormatExceptionConverter
         extends AbstractExceptionConverter<InvalidFormatException>
         implements ClassifiedResultCode {
-
-    @Override
-    protected Object resolveArgs(InvalidFormatException exception) {
-        Parameter<Class<?>, Object> parameter = new Parameter<>();
-        parameter.setName(getName(exception.getPath()));
-        parameter.setType(exception.getTargetType());
-        parameter.setValue(exception.getValue());
-        return parameter;
-    }
 
     private static String getName(List<JsonMappingException.Reference> paths) {
         return paths.stream()
@@ -44,6 +33,15 @@ public class InvalidFormatExceptionConverter
         return reference.getIndex() == -1
                 ? reference.getFieldName()
                 : (reference.getFieldName() + "[" + reference.getIndex() + "]");
+    }
+
+    @Override
+    protected Object resolveArgs(InvalidFormatException exception) {
+        Parameter<Class<?>, Object> parameter = new Parameter<>();
+        parameter.setName(getName(exception.getPath()));
+        parameter.setType(exception.getTargetType());
+        parameter.setValue(exception.getValue());
+        return parameter;
     }
 
     @Override

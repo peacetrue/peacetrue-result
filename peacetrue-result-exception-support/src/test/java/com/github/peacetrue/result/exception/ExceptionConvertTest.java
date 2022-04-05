@@ -66,7 +66,7 @@ import java.util.Map;
 
                 ResultMessageSourceAutoConfiguration.class,
                 ResultBuilderAutoConfiguration.class,
-                ExceptionResultAutoConfiguration.class,
+                ResultExceptionAutoConfiguration.class,
                 ResultExceptionSupportAutoConfiguration.class,
                 JacksonResultExceptionAutoConfiguration.class,
                 SpringExceptionResultAutoConfiguration.class,
@@ -79,19 +79,30 @@ import java.util.Map;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @EntityScan
-public class ExceptionConvertTest {
+class ExceptionConvertTest {
 
     private static final EasyRandom EASY_RANDOM = new EasyRandom();
-
-    public static class DateConverter implements Converter<String, Date> {
-        @Override
-        public Date convert(String s) {
-            return new Date(Long.parseLong(s));
-        }
-    }
-
     @Autowired
     private TestRestTemplate restTemplate;
+
+    private static HttpHeaders headers(Map<String, String> headers) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        headers.forEach(httpHeaders::add);
+        return httpHeaders;
+    }
+
+    private static void generateDocument(String name, Object result) {
+        try {
+            String stringPath = SourcePathUtils.getTestResourceAbsolutePath(
+                    "/com/github/peacetrue/result/exception/", name, ".json"
+            );
+            Path path = Paths.get(stringPath);
+            if (Files.notExists(path)) Files.createFile(path);
+            new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(path.toFile(), result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     //    @Test
     void resourceNotFound() {
@@ -99,29 +110,46 @@ public class ExceptionConvertTest {
         Assertions.assertEquals(result.getCode(), ResultTypes.RESOURCE_NOT_FOUND.getCode());
     }
 
+    //tag::missingServletRequestParameter[]
     @Test
     void missingServletRequestParameter() {
         Result result = this.restTemplate.getForObject("/missingServletRequestParameter", ResultImpl.class);
         generateDocument("missingServletRequestParameter", result);
         Assertions.assertTrue(result.getCode().startsWith(ResultTypes.PARAMETER_MISSING.getCode()));
     }
+    //end::missingServletRequestParameter[]
 
+    //tag::missingPathVariable[]
     @Test
     void missingPathVariable() {
         Result result = this.restTemplate.getForObject("/missingPathVariable", ResultImpl.class);
         generateDocument("missingPathVariable", result);
-        Assertions.assertTrue(result.getCode().startsWith(ResultTypes.PARAMETER_MISSING.getCode()));
+        Assertions.assertTrue(result.getCode().startsWith(ResultTypes.SERVER_ERROR.getCode()));
     }
+    //end::missingPathVariable[]
 
+    //tag::methodArgumentConversionNotSupported[]
+    @Test
+    void methodArgumentConversionNotSupported() {
+        //org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException: Failed to convert value of type 'java.lang.String' to required type 'com.github.peacetrue.result.exception.TestBean'; nested exception is java.lang.IllegalStateException: Cannot convert value of type 'java.lang.String' to required type 'com.github.peacetrue.result.exception.TestBean': no matching editors or conversion strategy found
+        Result result = this.restTemplate.getForObject("/methodArgumentConversionNotSupported?input=test", ResultImpl.class);
+        generateDocument("methodArgumentConversionNotSupported", result);
+        Assertions.assertTrue(result.getCode().startsWith(ResultTypes.SERVER_ERROR.getCode()));
+    }
+    //end::methodArgumentConversionNotSupported[]
+
+    //tag::methodArgumentTypeMismatch[]
     @Test
     void methodArgumentTypeMismatch() {
-        Result result = this.restTemplate.getForObject("/methodArgumentTypeMismatch?input=a", ResultImpl.class);
+        Result result = this.restTemplate.getForObject("/methodArgumentTypeMismatch?input=test", ResultImpl.class);
         generateDocument("methodArgumentTypeMismatch", result);
         Assertions.assertTrue(result.getCode().startsWith(ResultTypes.PARAMETER_INVALID.getCode()));
     }
+    //end::methodArgumentTypeMismatch[]
 
+    //tag::bind[]
     @Test
-    void beanInvalid() {
+    void bind() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("assertFalse", "true");
         params.add("assertTrue", "false");
@@ -145,20 +173,71 @@ public class ExceptionConvertTest {
         params.add("positive", "0");
         params.add("positiveOrZero", "-1");
         params.add("size", "00");
-        GenericDataResult result = this.restTemplate.postForObject("/beanInvalid", params, GenericDataResult.class);
-        generateDocument("beanInvalid", result);
+        GenericDataResult result = this.restTemplate.postForObject("/bind", params, GenericDataResult.class);
+        generateDocument("bind", result);
 
         Assertions.assertEquals(ResultTypes.ERRORS.getCode(), result.getCode());
-
-//        CollectionType collectionType = TypeFactory.defaultInstance().constructCollectionType(List.class, ResultImpl.class);
-//        List<Result> results = new ObjectMapper().convertValue(result.getData(), collectionType);
-//        List<String> properties = new ArrayList<>(params.keySet());
-//        results.sort(Comparator.comparing(item -> item.getCode().split("\\.", 2)[1], Comparator.comparingInt(properties::indexOf)));
         Assertions.assertTrue(result.getData() instanceof List);
         Assertions.assertEquals(params.size(), ((List<?>) result.getData()).size());
     }
+    //end::bind[]
 
+    //tag::requestBodyMissing[]
+    @Test
+    void requestBodyMissing() {
+        //Required request body is missing: public com.github.peacetrue.result.exception.TestBean com.github.peacetrue.result.exception.ExceptionConvertTestController.httpMessageNotReadable(com.github.peacetrue.result.exception.TestBean)
+        String emptyRequestBody = "";
+        HttpEntity<String> requestEntity = new HttpEntity<>(emptyRequestBody, headers(ImmutableMap.of(
+                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE
+        )));
+        Result result = this.restTemplate.exchange("/httpMessageNotReadable", HttpMethod.POST, requestEntity, ResultImpl.class).getBody();
+        generateDocument("requestBodyMissing", result);
+        Assertions.assertEquals(ResultTypes.PARAMETER_MISSING.getCode(), result.getCode());
+    }
+    //end::requestBodyMissing[]
 
+    //tag::requestBodyJsonInvalid[]
+    @Test
+    void requestBodyJsonInvalid() {
+        //org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Unexpected character ('?' (code 63)): expected a valid value (number, String, array, object, 'true', 'false' or 'null'); nested exception is com.fasterxml.jackson.core.JsonParseException: Unexpected character ('?' (code 63)): expected a valid value (number, String, array, object, 'true', 'false' or 'null')
+        //Caused by: com.fasterxml.jackson.core.JsonParseException: Unexpected character ('?' (code 63)): expected a valid value (number, String, array, object, 'true', 'false' or 'null')
+        String invalidRequestBody = "??";
+        HttpEntity<String> requestEntity = new HttpEntity<>(invalidRequestBody, headers(ImmutableMap.of(
+                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE
+        )));
+        Result result = this.restTemplate.exchange("/httpMessageNotReadable", HttpMethod.POST, requestEntity, ResultImpl.class).getBody();
+        generateDocument("requestBodyJsonInvalid", result);
+        Assertions.assertEquals(ResultTypes.PARAMETER_INVALID.getCode(), result.getCode());
+
+        //org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Unexpected end-of-input in field name; nested exception is com.fasterxml.jackson.core.io.JsonEOFException: Unexpected end-of-input in field name
+        //Caused by: com.fasterxml.jackson.core.io.JsonEOFException: Unexpected end-of-input in field name
+        invalidRequestBody = "{\"name}";
+        requestEntity = new HttpEntity<>(invalidRequestBody, headers(ImmutableMap.of(
+                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE
+        )));
+        result = this.restTemplate.exchange("/httpMessageNotReadable", HttpMethod.POST, requestEntity, ResultImpl.class).getBody();
+        generateDocument("requestBodyJsonInvalidEOF", result);
+        Assertions.assertEquals(ResultTypes.PARAMETER_INVALID.getCode(), result.getCode());
+    }
+    //end::requestBodyJsonInvalid[]
+
+    //tag::requestBodyJsonFormatInvalid[]
+    @Test
+    void requestBodyJsonFormatInvalid() {
+        //InvalidFormatException
+        //org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `java.util.Date` from String "?": not a valid representation (error: Failed to parse Date value '?': Cannot parse date "?": not compatible with any of standard forms ("yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd'T'HH:mm:ss.SSS", "EEE, dd MMM yyyy HH:mm:ss zzz", "yyyy-MM-dd")); nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `java.util.Date` from String "?": not a valid representation (error: Failed to parse Date value '?': Cannot parse date "?": not compatible with any of standard forms ("yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd'T'HH:mm:ss.SSS", "EEE, dd MMM yyyy HH:mm:ss zzz", "yyyy-MM-dd"))
+        //Caused by: com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `java.util.Date` from String "?": not a valid representation (error: Failed to parse Date value '?': Cannot parse date "?": not compatible with any of standard forms ("yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd'T'HH:mm:ss.SSS", "EEE, dd MMM yyyy HH:mm:ss zzz", "yyyy-MM-dd"))
+        String formatInvalidRequestBody = "{\"future\": \"?\"}";
+        HttpEntity<String> requestEntity = new HttpEntity<>(formatInvalidRequestBody, headers(ImmutableMap.of(
+                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE
+        )));
+        Result result = this.restTemplate.exchange("/httpMessageNotReadable", HttpMethod.POST, requestEntity, ResultImpl.class).getBody();
+        generateDocument("requestBodyJsonFormatInvalid", result);
+        Assertions.assertTrue(result.getCode().startsWith(ResultTypes.PARAMETER_INVALID.getCode()));
+    }
+    //end::requestBodyJsonFormatInvalid[]
+
+    //tag::methodArgumentNotValid[]
     @Test
     void methodArgumentNotValid() {
         TestBean testBean = EASY_RANDOM.nextObject(TestBean.class);
@@ -169,58 +248,44 @@ public class ExceptionConvertTest {
         generateDocument("methodArgumentNotValid", result);
         Assertions.assertEquals(ResultTypes.ERRORS.getCode(), result.getCode());
     }
+    //end::methodArgumentNotValid[]
 
-    @Test
-    void jsonProcessingException() {
-        HttpEntity<String> requestEntity = new HttpEntity<>("{x}", headers(ImmutableMap.of(
-                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE
-        )));
-        Result result = this.restTemplate.exchange("/methodArgumentNotValid", HttpMethod.POST, requestEntity, ResultImpl.class).getBody();
-        generateDocument("jsonProcessingException", result);
-        Assertions.assertEquals(ResultTypes.PARAMETER_INVALID.getCode(), result.getCode());
-    }
-
-    @Test
-    void invalidFormatException() {
-        HttpEntity<String> requestEntity = new HttpEntity<>("{a:x}", headers(ImmutableMap.of(
-                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.5"
-        )));
-        Result result = this.restTemplate.exchange("/methodArgumentNotValid", HttpMethod.POST, requestEntity, ResultImpl.class).getBody();
-        generateDocument("invalidFormatException", result);
-        Assertions.assertEquals(ResultTypes.PARAMETER_INVALID.getCode(), result.getCode());
-    }
-
-    public static HttpHeaders headers(Map<String, String> headers) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        headers.forEach(httpHeaders::add);
-        return httpHeaders;
-    }
-
+    //tag::entityNotFound[]
     @Test
     void entityNotFound() {
-        Result result = this.restTemplate.getForObject("/entityNotFound", ResultImpl.class);
+        long idNotExists = 0L;
+        Result result = this.restTemplate.getForObject("/entityNotFound?id={0}", ResultImpl.class, idNotExists);
         generateDocument("entityNotFound", result);
-        Assertions.assertTrue(result.getCode().startsWith(ResultTypes.RECORD_NOT_FOUND.getCode()));
+        Assertions.assertTrue(result.getCode().startsWith(ResultTypes.PARAMETER_ILLEGAL.getCode()));
     }
+    //end::entityNotFound[]
 
+    //tag::duplicate[]
     @Test
     void duplicate() {
-        Result result = this.restTemplate.postForObject("/duplicate", HttpMethod.POST, ResultImpl.class);
+        //javax.persistence.PersistenceException: org.hibernate.exception.ConstraintViolationException: could not execute statement
+        //Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement
+        //Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry 'test' for key 'test_entity.uk_name'
+        String existName = "test";
+        Result result = this.restTemplate.postForObject("/duplicate?name={0}", HttpMethod.POST, ResultImpl.class, existName);
         generateDocument("duplicate", result);
         Assertions.assertTrue(result.getCode().startsWith("unique"));
     }
+    //end::duplicate[]
 
-    private static void generateDocument(String name, Object result) {
-        try {
-            String stringPath = SourcePathUtils.getTestResourceAbsolutePath(
-                    "/com/github/peacetrue/result/exception/", name, ".json"
-            );
-            Path path = Paths.get(stringPath);
-            if (Files.notExists(path)) Files.createFile(path);
-            new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(path.toFile(), result);
-        } catch (Exception e) {
-            e.printStackTrace();
+    //tag::userDisabled[]
+    @Test
+    void userDisabled() {
+        Result result = this.restTemplate.postForObject("/userDisabled", HttpMethod.POST, ResultImpl.class);
+        generateDocument("userDisabled", result);
+        Assertions.assertEquals(result.getCode(), "user_disabled");
+    }
+    //end::userDisabled[]
+
+    public static class DateConverter implements Converter<String, Date> {
+        @Override
+        public Date convert(String s) {
+            return new Date(Long.parseLong(s));
         }
     }
 }

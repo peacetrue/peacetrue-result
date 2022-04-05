@@ -17,6 +17,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -80,7 +81,9 @@ public class ResultBuilderAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ResultCustomizer.class)
     public ResultCustomizer resultCustomizer() {
-        return new ResultCodeCustomizer(properties.getCustomCodes());
+        return CollectionUtils.isEmpty(properties.getCustomCodes())
+                ? ResultCustomizer.DEFAULT
+                : new ResultCodeCustomizer(properties.getCustomCodes());
     }
 
 

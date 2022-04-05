@@ -22,7 +22,9 @@ import java.util.stream.Collectors;
  * @author peace
  */
 @Slf4j
-public class BindExceptionConverter extends AbstractExceptionConverter<BindException> implements ClassifiedResultCode {
+public class BindExceptionConverter
+        extends AbstractExceptionConverter<BindException>
+        implements ClassifiedResultCode {
 
     /** @see org.springframework.beans.TypeMismatchException */
     private static final String TYPE_MISMATCH = resolveCode(TypeMismatchException.class);

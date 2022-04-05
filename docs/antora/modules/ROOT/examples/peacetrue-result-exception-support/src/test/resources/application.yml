@@ -4,17 +4,17 @@ logging.level.web: debug
 logging.level.com.github.peacetrue: trace
 
 spring:
-    jpa:
-        generate-ddl: true
-        hibernate:
-            ddl-auto: update
-        open-in-view: false
-    messages:
-        basename: 'messages'
-    datasource:
-        url: jdbc:mysql://localhost:3306/peacetrue-result?autoreconnect=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
-        username: root
-        password: 1qw2!QW@
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    open-in-view: true
+  messages:
+    basename: 'messages'
+  datasource:
+    url: jdbc:mysql://localhost:3306/peacetrue-result?autoreconnect=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 1qw2!QW@
 server:
-    error:
-        include-stacktrace: on_trace_param
+  error:
+    include-stacktrace: on_trace_param

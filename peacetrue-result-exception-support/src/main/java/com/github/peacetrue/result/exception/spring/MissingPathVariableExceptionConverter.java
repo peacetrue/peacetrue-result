@@ -5,7 +5,6 @@ import com.github.peacetrue.result.ResultTypes;
 import com.github.peacetrue.result.exception.AbstractExceptionConverter;
 import com.github.peacetrue.result.exception.ClassifiedResultCode;
 import org.springframework.web.bind.MissingPathVariableException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 
 /**
  * 缺少路径变量异常转换器。
@@ -23,7 +22,7 @@ public class MissingPathVariableExceptionConverter
 
     @Override
     public String getSupperCode() {
-        return ResultTypes.PARAMETER_MISSING.getCode();
+        return ResultTypes.SERVER_ERROR.getCode();
     }
 
 }

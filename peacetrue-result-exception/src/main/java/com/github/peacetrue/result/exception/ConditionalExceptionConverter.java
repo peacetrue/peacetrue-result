@@ -14,18 +14,18 @@ public interface ConditionalExceptionConverter {
     /**
      * 是否支持此异常。
      *
-     * @param throwable 异常
+     * @param exception 异常
      * @return true 如果支持
      */
-    boolean supports(Throwable throwable);
+    boolean supports(Throwable exception);
 
     /**
      * 转换异常为数据响应结果。
      *
-     * @param throwable 异常
+     * @param exception 异常
      * @return 响应结果
      * @see ExceptionConverter
      */
-    Result convert(Throwable throwable);
+    Result convert(Throwable exception);
 
 }

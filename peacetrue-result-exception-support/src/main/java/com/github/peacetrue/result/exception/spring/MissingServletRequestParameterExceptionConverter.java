@@ -16,14 +16,14 @@ public class MissingServletRequestParameterExceptionConverter
         implements ClassifiedResultCode {
 
     @Override
+    public String getSupperCode() {
+        return ResultTypes.PARAMETER_MISSING.getCode();
+    }
+
+    @Override
     protected Parameter<String, Object> resolveArgs(MissingServletRequestParameterException exception) {
         return new Parameter<>(
                 exception.getParameterName(), exception.getParameterType(), null
         );
-    }
-
-    @Override
-    public String getSupperCode() {
-        return ResultTypes.PARAMETER_MISSING.getCode();
     }
 }

@@ -11,8 +11,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
  *
  * @author peace
  */
-public class MethodArgumentTypeMismatchExceptionConverter extends
-        AbstractExceptionConverter<MethodArgumentTypeMismatchException>
+public class MethodArgumentTypeMismatchExceptionConverter
+        extends AbstractExceptionConverter<MethodArgumentTypeMismatchException>
         implements ClassifiedResultCode {
 
     @Override

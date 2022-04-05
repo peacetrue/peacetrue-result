@@ -33,24 +33,38 @@ class SuccessResultMockTest extends AbstractSuccessResultMockTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(ResultTypes.SUCCESS.getCode()))
-                .andExpect(jsonPath("$.message").value("Successful operation"))
+                .andExpect(jsonPath("$.message").value("The operation succeeded"))
                 .andExpect(jsonPath("$.data").value(input))
+        ;
+    }
+
+    @Test
+    void disableSuccessAutowireByResultType() throws Exception {
+        int input = 1;
+        this.mockMvc.perform(get("/disableSuccessAutowireByResultType")
+                .param("input", String.valueOf(input))
+                .header(HttpHeaders.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.5")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(input))
+        ;
+    }
+
+    @Test
+    void disableSuccessAutowireByConfiguration() throws Exception {
+        String input = "1";
+        this.mockMvc.perform(get("/disableSuccessAutowireByConfiguration")
+                .param("input", input)
+                .header(HttpHeaders.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.5")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(input))
         ;
     }
 
     @Test
     void disableSuccessAutowireByAnnotation() throws Exception {
         this.mockMvc.perform(get("/disableSuccessAutowireByAnnotation?input=1")
-                .header(HttpHeaders.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.5")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(1))
-        ;
-    }
-
-    @Test
-    void disableSuccessAutowireByConfiguration() throws Exception {
-        this.mockMvc.perform(get("/disableSuccessAutowireByConfiguration?input=1")
                 .header(HttpHeaders.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.5")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

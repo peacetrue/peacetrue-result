@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @SpringBootTest(classes = {
         ResultMessageSourceAutoConfiguration.class,
         ResultBuilderAutoConfiguration.class,
-        SuccessResultAutoConfiguration.class,
+        ResultSuccessAutoConfiguration.class,
         SuccessResultTestController.class
 })
 public class AbstractSuccessResultMockTest {
