@@ -17,7 +17,7 @@
 ----
 <dependency>
   <groupId>com.github.peacetrue.result</groupId>
-  <artifactId>peacetrue-result-sample</artifactId>
+  <artifactId>peacetrue-result-exception-support</artifactId>
   <version>1.0.0</version>
 </dependency>
 ----
