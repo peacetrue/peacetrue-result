@@ -19,7 +19,7 @@ public class IndexParameterNameResolverImpl implements IndexParameterNameResolve
     public String resolveParameterName(String table, String index) {
         int i = index.indexOf("_");
         index = i == -1 ? index : index.substring(i + 1);
-        return RegexUtils.replaceAll(index, PATTERN, matcher -> matcher.group(1).toUpperCase());
+        return RegexUtils.replaceAll(PATTERN, index, matcher -> matcher.group(1).toUpperCase());
     }
 
 }

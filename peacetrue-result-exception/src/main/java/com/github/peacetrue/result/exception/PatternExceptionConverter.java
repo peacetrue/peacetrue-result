@@ -7,22 +7,24 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * 从 {@link Exception#getMessage()} 中提取描述模板参数。
  *
  * @author peace
  **/
-public class PatternExceptionConverter<T extends Throwable> extends AbstractExceptionConverter<T> {
+public abstract class PatternExceptionConverter<T extends Throwable>
+        extends AbstractExceptionConverter<T> {
 
     /** 正则表达式规则 */
-    private List<String> patterns;
+    protected final List<Pattern> patterns;
 
-    public PatternExceptionConverter() {
+    protected PatternExceptionConverter() {
         this(Collections.emptyList());
     }
 
-    public PatternExceptionConverter(List<String> patterns) {
+    protected PatternExceptionConverter(List<Pattern> patterns) {
         this.patterns = Objects.requireNonNull(patterns);
     }
 
@@ -30,7 +32,7 @@ public class PatternExceptionConverter<T extends Throwable> extends AbstractExce
     @Override
     protected Object resolveArgs(T exception) {
         return patterns.stream()
-                .map(item -> RegexUtils.extractValue(exception.getMessage(), item))
+                .map(item -> RegexUtils.extractValues(item, exception.getMessage()))
                 .filter(item -> !ObjectUtils.isEmpty(item))
                 .findFirst().orElse(null);
     }
