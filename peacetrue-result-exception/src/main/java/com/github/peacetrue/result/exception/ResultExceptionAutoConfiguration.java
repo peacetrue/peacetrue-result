@@ -2,14 +2,15 @@ package com.github.peacetrue.result.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractResourceBasedMessageSource;
+import org.springframework.lang.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -54,24 +55,29 @@ public class ResultExceptionAutoConfiguration {
     /**
      * 避免循环依赖：
      * <p>
-     * 首先初始化 ExceptionConvertServiceImpl，
-     * 然后初始化 NestConditionalExceptionConverter，
+     * 首先初始化 ExceptionConvertServiceImpl（不依赖 ConditionalExceptionConverter），
+     * 然后初始化 NestConditionalExceptionConverter（依赖 ExceptionConvertService），
      * 最后将 NestConditionalExceptionConverter 设置到 ExceptionConvertServiceImpl 中。
      */
     @Configuration
+    @AutoConfigureAfter(ResultExceptionAutoConfiguration.class)
     public static class ExceptionConvertServiceImplConfiguration {
 
         @Autowired
         @SuppressWarnings("rawtypes")
-        public void registerExceptionConverter(ExceptionConvertServiceImpl exceptionConvertService,
+        public void registerExceptionConverter(ExceptionConvertService exceptionConvertService,
                                                List<ExceptionConverter> exceptionConverters) {
-            exceptionConvertService.setExceptionConverters(exceptionConverters);
+            if (exceptionConvertService instanceof ExceptionConvertServiceImpl) {
+                ((ExceptionConvertServiceImpl) exceptionConvertService).setExceptionConverters(exceptionConverters);
+            }
         }
 
         @Autowired
-        public void registerConditionalExceptionConverter(ExceptionConvertServiceImpl exceptionConvertService,
+        public void registerConditionalExceptionConverter(ExceptionConvertService exceptionConvertService,
                                                           List<ConditionalExceptionConverter> conditionalExceptionConverters) {
-            exceptionConvertService.setConditionalExceptionConverters(conditionalExceptionConverters);
+            if (exceptionConvertService instanceof ExceptionConvertServiceImpl) {
+                ((ExceptionConvertServiceImpl) exceptionConvertService).setConditionalExceptionConverters(conditionalExceptionConverters);
+            }
         }
     }
 
