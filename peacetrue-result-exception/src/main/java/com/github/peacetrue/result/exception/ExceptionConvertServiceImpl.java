@@ -95,7 +95,6 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
         return !includeMessageTemplateArgs && result instanceof DataResult;
     }
 
-    @Autowired(required = false)
     @SuppressWarnings("all")
     public void setExceptionConverters(List<ExceptionConverter> exceptionConverters) {
         if (CollectionUtils.isEmpty(exceptionConverters)) return;
@@ -117,7 +116,6 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
         });
     }
 
-    @Autowired(required = false)
     public void setConditionalExceptionConverters(List<ConditionalExceptionConverter> conditionalExceptionConverters) {
         if (CollectionUtils.isEmpty(conditionalExceptionConverters)) return;
         log.debug("register '{}' ConditionalExceptionConverter: {}",

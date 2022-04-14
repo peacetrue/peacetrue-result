@@ -72,10 +72,13 @@ public class ResultBuilderAutoConfiguration {
                 ;
     }
 
-    @Autowired
-    public void registerFormatter(@Qualifier(CONVERSION_SERVICE_NAME) FormatterRegistry registry,
-                                  ClassPrinter classPrinter) {
-        registry.addFormatterForFieldType(Class.class, classPrinter, null);
+    @Configuration
+    public static class ClassPrinterRegisterConfiguration {
+        @Autowired
+        public void registerFormatter(@Qualifier(CONVERSION_SERVICE_NAME) FormatterRegistry registry,
+                                      ClassPrinter classPrinter) {
+            registry.addFormatterForFieldType(Class.class, classPrinter, null);
+        }
     }
 
     @Bean

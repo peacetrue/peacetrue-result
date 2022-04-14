@@ -51,6 +51,30 @@ public class ResultExceptionAutoConfiguration {
         return convertService;
     }
 
+    /**
+     * 避免循环依赖：
+     * <p>
+     * 首先初始化 ExceptionConvertServiceImpl，
+     * 然后初始化 NestConditionalExceptionConverter，
+     * 最后将 NestConditionalExceptionConverter 设置到 ExceptionConvertServiceImpl 中。
+     */
+    @Configuration
+    public static class ExceptionConvertServiceImplConfiguration {
+
+        @Autowired
+        @SuppressWarnings("rawtypes")
+        public void registerExceptionConverter(ExceptionConvertServiceImpl exceptionConvertService,
+                                               List<ExceptionConverter> exceptionConverters) {
+            exceptionConvertService.setExceptionConverters(exceptionConverters);
+        }
+
+        @Autowired
+        public void registerConditionalExceptionConverter(ExceptionConvertServiceImpl exceptionConvertService,
+                                                          List<ConditionalExceptionConverter> conditionalExceptionConverters) {
+            exceptionConvertService.setConditionalExceptionConverters(conditionalExceptionConverters);
+        }
+    }
+
     @Bean
     public FallbackExceptionConverter fallbackExceptionConverter() {
         return new FallbackExceptionConverter();
