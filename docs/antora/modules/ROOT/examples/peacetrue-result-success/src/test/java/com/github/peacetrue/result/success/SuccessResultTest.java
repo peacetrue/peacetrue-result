@@ -56,10 +56,10 @@ class SuccessResultTest {
         //修改 RestTemplate 接口，使其支持构造类型，类似 objectMapper.getTypeFactory().constructArrayType()
         //手动根据 DataResultImpl + 具体类型 = 构造包装类型
         //不指定类型，使用 RestTemplate 的默认转换，然后手动强制转换
-        Integer output = execute(resultType -> this.restTemplate.getForObject(
+        int output = execute(resultType -> this.restTemplate.getForObject(
                 "/enableSuccessAutowire?input={0}", resultType, 1
         ), Integer.class);
-        Assertions.assertEquals(1, output);
+        Assertions.assertEquals(1,  output);
         //2022-03-12 06:33:53.917  WARN 54791 --- [o-auto-1-exec-1] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages] not found for MessageSource: Can't find bundle for base name messages, locale zh_CN
     }
 
@@ -71,7 +71,7 @@ class SuccessResultTest {
 
     @Test
     void disableSuccessAutowireByAnnotation() {
-        Integer output = this.restTemplate.getForObject(
+        int output = this.restTemplate.getForObject(
                 "/disableSuccessAutowireByAnnotation?input={0}", Integer.class, 1
         );
         Assertions.assertEquals(1, output);
@@ -79,7 +79,7 @@ class SuccessResultTest {
 
     @Test
     void disableSuccessAutowireByConfiguration() {
-        Integer output = this.restTemplate.getForObject(
+        int output = this.restTemplate.getForObject(
                 "/disableSuccessAutowireByConfiguration?input={0}", Integer.class, 1
         );
         Assertions.assertEquals(1, output);

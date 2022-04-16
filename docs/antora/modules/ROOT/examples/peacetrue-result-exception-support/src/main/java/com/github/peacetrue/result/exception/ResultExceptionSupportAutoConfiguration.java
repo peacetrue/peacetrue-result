@@ -1,6 +1,7 @@
 package com.github.peacetrue.result.exception;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractResourceBasedMessageSource;
 
@@ -10,6 +11,7 @@ import org.springframework.context.support.AbstractResourceBasedMessageSource;
  * @author peace
  **/
 @Configuration
+@AutoConfigureAfter(ResultExceptionAutoConfiguration.class)
 public class ResultExceptionSupportAutoConfiguration {
 
     @Autowired

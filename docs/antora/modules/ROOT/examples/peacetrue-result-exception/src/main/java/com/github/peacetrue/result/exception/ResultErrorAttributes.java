@@ -1,7 +1,7 @@
-package com.github.peacetrue.result.exception;//package com.github.peacetrue.result.exception;
+package com.github.peacetrue.result.exception;
 
-import com.github.peacetrue.result.DataResultImpl;
 import com.github.peacetrue.result.ResultCustomizer;
+import com.github.peacetrue.result.ResultImpl;
 import com.github.peacetrue.result.ResultTypes;
 import com.github.peacetrue.result.builder.ResultMessageBuilder;
 import com.github.peacetrue.spring.beans.BeanUtils;
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 响应结果错误属性。
+ * 响应结果错误属性。处理 {@link ResultTypes#RESOURCE_NOT_FOUND} 的场景。
  *
  * @author peace
  */
@@ -23,26 +23,23 @@ public class ResultErrorAttributes extends DefaultErrorAttributes {
 
     private ResultMessageBuilder resultMessageBuilder;
     private ResultCustomizer resultCustomizer;
-    private ExceptionResultHandler exceptionResultHandler;
 
     @Override
     public Map<String, Object> getErrorAttributes(WebRequest webRequest, boolean includeStackTrace) {
-        Throwable error = getError(webRequest);
-        if (error != null) {
-            Object rawResult = exceptionResultHandler.handleException(error);
-            return BeanUtils.getPropertyValues(rawResult);
-        }
-
         Integer status = (Integer) webRequest.getAttribute("javax.servlet.error.status_code", RequestAttributes.SCOPE_REQUEST);
         if (Objects.equals(status, HttpStatus.NOT_FOUND.value())) {
             String code = ResultTypes.RESOURCE_NOT_FOUND.getCode();
             Object[] messageTemplateArgs = {webRequest.getAttribute("javax.servlet.error.request_uri", RequestAttributes.SCOPE_REQUEST)};
             String message = resultMessageBuilder.build(ResultTypes.RESOURCE_NOT_FOUND.getCode(), messageTemplateArgs);
-            Object rawResult = resultCustomizer.customize(new DataResultImpl<>(code, message, messageTemplateArgs));
-            return BeanUtils.getPropertyValues(rawResult);
+            return convert(resultCustomizer.customize(new ResultImpl(code, message)));
         }
 
         return super.getErrorAttributes(webRequest, includeStackTrace);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> convert(Object result) {
+        return result instanceof Map ? (Map<String, Object>) result : BeanUtils.getPropertyValues(result);
     }
 
     @Autowired
@@ -55,8 +52,4 @@ public class ResultErrorAttributes extends DefaultErrorAttributes {
         this.resultCustomizer = resultCustomizer;
     }
 
-    @Autowired
-    public void setExceptionResultHandler(ExceptionResultHandler exceptionResultHandler) {
-        this.exceptionResultHandler = exceptionResultHandler;
-    }
 }

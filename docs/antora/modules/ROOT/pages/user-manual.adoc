@@ -57,6 +57,17 @@ include::example$peacetrue-result-success/src/test/java/com/github/peacetrue/res
 
 以下详细介绍目前支持的异常。
 
+=== 请求资源不存在
+
+请求不存在的资源 */resource_not_found*，
+触发 `HttpStatus.NOT_FOUND`，返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-exception-support/src/test/resources/com/github/peacetrue/result/exception/resourceNotFound.json[]
+----
+
 === 缺少必须的请求参数
 
 请求接口 */missingServletRequestParameter*：

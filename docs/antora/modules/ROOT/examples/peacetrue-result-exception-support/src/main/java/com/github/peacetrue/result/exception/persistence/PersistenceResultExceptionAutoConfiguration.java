@@ -9,13 +9,13 @@ import org.springframework.context.annotation.Configuration;
 import javax.persistence.EntityManager;
 
 /**
- * for exception in artifact 'javax.persistence:javax.persistence-api:*'.
+ * JPA 相关的异常响应结果自动配置。
  *
  * @author peace
  **/
 @Configuration
-@AutoConfigureAfter(ResultExceptionSupportAutoConfiguration.class)
 @ConditionalOnClass(EntityManager.class)
+@AutoConfigureAfter(ResultExceptionSupportAutoConfiguration.class)
 public class PersistenceResultExceptionAutoConfiguration {
 
     @Bean

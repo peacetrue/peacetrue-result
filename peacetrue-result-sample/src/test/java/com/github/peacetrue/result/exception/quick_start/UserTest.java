@@ -93,14 +93,14 @@ class UserTest {
         }
     }
 
-    //tag::resource_not_found[]
+    //tag::resourceNotFound[]
     @Test
     void resourceNotFound() {
-        Result result = this.restTemplate.getForObject("/resource_not_found", GenericDataResult.class);
-        generateDocument("resource_not_found", result);
+        Result result = this.restTemplate.getForObject("/resourceNotFound", ResultImpl.class);
+        generateDocument("resourceNotFound", result);
         Assertions.assertEquals(ResultTypes.RESOURCE_NOT_FOUND.getCode(), result.getCode());
     }
-    //end::resource_not_found[]
+    //end::resourceNotFound[]
 
     //tag::success[]
     @Test

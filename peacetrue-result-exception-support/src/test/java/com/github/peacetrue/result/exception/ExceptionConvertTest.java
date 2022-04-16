@@ -108,12 +108,14 @@ class ExceptionConvertTest {
         }
     }
 
+    //tag::resourceNotFound[]
     @Test
     void resourceNotFound() {
-        Result result = this.restTemplate.getForObject("/resource_not_found", ResultImpl.class);
+        Result result = this.restTemplate.getForObject("/resourceNotFound", ResultImpl.class);
         generateDocument("resourceNotFound", result);
         Assertions.assertEquals(ResultTypes.RESOURCE_NOT_FOUND.getCode(), result.getCode());
     }
+    //end::resourceNotFound[]
 
     //tag::missingServletRequestParameter[]
     @Test

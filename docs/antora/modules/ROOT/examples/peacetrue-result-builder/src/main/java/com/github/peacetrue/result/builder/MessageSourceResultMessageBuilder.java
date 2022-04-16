@@ -23,7 +23,8 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.github.peacetrue.result.builder.ResultBuilderAutoConfiguration.CONVERSION_SERVICE_NAME;
+import static com.github.peacetrue.result.builder.ResultBuilderAutoConfiguration.RESULT_BUILDER_CONVERSION_SERVICE;
+import static com.github.peacetrue.result.builder.ResultBuilderAutoConfiguration.RESULT_BUILDER_EXPRESSION_PARSER;
 
 /**
  * 基于 {@link MessageSource} 的响应结果描述构建者。
@@ -37,8 +38,8 @@ public class MessageSourceResultMessageBuilder implements ResultMessageBuilder, 
     public static final String DEFAULT_CODE_PREFIX = "Result";
     public static final String DEFAULT_MESSAGE = "missing '%s' message";
 
-    private String codePrefix;
-    private String defaultMessage;
+    private final String codePrefix;
+    private final String defaultMessage;
     private MessageSource messageSource;
     private ExpressionParser expressionParser;
     private ConversionService conversionService;
@@ -98,21 +99,13 @@ public class MessageSourceResultMessageBuilder implements ResultMessageBuilder, 
         return context;
     }
 
-    public void setCodePrefix(String codePrefix) {
-        this.codePrefix = codePrefix;
-    }
-
-    public void setDefaultMessage(String defaultMessage) {
-        this.defaultMessage = defaultMessage;
-    }
-
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanResolver = new BeanFactoryResolver(beanFactory);
     }
 
     @Autowired
-    @Qualifier(CONVERSION_SERVICE_NAME)
+    @Qualifier(RESULT_BUILDER_CONVERSION_SERVICE)
     public void setConversionService(ConversionService conversionService) {
         this.conversionService = conversionService;
     }
@@ -123,6 +116,7 @@ public class MessageSourceResultMessageBuilder implements ResultMessageBuilder, 
     }
 
     @Autowired
+    @Qualifier(RESULT_BUILDER_EXPRESSION_PARSER)
     public void setExpressionParser(ExpressionParser expressionParser) {
         this.expressionParser = expressionParser;
     }

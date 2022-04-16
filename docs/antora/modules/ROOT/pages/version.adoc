@@ -30,3 +30,8 @@
 == 2.1.0
 
 同时支持 Spring Boot 1 系列最高版本和 Spring Boot 2 系列最低版本。
+
+Spring Boot 2 支持 `ResultTypes.RESOURCE_NOT_FOUND`，
+Spring Boot 1 不支持 `ResultTypes.RESOURCE_NOT_FOUND`。
+
+NOTE: 读者可以尝试 Spring Boot 1 系列其他版本，测试时仅验证过 Spring Boot 1 系列最高版本。

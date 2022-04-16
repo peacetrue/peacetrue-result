@@ -11,7 +11,7 @@ import com.github.peacetrue.result.exception.ResultExceptionAutoConfiguration;
 import com.github.peacetrue.result.exception.ResultExceptionSupportAutoConfiguration;
 import com.github.peacetrue.result.exception.jackson.JacksonResultExceptionAutoConfiguration;
 import com.github.peacetrue.result.exception.persistence.PersistenceResultExceptionAutoConfiguration;
-import com.github.peacetrue.result.exception.spring.SpringExceptionResultAutoConfiguration;
+import com.github.peacetrue.result.exception.spring.SpringResultExceptionAutoConfiguration;
 import com.github.peacetrue.result.exception.sql.SQLResultExceptionAutoConfiguration;
 import com.github.peacetrue.result.success.ResultSuccessAutoConfiguration;
 import com.github.peacetrue.test.SourcePathUtils;
@@ -28,6 +28,7 @@ import org.springframework.boot.autoconfigure.transaction.TransactionAutoConfigu
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManagerAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -61,9 +62,10 @@ import java.nio.file.Paths;
                 ResultExceptionAutoConfiguration.class,
                 ResultExceptionSupportAutoConfiguration.class,
                 JacksonResultExceptionAutoConfiguration.class,
-                SpringExceptionResultAutoConfiguration.class,
+                SpringResultExceptionAutoConfiguration.class,
                 SQLResultExceptionAutoConfiguration.class,
                 PersistenceResultExceptionAutoConfiguration.class,
+                ErrorMvcAutoConfiguration.class,
 
                 UserController.class,
                 UserRepository.class,
@@ -90,6 +92,15 @@ class UserTest {
             e.printStackTrace();
         }
     }
+
+    //tag::resourceNotFound[]
+    @Test
+    void resourceNotFound() {
+        Result result = this.restTemplate.getForObject("/resourceNotFound", ResultImpl.class);
+        generateDocument("resourceNotFound", result);
+        Assertions.assertEquals(ResultTypes.RESOURCE_NOT_FOUND.getCode(), result.getCode());
+    }
+    //end::resourceNotFound[]
 
     //tag::success[]
     @Test

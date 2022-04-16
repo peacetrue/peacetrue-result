@@ -52,6 +52,25 @@ include::example$peacetrue-result-sample/src/test/resources/com/github/peacetrue
 
 组件会自动处理一些常规异常，详情可参考 xref:user-manual.adoc#ExceptionConvert[自动装配异常响应结果]。
 
+=== 请求资源不存在
+
+请求不存在的资源 */resource_not_found*：
+
+.UserTest
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/test/java/com/github/peacetrue/result/exception/quick_start/UserTest.java[tags=resourceNotFound]
+----
+
+返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-sample/src/test/resources/com/github/peacetrue/result/exception/quick_start/resourceNotFound.json[]
+----
+
+
 === 参数缺失
 
 请求接口 */users*，不传入参数 `id`：

@@ -10,6 +10,7 @@ import org.springframework.util.ObjectUtils;
 import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import java.util.regex.Pattern;
 
 /**
  * {@link EntityNotFoundException} 异常转换器。
@@ -23,6 +24,8 @@ public class EntityNotFoundExceptionConverter
         extends AbstractExceptionConverter<EntityNotFoundException>
         implements ClassifiedResultCode {
 
+    private static final Pattern PATTERN = Pattern.compile("Unable to find (.+)? with id (.+)");
+
     private static Class<?> forName(String className) {
         try {
             return Class.forName(className);
@@ -35,7 +38,7 @@ public class EntityNotFoundExceptionConverter
     @Override
     protected Parameter<Class<?>, String> resolveArgs(EntityNotFoundException exception) {
         String message = exception.getMessage();
-        String[] values = RegexUtils.extractValue(message, "Unable to find (.+)? with id (.+)");
+        String[] values = RegexUtils.extractValues(PATTERN, message);
         if (ObjectUtils.isEmpty(values)) {
             throw new IllegalStateException("Can't extract values from message '" + message + "'");
         }
