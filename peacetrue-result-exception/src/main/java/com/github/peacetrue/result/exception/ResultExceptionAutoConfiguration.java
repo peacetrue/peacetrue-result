@@ -6,16 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractResourceBasedMessageSource;
 import org.springframework.core.Ordered;
-import org.springframework.lang.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -27,7 +28,6 @@ import java.util.List;
 @Configuration
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE + 3)
 @AutoConfigureAfter(ResultBuilderAutoConfiguration.class)
-@AutoConfigureBefore(ErrorMvcAutoConfiguration.class)
 @EnableConfigurationProperties(ResultExceptionProperties.class)
 public class ResultExceptionAutoConfiguration {
 
@@ -87,9 +87,19 @@ public class ResultExceptionAutoConfiguration {
         return new ConfiguredResultCodeClassifier(properties.getClassifiedCodes());
     }
 
-    @Bean
-    public ResultErrorAttributes resultErrorAttributes() {
-        return new ResultErrorAttributes();
+    /**
+     * Spring Boot 1 和 Spring Boot 2 中，{@link ErrorAttributes} 所在包不同，需要区别处理。
+     * {@link ResultErrorAttributes} 只支持 Spring Boot 2，不支持 Spring Boot 1。
+     */
+    @Configuration
+    @ConditionalOnClass(name = "org.springframework.boot.web.servlet.error.ErrorAttributes")
+    @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE + 3)
+    @AutoConfigureBefore(name = "org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration")
+    public static class ErrorAttributesConfiguration {
+        @Bean
+        public ResultErrorAttributes resultErrorAttributes() {
+            return new ResultErrorAttributes();
+        }
     }
 
     @Autowired

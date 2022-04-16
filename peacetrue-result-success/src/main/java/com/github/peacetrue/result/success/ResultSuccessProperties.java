@@ -4,7 +4,6 @@ import com.github.peacetrue.result.Result;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
 import java.util.Set;
