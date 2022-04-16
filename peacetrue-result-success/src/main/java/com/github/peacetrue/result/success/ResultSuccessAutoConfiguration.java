@@ -1,6 +1,6 @@
 package com.github.peacetrue.result.success;
 
-import com.github.peacetrue.result.builder.ResultMessageSourceAutoConfiguration;
+import com.github.peacetrue.result.builder.ResultBuilderAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -18,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author peace
  */
 @Configuration
-@AutoConfigureAfter(ResultMessageSourceAutoConfiguration.class)
+@AutoConfigureAfter(ResultBuilderAutoConfiguration.class)
 @EnableConfigurationProperties(ResultSuccessProperties.class)
 public class ResultSuccessAutoConfiguration {
 

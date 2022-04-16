@@ -10,15 +10,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.JsonViewResponseBodyAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Objects;
@@ -61,7 +65,9 @@ public class SuccessAutowireResponseBodyAdvice implements ResponseBodyAdvice<Obj
         return !isAlreadyResult(returnType)
                 && !isDisabledAutowire(returnType)
                 && canConvertResult(converterType)
-                && !isDisabledMethod(returnType);
+                && !isDisabledMethod(returnType)
+                && (!isResponseEntity(returnType) || isOkResponseEntity(returnType))
+                ;
     }
 
     private boolean isAlreadyResult(MethodParameter returnType) {
@@ -88,6 +94,19 @@ public class SuccessAutowireResponseBodyAdvice implements ResponseBodyAdvice<Obj
         if (method == null) return false;
         String name = method.getDeclaringClass().getName() + "." + method.getName();
         return disabledMethods.stream().anyMatch(name::startsWith);
+    }
+
+    private boolean isResponseEntity(MethodParameter returnType) {
+        return ResponseEntity.class.isAssignableFrom(returnType.getParameterType());
+    }
+
+    private boolean isOkResponseEntity(MethodParameter returnType) {
+        Field field = ReflectionUtils.findField(returnType.getClass(), "returnValue");
+        if (field == null) return false;
+        ReflectionUtils.makeAccessible(field);
+        ResponseEntity<?> value = (ResponseEntity<?>) ReflectionUtils.getField(field, returnType);
+        if (value == null) return false;
+        return HttpStatus.OK == value.getStatusCode();
     }
 
     @Override

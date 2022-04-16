@@ -9,7 +9,7 @@ import com.github.peacetrue.result.builder.ResultBuilderAutoConfiguration;
 import com.github.peacetrue.result.builder.ResultMessageSourceAutoConfiguration;
 import com.github.peacetrue.result.exception.jackson.JacksonResultExceptionAutoConfiguration;
 import com.github.peacetrue.result.exception.persistence.PersistenceResultExceptionAutoConfiguration;
-import com.github.peacetrue.result.exception.spring.SpringExceptionResultAutoConfiguration;
+import com.github.peacetrue.result.exception.spring.SpringResultExceptionAutoConfiguration;
 import com.github.peacetrue.result.exception.sql.SQLResultExceptionAutoConfiguration;
 import com.github.peacetrue.test.SourcePathUtils;
 import com.google.common.collect.ImmutableMap;
@@ -27,6 +27,7 @@ import org.springframework.boot.autoconfigure.transaction.TransactionAutoConfigu
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManagerAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -58,18 +59,21 @@ import java.util.Map;
                 TransactionAutoConfiguration.class,
                 TestEntityManagerAutoConfiguration.class,
 
-                ExceptionConvertTest.DateConverter.class,
-                HttpMessageConvertersAutoConfiguration.class,
+                ServletWebServerFactoryAutoConfiguration.class,
                 DispatcherServletAutoConfiguration.class,
                 WebMvcAutoConfiguration.class,
-                ServletWebServerFactoryAutoConfiguration.class,
+
+                HttpMessageConvertersAutoConfiguration.class,
+                ExceptionConvertTest.DateConverter.class,
 
                 ResultMessageSourceAutoConfiguration.class,
                 ResultBuilderAutoConfiguration.class,
                 ResultExceptionAutoConfiguration.class,
+                ErrorMvcAutoConfiguration.class,
+
                 ResultExceptionSupportAutoConfiguration.class,
                 JacksonResultExceptionAutoConfiguration.class,
-                SpringExceptionResultAutoConfiguration.class,
+                SpringResultExceptionAutoConfiguration.class,
                 SQLResultExceptionAutoConfiguration.class,
                 PersistenceResultExceptionAutoConfiguration.class,
 
@@ -104,10 +108,11 @@ class ExceptionConvertTest {
         }
     }
 
-    //    @Test
+    @Test
     void resourceNotFound() {
         Result result = this.restTemplate.getForObject("/resource_not_found", ResultImpl.class);
-        Assertions.assertEquals(result.getCode(), ResultTypes.RESOURCE_NOT_FOUND.getCode());
+        generateDocument("resourceNotFound", result);
+        Assertions.assertEquals(ResultTypes.RESOURCE_NOT_FOUND.getCode(), result.getCode());
     }
 
     //tag::missingServletRequestParameter[]

@@ -2,7 +2,7 @@ package com.github.peacetrue.result.exception.sql;
 
 import com.github.peacetrue.result.exception.ClassifiedResultCodeRegistry;
 import com.github.peacetrue.result.exception.NestExceptionRegistry;
-import com.github.peacetrue.result.exception.ResultExceptionAutoConfiguration;
+import com.github.peacetrue.result.exception.ResultExceptionSupportAutoConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -19,7 +19,7 @@ import static com.github.peacetrue.result.exception.sql.SQLDuplicateConditionalE
  * @author peace
  */
 @Configuration
-@AutoConfigureAfter(ResultExceptionAutoConfiguration.class)
+@AutoConfigureAfter(ResultExceptionSupportAutoConfiguration.class)
 public class SQLResultExceptionAutoConfiguration {
 
     @Bean

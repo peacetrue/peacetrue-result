@@ -1,14 +1,19 @@
 package com.github.peacetrue.result.exception;
 
+import com.github.peacetrue.result.builder.ResultBuilderAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractResourceBasedMessageSource;
+import org.springframework.core.Ordered;
 import org.springframework.lang.Nullable;
 
 import java.util.List;
@@ -20,6 +25,9 @@ import java.util.List;
  */
 @Slf4j
 @Configuration
+@AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE + 3)
+@AutoConfigureAfter(ResultBuilderAutoConfiguration.class)
+@AutoConfigureBefore(ErrorMvcAutoConfiguration.class)
 @EnableConfigurationProperties(ResultExceptionProperties.class)
 public class ResultExceptionAutoConfiguration {
 
@@ -52,6 +60,43 @@ public class ResultExceptionAutoConfiguration {
         return convertService;
     }
 
+
+    @Bean
+    public FallbackExceptionConverter fallbackExceptionConverter() {
+        return new FallbackExceptionConverter();
+    }
+
+    @Bean
+    public ResultExceptionConverter resultExceptionConverter() {
+        return new ResultExceptionConverter();
+    }
+
+    @Bean
+    public NestConditionalExceptionConverter nestConditionalExceptionConverter() {
+        return new NestConditionalExceptionConverter(properties.getNestClasses());
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ResultExceptionThrowService.class)
+    public ResultExceptionThrowService resultExceptionThrowService() {
+        return new ResultExceptionThrowServiceImpl();
+    }
+
+    @Bean
+    public ConfiguredResultCodeClassifier configuredResultCodeClassifier() {
+        return new ConfiguredResultCodeClassifier(properties.getClassifiedCodes());
+    }
+
+    @Bean
+    public ResultErrorAttributes resultErrorAttributes() {
+        return new ResultErrorAttributes();
+    }
+
+    @Autowired
+    public void registerMessageSourceBasename(AbstractResourceBasedMessageSource messageSource) {
+        messageSource.addBasenames("peacetrue-result-exception");
+    }
+
     /**
      * 避免循环依赖：
      * <p>
@@ -60,7 +105,7 @@ public class ResultExceptionAutoConfiguration {
      * 最后将 NestConditionalExceptionConverter 设置到 ExceptionConvertServiceImpl 中。
      */
     @Configuration
-    @AutoConfigureAfter(ResultExceptionAutoConfiguration.class)
+    @AutoConfigureOrder(Ordered.LOWEST_PRECEDENCE)
     public static class ExceptionConvertServiceImplConfiguration {
 
         @Autowired
@@ -81,48 +126,13 @@ public class ResultExceptionAutoConfiguration {
         }
     }
 
-    @Bean
-    public FallbackExceptionConverter fallbackExceptionConverter() {
-        return new FallbackExceptionConverter();
-    }
-
-    @Bean
-    public ResultExceptionConverter resultExceptionConverter() {
-        return new ResultExceptionConverter();
-    }
-
-    @Bean
-    public NestConditionalExceptionConverter nestConditionalExceptionConverter() {
-        return new NestConditionalExceptionConverter(properties.getNestClasses());
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(ResultExceptionThrowService.class)
-    public ResultExceptionThrowService exceptionThrowService() {
-        return new ResultExceptionThrowServiceImpl();
-    }
-
-    @Bean
-    public ConfiguredResultCodeClassifier configuredResultCodeClassifier() {
-        return new ConfiguredResultCodeClassifier(properties.getClassifiedCodes());
-    }
-
-    @Bean
-    public ResultErrorAttributes resultErrorAttributes() {
-        return new ResultErrorAttributes();
-    }
-
-    @Autowired
-    public void registerMessageSourceBasename(AbstractResourceBasedMessageSource messageSource) {
-        messageSource.addBasenames("peacetrue-result-exception");
-    }
-
     /**
      * 依赖的 {@link ClassifiedResultCode} 示例化较晚，必须单独隔离配置，否则造成循环依赖。
      *
      * @author peace
      */
     @Configuration
+    @AutoConfigureOrder(Ordered.LOWEST_PRECEDENCE)
     public static class ClassifiedResultCodeConfiguration {
         @Autowired(required = false)
         public void registerClassifiedResultCodes(@Nullable ClassifiedResultCodeRegistry registry,
