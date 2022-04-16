@@ -115,7 +115,7 @@ class SuccessAutowireMockTest {
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.code").value(ResultTypes.SUCCESS.getCode()))
-                    .andExpect(jsonPath("$.message").value(Matchers.not(ResultTypes.SUCCESS.getName())))
+                    .andExpect(jsonPath("$.message").value(ResultTypes.SUCCESS.getName()))
                     .andExpect(jsonPath("$.data").value(input))
             ;
         }

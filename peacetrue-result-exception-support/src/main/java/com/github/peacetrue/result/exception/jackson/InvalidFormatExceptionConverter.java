@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.github.peacetrue.result.Parameter;
 import com.github.peacetrue.result.exception.AbstractExceptionConverter;
 import com.github.peacetrue.result.exception.NestConditionalExceptionConverter;
+import com.github.peacetrue.result.exception.NestExceptionRegistry;
 import com.github.peacetrue.result.exception.spring.SpringResultExceptionAutoConfiguration;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
  * {@link HttpMessageNotReadableException#getCause()} 为 {@link InvalidFormatException}。
  *
  * @author peace
- * @see SpringResultExceptionAutoConfiguration#registerNestExceptions(NestConditionalExceptionConverter)
+ * @see SpringResultExceptionAutoConfiguration#registerNestExceptions(NestExceptionRegistry)
  **/
 public class InvalidFormatExceptionConverter
         extends AbstractExceptionConverter<InvalidFormatException> {

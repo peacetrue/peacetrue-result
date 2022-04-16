@@ -3,8 +3,8 @@ description '自动装配失败响应结果'
 dependencies {
     api project(":peacetrue-result-core")
     api project(":peacetrue-result-builder")
-    compileOnly 'com.github.peacetrue.spring:peacetrue-spring-beans'
-    compileOnly 'org.springframework:spring-webmvc'
+    compileOnly "com.github.peacetrue.spring:peacetrue-spring-beans"
+    compileOnly "org.springframework:spring-webmvc"
     compileOnly "org.springframework.boot:spring-boot-autoconfigure${tailSpringBootVersion}"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor${tailSpringBootVersion}"
 }
