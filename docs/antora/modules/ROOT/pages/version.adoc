@@ -35,3 +35,7 @@ Spring Boot 2 支持 `ResultTypes.RESOURCE_NOT_FOUND`，
 Spring Boot 1 不支持 `ResultTypes.RESOURCE_NOT_FOUND`。
 
 NOTE: 读者可以尝试 Spring Boot 1 系列其他版本，测试时仅验证过 Spring Boot 1 系列最高版本。
+
+== 2.1.1
+
+添加 *peacetrue-common* 依赖。
