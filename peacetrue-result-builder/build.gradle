@@ -4,9 +4,9 @@ dependencies {
     api project(":peacetrue-result-core")
     api "org.slf4j:slf4j-api"
     compileOnly "org.springframework:spring-context"
-    compileOnly "org.springframework.boot:spring-boot-autoconfigure${tailSpringBootVersion}"
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor${tailSpringBootVersion}"
+    compileOnly "org.springframework.boot:spring-boot-autoconfigure"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    testImplementation "org.springframework.boot:spring-boot-starter-test${tailSpringBootVersion}"
-    testImplementation "org.springframework.boot:spring-boot-starter-logging${tailSpringBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-starter-logging"
 }

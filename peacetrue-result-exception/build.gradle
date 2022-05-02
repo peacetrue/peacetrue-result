@@ -6,6 +6,6 @@ dependencies {
     implementation "com.github.peacetrue:peacetrue-common"
     compileOnly 'com.github.peacetrue.spring:peacetrue-spring-beans'
     compileOnly 'org.springframework:spring-webmvc'
-    compileOnly "org.springframework.boot:spring-boot-autoconfigure${tailSpringBootVersion}"
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor${tailSpringBootVersion}"
+    compileOnly "org.springframework.boot:spring-boot-autoconfigure"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }

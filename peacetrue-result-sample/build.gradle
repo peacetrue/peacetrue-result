@@ -1,20 +1,20 @@
 description '响应结果样章'
 
 ext {
-    publishDisabled = true
+    isPublishDisabled = true
 }
 
 dependencies {
     api project(':peacetrue-result-success')
     api project(':peacetrue-result-exception-support')
     api 'org.slf4j:slf4j-api'
-    implementation "org.springframework.boot:spring-boot-starter-web${tailSpringBootVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa${tailSpringBootVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-logging${tailSpringBootVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-validation${tailSpringBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
 
-    testImplementation "org.springframework.boot:spring-boot-starter-test${tailSpringBootVersion}"
-    testImplementation("com.github.peacetrue:peacetrue-test:1+")
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation("com.github.peacetrue:peacetrue-test")
     testImplementation "mysql:mysql-connector-java"
 
 }
