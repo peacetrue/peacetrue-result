@@ -38,4 +38,6 @@ NOTE: 读者可以尝试 Spring Boot 1 系列其他版本，测试时仅验证�
 
 == 2.1.1
 
-添加 *peacetrue-common* 依赖。
+* 添加 *peacetrue-common* 依赖
+* 添加 *com.github.peacetrue.gradle.build-convention* 插件
+* 添加 GitHub 徽章
