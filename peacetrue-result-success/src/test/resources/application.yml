@@ -9,8 +9,6 @@ peacetrue:
       result-types:
         - com.github.peacetrue.result.Result
         - java.lang.Integer
-      disabled-methods:
-        - com.github.peacetrue.result.success.SuccessResultTestController.disableSuccessAutowireByConfiguration
 
 # tag::avoid-warning[]
 spring:
@@ -18,6 +16,17 @@ spring:
     basename: ''
 
 # end::avoid-warning[]
+---
+
+spring.profiles: disabled-methods
+
+# tag::disabled-methods[]
+peacetrue:
+  result:
+    success:
+      disabled-methods:
+        - com.github.peacetrue.result.success.SuccessResultTestController.disableSuccessAutowireByConfiguration
+# end::disabled-methods[]
 
 ---
 

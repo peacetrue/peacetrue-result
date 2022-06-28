@@ -2,6 +2,7 @@ package com.github.peacetrue.result.exception;
 
 import com.github.peacetrue.result.DataResultException;
 import com.github.peacetrue.result.ResultException;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.util.Locale;
 
@@ -13,17 +14,17 @@ import java.util.Locale;
 public interface ResultExceptionThrowService {
 
     /**
-     * 抛出响应结果异常
+     * 抛出响应结果异常。
      *
      * @param code 响应结果编码
      * @throws ResultException 响应结果异常
      */
     default void throwResultException(String code) throws ResultException {
-        throwResultException(code, Locale.getDefault());
+        throwResultException(code, LocaleContextHolder.getLocale());
     }
 
     /**
-     * 抛出响应结果异常
+     * 抛出响应结果异常。
      *
      * @param code   响应结果编码
      * @param locale 方言
@@ -32,18 +33,18 @@ public interface ResultExceptionThrowService {
     void throwResultException(String code, Locale locale) throws ResultException;
 
     /**
-     * 抛出数据响应结果异常
+     * 抛出数据响应结果异常。
      *
      * @param code 响应结果编码
      * @param data 响应结果数据
      * @throws DataResultException 数据响应结果异常
      */
     default void throwDataResultException(String code, Object data) throws DataResultException {
-        throwDataResultException(code, data, Locale.getDefault());
+        throwDataResultException(code, data, LocaleContextHolder.getLocale());
     }
 
     /**
-     * 抛出数据响应结果异常
+     * 抛出数据响应结果异常。
      *
      * @param code   响应结果编码
      * @param data   响应结果数据

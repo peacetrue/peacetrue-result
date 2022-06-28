@@ -45,18 +45,9 @@ public class MessageSourceResultMessageBuilder implements ResultMessageBuilder, 
     private ConversionService conversionService;
     private BeanResolver beanResolver;
 
-    public MessageSourceResultMessageBuilder() {
-        this(DEFAULT_CODE_PREFIX, DEFAULT_MESSAGE);
-    }
-
     public MessageSourceResultMessageBuilder(String codePrefix, String defaultMessage) {
         this.codePrefix = codePrefix;
         this.defaultMessage = defaultMessage;
-    }
-
-    @Override
-    public String build(String code, @Nullable Object args) {
-        return this.build(code, args, LocaleContextHolder.getLocale());
     }
 
     @Override

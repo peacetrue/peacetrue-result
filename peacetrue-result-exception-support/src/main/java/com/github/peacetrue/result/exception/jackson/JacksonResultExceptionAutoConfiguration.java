@@ -18,6 +18,11 @@ import org.springframework.context.annotation.Configuration;
 public class JacksonResultExceptionAutoConfiguration {
 
     @Bean
+    public JsonEOFExceptionConverter jsonEOFExceptionConverter() {
+        return new JsonEOFExceptionConverter();
+    }
+
+    @Bean
     public JsonParseExceptionConverter jsonParseExceptionConverter() {
         return new JsonParseExceptionConverter();
     }

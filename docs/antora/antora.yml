@@ -1,6 +1,10 @@
 name: peacetrue-result
 title: 响应结果组件
 version: master
+asciidoc:
+  attributes:
+    numbered: '@'
+    app-name: peacetrue-result
 start_page: ROOT:index.adoc
 nav:
   - modules/ROOT/nav.adoc

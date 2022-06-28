@@ -13,7 +13,7 @@ public interface ResultCodeClassifier {
     ResultCodeClassifier DEFAULT = code -> Optional.empty();
 
     /**
-     * 分类响应结果编码
+     * 分类响应结果编码。
      *
      * @param code 响应结果编码子类
      * @return 响应结果编码父类

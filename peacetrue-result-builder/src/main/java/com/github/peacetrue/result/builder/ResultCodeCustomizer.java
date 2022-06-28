@@ -1,12 +1,10 @@
 package com.github.peacetrue.result.builder;
 
-import com.github.peacetrue.beans.properties.code.CodeAware;
 import com.github.peacetrue.result.Result;
 import com.github.peacetrue.result.ResultCustomizer;
 import com.github.peacetrue.result.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -20,10 +18,6 @@ public class ResultCodeCustomizer implements ResultCustomizer {
 
     /** 默认编码和自定义编码的映射 */
     private final Map<String, String> customCodes;
-
-    public ResultCodeCustomizer() {
-        this(Collections.emptyMap());
-    }
 
     public ResultCodeCustomizer(Map<String, String> customCodes) {
         this.customCodes = Objects.requireNonNull(customCodes);
@@ -39,11 +33,9 @@ public class ResultCodeCustomizer implements ResultCustomizer {
             return result;
         }
         String customCode = customCodes.get(code);
-        customCode = result.getCode().substring(code.length()) + customCode;
+        customCode = customCode + result.getCode().substring(code.length());
         log.debug("customize Result.code: {} -> {}", result.getCode(), customCode);
-        if (!(result instanceof CodeAware)) return ResultUtils.build(result, customCode);
-        ((CodeAware) result).setCode(customCode);
-        return result;
+        return ResultUtils.setCode(result, customCode);
     }
 
 }

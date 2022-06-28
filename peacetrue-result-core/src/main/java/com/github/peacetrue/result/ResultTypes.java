@@ -28,8 +28,6 @@ public enum ResultTypes implements ResultType {
     PARAMETER_ILLEGAL("参数非法"),
     /** 服务端的内部错误，斩杀程序员祭天 */
     SERVER_ERROR("服务内部错误"),
-//    /** 记录不存在，通过唯一标志获取实体对象时，找不到指定对象 */
-//    RECORD_NOT_FOUND("记录不存在"),
     ;
 
     private final String name;

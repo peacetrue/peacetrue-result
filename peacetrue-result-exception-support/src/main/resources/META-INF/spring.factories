@@ -2,4 +2,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.github.peacetrue.result.exception.ResultExceptionSupportAutoConfiguration,\
   com.github.peacetrue.result.exception.spring.SpringResultExceptionAutoConfiguration,\
   com.github.peacetrue.result.exception.jackson.JacksonResultExceptionAutoConfiguration,\
-  com.github.peacetrue.result.exception.persistence.PersistenceResultExceptionAutoConfiguration
+  com.github.peacetrue.result.exception.persistence.PersistenceResultExceptionAutoConfiguration,\
+  com.github.peacetrue.result.exception.signature.SignatureResultExceptionAutoConfiguration

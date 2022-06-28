@@ -16,7 +16,7 @@ import java.lang.annotation.*;
 public @interface SuccessAutowire {
 
     /**
-     * 是否禁用自动包装功能
+     * 是否禁用自动包装功能。
      *
      * @return true 表示禁用
      */

@@ -111,7 +111,7 @@ class ExceptionConvertTest {
     //tag::resourceNotFound[]
     @Test
     void resourceNotFound() {
-        Result result = this.restTemplate.getForObject("/resourceNotFound", ResultImpl.class);
+        Result result = this.restTemplate.getForObject("/resourceNotFound", GenericDataResult.class);
         generateDocument("resourceNotFound", result);
         Assertions.assertEquals(ResultTypes.RESOURCE_NOT_FOUND.getCode(), result.getCode());
     }
@@ -120,7 +120,7 @@ class ExceptionConvertTest {
     //tag::missingServletRequestParameter[]
     @Test
     void missingServletRequestParameter() {
-        Result result = this.restTemplate.getForObject("/missingServletRequestParameter", ResultImpl.class);
+        Result result = this.restTemplate.getForObject("/missingServletRequestParameter", GenericDataResult.class);
         generateDocument("missingServletRequestParameter", result);
         Assertions.assertTrue(result.getCode().startsWith(ResultTypes.PARAMETER_MISSING.getCode()));
     }
@@ -241,6 +241,22 @@ class ExceptionConvertTest {
         Result result = this.restTemplate.exchange("/httpMessageNotReadable", HttpMethod.POST, requestEntity, ResultImpl.class).getBody();
         generateDocument("requestBodyJsonFormatInvalid", result);
         Assertions.assertTrue(result.getCode().startsWith(ResultTypes.PARAMETER_INVALID.getCode()));
+
+        formatInvalidRequestBody = "{\"testBeans\":[{\"future\": \"?\"}]}";
+        requestEntity = new HttpEntity<>(formatInvalidRequestBody, headers(ImmutableMap.of(
+                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE
+        )));
+        result = this.restTemplate.exchange("/httpMessageNotReadable", HttpMethod.POST, requestEntity, ResultImpl.class).getBody();
+        generateDocument("requestBodyJsonFormatInvalid", result);
+        Assertions.assertTrue(result.getCode().startsWith(ResultTypes.PARAMETER_INVALID.getCode()));
+
+        formatInvalidRequestBody = "{";
+        requestEntity = new HttpEntity<>(formatInvalidRequestBody, headers(ImmutableMap.of(
+                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE
+        )));
+        result = this.restTemplate.exchange("/httpMessageNotReadable", HttpMethod.POST, requestEntity, ResultImpl.class).getBody();
+        generateDocument("requestBodyJsonFormatInvalid", result);
+        Assertions.assertTrue(result.getCode().startsWith(ResultTypes.PARAMETER_INVALID.getCode()));
     }
     //end::requestBodyJsonFormatInvalid[]
 
@@ -248,6 +264,7 @@ class ExceptionConvertTest {
     @Test
     void methodArgumentNotValid() {
         TestBean testBean = EASY_RANDOM.nextObject(TestBean.class);
+        testBean.setTestBeans(null);
         HttpEntity<Object> requestEntity = new HttpEntity<>(testBean, headers(ImmutableMap.of(
                 HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE
         )));

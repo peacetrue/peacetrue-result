@@ -54,12 +54,8 @@ public class ResultExceptionAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ExceptionConvertService.class)
     public ExceptionConvertService exceptionConvertService() {
-        ExceptionConvertServiceImpl convertService = new ExceptionConvertServiceImpl();
-        convertService.setIncludeStackTrace(properties.getIncludeStackTrace());
-        convertService.setIncludeMessageTemplateArgs(properties.getIncludeMessageTemplateArgs());
-        return convertService;
+        return new ExceptionConvertServiceImpl();
     }
-
 
     @Bean
     public FallbackExceptionConverter fallbackExceptionConverter() {

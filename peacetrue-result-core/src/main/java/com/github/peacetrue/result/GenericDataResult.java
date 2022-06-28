@@ -1,5 +1,7 @@
 package com.github.peacetrue.result;
 
+import lombok.NoArgsConstructor;
+
 import javax.annotation.Nullable;
 
 /**
@@ -13,10 +15,8 @@ import javax.annotation.Nullable;
  *
  * @author peace
  **/
+@NoArgsConstructor
 public class GenericDataResult extends DataResultImpl<Object> {
-
-    public GenericDataResult() {
-    }
 
     public GenericDataResult(String code, @Nullable String message, @Nullable Object data) {
         super(code, message, data);
@@ -29,4 +29,5 @@ public class GenericDataResult extends DataResultImpl<Object> {
     public GenericDataResult(DataResult<?> result) {
         this(result, result.getData());
     }
+
 }

@@ -17,12 +17,12 @@ import java.util.Arrays;
 @Slf4j
 public class FallbackExceptionConverter implements ExceptionConverter<Throwable> {
 
-    private boolean includeStackTrace = false;
+    private final boolean includeStackTrace = false;
     private ResultMessageBuilder resultMessageBuilder;
 
     @Override
     public Result convert(Throwable exception) {
-        log.warn("could not find a valid ExceptionConverter or ConditionalExceptionConverter", exception);
+        log.debug("fallback convert exception: {}", exception.getClass().getName());
         String code = ResultTypes.FAILURE.getCode();
         Object data = includeStackTrace ? Arrays.toString(exception.getStackTrace()) : null;
         return ResultUtils.build(code, resultMessageBuilder.build(code), data);

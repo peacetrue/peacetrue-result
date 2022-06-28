@@ -1,14 +1,13 @@
 package com.github.peacetrue.result.builder.printer;
 
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
 import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -18,17 +17,17 @@ import java.util.Set;
  * @author peace
  */
 @Slf4j
-@NoArgsConstructor
 public class MessageSourceClassPrinter implements ClassPrinter {
 
     public static final String DEFAULT_CLASS_PREFIX = "Class";
 
-    private String classPrefix;
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
+    @Nullable
+    private final String classPrefix;
 
-    public MessageSourceClassPrinter(String classPrefix, MessageSource messageSource) {
+    public MessageSourceClassPrinter(MessageSource messageSource, @Nullable String classPrefix) {
         this.classPrefix = classPrefix;
-        this.messageSource = messageSource;
+        this.messageSource = Objects.requireNonNull(messageSource);
     }
 
     /**
@@ -72,8 +71,4 @@ public class MessageSourceClassPrinter implements ClassPrinter {
         return messageSource.getMessage(code, null, null, locale);
     }
 
-    @Autowired
-    public void setMessageSource(MessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
 }

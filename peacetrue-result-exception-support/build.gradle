@@ -1,3 +1,4 @@
+
 description "响应结果异常支持，处理各种具体的异常"
 
 dependencies {
@@ -6,18 +7,22 @@ dependencies {
     api project(":peacetrue-result-exception")
     compileOnly "org.springframework.boot:spring-boot-autoconfigure"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-    compileOnly "org.springframework:spring-webmvc"
     compileOnly "javax.servlet:javax.servlet-api"
+    compileOnly "org.springframework:spring-webmvc"
     compileOnly "com.fasterxml.jackson.core:jackson-databind"
     compileOnly "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final"
+    compileOnly "com.github.peacetrue:peacetrue-common"
+    compileOnly "com.github.peacetrue.spring:peacetrue-spring-signature"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.springframework.boot:spring-boot-starter-web"
     testImplementation "org.springframework.boot:spring-boot-starter-data-jpa"
     testImplementation "org.springframework.boot:spring-boot-starter-logging"
     testImplementation "org.springframework.boot:spring-boot-starter-validation"
+    testImplementation "com.github.peacetrue:peacetrue-common"
     testImplementation "com.github.peacetrue:peacetrue-validation"
     testImplementation "com.github.peacetrue:peacetrue-test"
+    testImplementation "com.github.peacetrue.spring:peacetrue-spring-signature"
     testImplementation "com.h2database:h2"
     testImplementation "mysql:mysql-connector-java"
 

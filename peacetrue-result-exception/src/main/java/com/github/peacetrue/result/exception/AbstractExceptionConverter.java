@@ -16,7 +16,7 @@ public abstract class AbstractExceptionConverter<T extends Throwable>
         implements ExceptionConverter<T> {
 
     /**
-     * 解析异常对应的响应结果编码，使用删除结尾 Exception 的异常类名作为编码
+     * 解析异常对应的响应结果编码，使用删除结尾 Exception 的异常类名作为编码。
      *
      * @param clazz 异常类
      * @return 响应结果编码
@@ -41,7 +41,7 @@ public abstract class AbstractExceptionConverter<T extends Throwable>
     }
 
     /**
-     * 获取当前异常响应结果编码
+     * 获取当前异常响应结果编码。
      *
      * @return 响应结果编码
      */

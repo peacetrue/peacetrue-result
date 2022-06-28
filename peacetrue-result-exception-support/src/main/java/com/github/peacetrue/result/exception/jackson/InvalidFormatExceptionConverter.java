@@ -10,6 +10,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +33,7 @@ public class InvalidFormatExceptionConverter
     private static String getFieldName(JsonMappingException.Reference reference) {
         return reference.getIndex() == -1
                 ? reference.getFieldName()
-                : (reference.getFieldName() + "[" + reference.getIndex() + "]");
+                : (Objects.toString(reference.getFieldName(), "") + "[" + reference.getIndex() + "]");
     }
 
     @Override

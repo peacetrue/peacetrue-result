@@ -2,9 +2,11 @@ package com.github.peacetrue.result.exception;
 
 import lombok.Data;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author peace
@@ -57,5 +59,6 @@ public class TestBean {
     private Integer positiveOrZero;
     @Size(max = 1)
     private String size;
+    private List<@Valid TestBean> testBeans;
 }
 //end::TestBean[]

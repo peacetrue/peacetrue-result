@@ -8,16 +8,16 @@ package com.github.peacetrue.result.exception;
 public interface ClassifiedResultCode {
 
     /**
-     * 获取当前响应结果编码
+     * 获取当前响应结果编码。
      *
      * @return 当前响应结果编码
      */
     String getCode();
 
     /**
-     * 获取父类响应结果编码
+     * 获取父级响应结果编码。
      *
-     * @return 父类响应结果编码
+     * @return 父级响应结果编码
      */
     String getSupperCode();
 }

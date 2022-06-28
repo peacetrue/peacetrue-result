@@ -18,18 +18,8 @@ public class ResultExceptionThrowServiceImpl implements ResultExceptionThrowServ
     private ResultMessageBuilder resultMessageBuilder;
 
     @Override
-    public void throwResultException(String code) throws ResultException {
-        throwResultException(code, LocaleContextHolder.getLocale());
-    }
-
-    @Override
     public void throwResultException(String code, Locale locale) throws ResultException {
         throw new ResultException(code, resultMessageBuilder.build(code, locale));
-    }
-
-    @Override
-    public void throwDataResultException(String code, Object data) throws DataResultException {
-        throwDataResultException(code, data, LocaleContextHolder.getLocale());
     }
 
     @Override

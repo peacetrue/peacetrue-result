@@ -17,6 +17,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NamedMessage implements Serializable {
+
+    private static final long serialVersionUID = 0L;
+
     private String name;
     private String message;
 }

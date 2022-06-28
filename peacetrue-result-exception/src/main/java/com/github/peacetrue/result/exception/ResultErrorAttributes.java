@@ -1,7 +1,7 @@
 package com.github.peacetrue.result.exception;
 
+import com.github.peacetrue.result.DataResultImpl;
 import com.github.peacetrue.result.ResultCustomizer;
-import com.github.peacetrue.result.ResultImpl;
 import com.github.peacetrue.result.ResultTypes;
 import com.github.peacetrue.result.builder.ResultMessageBuilder;
 import com.github.peacetrue.spring.beans.BeanUtils;
@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -29,9 +30,10 @@ public class ResultErrorAttributes extends DefaultErrorAttributes {
         Integer status = (Integer) webRequest.getAttribute("javax.servlet.error.status_code", RequestAttributes.SCOPE_REQUEST);
         if (Objects.equals(status, HttpStatus.NOT_FOUND.value())) {
             String code = ResultTypes.RESOURCE_NOT_FOUND.getCode();
-            Object[] messageTemplateArgs = {webRequest.getAttribute("javax.servlet.error.request_uri", RequestAttributes.SCOPE_REQUEST)};
+            String uri = (String) webRequest.getAttribute("javax.servlet.error.request_uri", RequestAttributes.SCOPE_REQUEST);
+            Map<String, String> messageTemplateArgs = Collections.singletonMap("uri", uri);
             String message = resultMessageBuilder.build(ResultTypes.RESOURCE_NOT_FOUND.getCode(), messageTemplateArgs);
-            return convert(resultCustomizer.customize(new ResultImpl(code, message)));
+            return convert(resultCustomizer.customize(new DataResultImpl<>(code, message, messageTemplateArgs)));
         }
 
         return super.getErrorAttributes(webRequest, includeStackTrace);

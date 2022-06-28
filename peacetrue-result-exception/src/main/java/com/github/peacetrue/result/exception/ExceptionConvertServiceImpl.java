@@ -1,16 +1,13 @@
 package com.github.peacetrue.result.exception;
 
 import com.github.peacetrue.beans.properties.code.CodeAware;
-import com.github.peacetrue.result.*;
+import com.github.peacetrue.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ResolvableType;
 import org.springframework.util.CollectionUtils;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.*;
-import java.util.stream.IntStream;
 
 import static com.github.peacetrue.result.ResultTypes.ERRORS;
 
@@ -26,30 +23,19 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
     private List<ConditionalExceptionConverter> conditionalExceptionConverters = Collections.emptyList();
     private FallbackExceptionConverter fallbackExceptionConverter;
     private ResultCodeClassifier resultCodeClassifier;
-    private boolean includeStackTrace;
-    private boolean includeMessageTemplateArgs;
-
-    private static String getStackTrace(Throwable throwable) {
-        StringWriter stringWriter = new StringWriter();
-        throwable.printStackTrace(new PrintWriter(stringWriter));
-        return stringWriter.toString();
-    }
 
     @Override
     public Result convert(Throwable throwable) {
         log.info("convert '{}'", throwable.getClass().getName());
-        Result result = mapConvert(throwable)
+        Result result = directConvert(throwable)
                 .orElseGet(() -> conditionalConvert(throwable)
                         .orElseGet(() -> fallbackConvert(throwable)));
         classifyResultCode(result);
-        if (ERRORS.getCode().equals(result.getCode())) return clearErrorsResultData(result);
-        if (includeStackTrace) return new DataResultImpl<>(result, getStackTrace(throwable));
-        if (clearMessageTemplateArgs(result)) return new ResultImpl(result);
         return result;
     }
 
     @SuppressWarnings("java:S3864")
-    private Optional<Result> mapConvert(Throwable throwable) {
+    private Optional<Result> directConvert(Throwable throwable) {
         //优先使用子类处理，子类不支持再使用父类处理
         return exceptionConverters.entrySet().stream()
                 .filter(entry -> entry.getKey().isAssignableFrom(throwable.getClass()))
@@ -66,6 +52,7 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
     }
 
     private Result fallbackConvert(Throwable throwable) {
+        log.warn("could not find a valid ExceptionConverter or ConditionalExceptionConverter which supports {}", throwable.getClass().getName());
         return fallbackExceptionConverter.convert(throwable);
     }
 
@@ -74,25 +61,6 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
             resultCodeClassifier.classifyResultCode(result.getCode())
                     .ifPresent(((CodeAware) result)::setCode);
         }
-    }
-
-    private Result clearErrorsResultData(Result result) {
-        Object data = ResultUtils.getData(result);
-        if (!(data instanceof List)) {
-            log.warn("Result.data must be List where Result.code is errors, currently {}", data);
-            return result;
-        }
-        @SuppressWarnings("unchecked")
-        List<Result> results = (List<Result>) data;
-        IntStream.range(0, results.size()).forEach(index -> {
-            Result childResult = results.get(index);
-            if (clearMessageTemplateArgs(childResult)) results.set(index, new ResultImpl(childResult));
-        });
-        return result;
-    }
-
-    private boolean clearMessageTemplateArgs(Object result) {
-        return !includeMessageTemplateArgs && result instanceof DataResult;
     }
 
     @SuppressWarnings("all")
@@ -133,11 +101,4 @@ public class ExceptionConvertServiceImpl implements ExceptionConvertService {
         this.resultCodeClassifier = resultCodeClassifier;
     }
 
-    public void setIncludeStackTrace(boolean includeStackTrace) {
-        this.includeStackTrace = includeStackTrace;
-    }
-
-    public void setIncludeMessageTemplateArgs(boolean includeMessageTemplateArgs) {
-        this.includeMessageTemplateArgs = includeMessageTemplateArgs;
-    }
 }

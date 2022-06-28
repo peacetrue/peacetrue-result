@@ -1,6 +1,7 @@
 package com.github.peacetrue.result.success;
 
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,8 +18,10 @@ public class SuccessResultTestController {
     /** 启用成功自动封装 */
     @ResponseBody
     @RequestMapping(value = "/enableSuccessAutowire", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String enableSuccessAutowire(String input) {
-        return input;
+    public Object enableSuccessAutowire(String input) {
+        return "ResponseEntityOk".equals(input)
+                ? ResponseEntity.ok(input)
+                : ("ResponseEntityError".equals(input) ? ResponseEntity.badRequest().body(input) : input);
     }
     //end::enableSuccessAutowire[]
 

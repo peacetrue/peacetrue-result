@@ -23,7 +23,7 @@ abstract class BaseExceptionConverter<T extends Throwable> {
     protected ResultMessageBuilder resultMessageBuilder;
 
     /**
-     * 转换异常为响应结果
+     * 转换异常为响应结果。
      *
      * @param exception 异常
      * @return 响应结果
@@ -57,7 +57,9 @@ abstract class BaseExceptionConverter<T extends Throwable> {
      * @return 响应结果数据
      */
     @Nullable
-    protected abstract Object resolveArgs(T exception);
+    protected Object resolveArgs(T exception) {
+        return null;
+    }
 
     @Autowired
     public void setResultMessageBuilder(ResultMessageBuilder resultMessageBuilder) {

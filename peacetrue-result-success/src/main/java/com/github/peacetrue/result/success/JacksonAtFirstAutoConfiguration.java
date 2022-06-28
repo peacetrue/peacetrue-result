@@ -34,11 +34,11 @@ public class JacksonAtFirstAutoConfiguration {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-                converters.sort((o1, o2) -> {
-                    if (predicate.test(o1)) return -1;
-                    if (predicate.test(o2)) return 1;
-                    return 0;
-                });
+//                    maybe follow:
+//                    if (predicate.test(o1)) return -1;
+//                    if (predicate.test(o2)) return 1;
+//                    return 0;
+                converters.sort((o1, o2) -> predicate.test(o1) ? -1 : 0);
             }
         };
     }

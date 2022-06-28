@@ -1,7 +1,23 @@
-rootProject.name = 'peacetrue-result'
-include(':peacetrue-result-core')
-include(':peacetrue-result-builder')
-include(':peacetrue-result-success')
-include(':peacetrue-result-exception')
-include(':peacetrue-result-exception-support')
-include(':peacetrue-result-sample')
+pluginManagement {
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.namespace == "com.github.peacetrue.gradle") {
+                useModule("${requested.id.namespace}:peacetrue-gradle-plugin:${requested.version}")
+            }
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://maven.aliyun.com/nexus/content/groups/public" }
+    }
+}
+
+rootProject.name = "peacetrue-result"
+include(":peacetrue-result-core")
+include(":peacetrue-result-builder")
+include(":peacetrue-result-success")
+include(":peacetrue-result-exception")
+include(":peacetrue-result-exception-support")

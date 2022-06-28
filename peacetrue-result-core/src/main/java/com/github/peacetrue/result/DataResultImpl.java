@@ -1,8 +1,9 @@
 package com.github.peacetrue.result;
 
-import lombok.Getter;
+import com.github.peacetrue.beans.properties.data.DataAware;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.annotation.Nullable;
 
@@ -11,10 +12,10 @@ import javax.annotation.Nullable;
  *
  * @author peace
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class DataResultImpl<T> extends ResultImpl implements DataResult<T> {
+public class DataResultImpl<T> extends ResultImpl implements DataResult<T>, DataAware<T> {
 
     private T data;
 

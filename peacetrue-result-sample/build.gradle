@@ -1,21 +1,21 @@
-description '响应结果样章'
-
-ext {
-    isPublishDisabled = true
+plugins {
+    id "com.github.peacetrue.gradle.build-convention" version "${peaceGradleVersion}${tailSnapshot}"
 }
 
+description "响应结果样章"
+
 dependencies {
-    api project(':peacetrue-result-success')
-    api project(':peacetrue-result-exception-support')
-    api 'org.slf4j:slf4j-api'
+    api "com.github.peacetrue.result:peacetrue-result-success"
+    api "com.github.peacetrue.result:peacetrue-result-exception-support"
+    api "org.slf4j:slf4j-api"
+    implementation "com.github.peacetrue.spring:peacetrue-spring-beans"
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-logging"
     implementation "org.springframework.boot:spring-boot-starter-validation"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
-    testImplementation("com.github.peacetrue:peacetrue-test")
+    testImplementation "com.github.peacetrue:peacetrue-test"
     testImplementation "mysql:mysql-connector-java"
-
 }
 

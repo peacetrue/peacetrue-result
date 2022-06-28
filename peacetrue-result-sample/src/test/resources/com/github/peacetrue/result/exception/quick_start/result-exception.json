@@ -1,0 +1,4 @@
+{
+  "code" : "user_not_exist",
+  "message" : "用户'test'不存在或密码错误"
+}

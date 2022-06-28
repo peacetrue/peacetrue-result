@@ -1,5 +1,7 @@
 package com.github.peacetrue.result.builder;
 
+import org.springframework.context.i18n.LocaleContextHolder;
+
 import javax.annotation.Nullable;
 import java.util.Locale;
 
@@ -11,7 +13,7 @@ import java.util.Locale;
 public interface ResultMessageBuilder {
 
     /**
-     * 构建响应结果描述
+     * 构建响应结果描述。
      *
      * @param code 响应结果编码
      * @return 响应结果描述
@@ -21,7 +23,7 @@ public interface ResultMessageBuilder {
     }
 
     /**
-     * 构建响应结果描述
+     * 构建响应结果描述。
      *
      * @param code   响应结果编码
      * @param locale 方言
@@ -32,19 +34,19 @@ public interface ResultMessageBuilder {
     }
 
     /**
-     * 构建响应结果描述
+     * 构建响应结果描述。
      *
      * @param code 响应结果编码
      * @param args 上下文参数
      * @return 响应结果描述
      */
     default String build(String code, @Nullable Object args) {
-        return build(code, args, Locale.getDefault());
+        return build(code, args, LocaleContextHolder.getLocale());
     }
 
 
     /**
-     * 构建响应结果描述
+     * 构建响应结果描述。
      *
      * @param code   响应结果编码
      * @param args   上下文参数

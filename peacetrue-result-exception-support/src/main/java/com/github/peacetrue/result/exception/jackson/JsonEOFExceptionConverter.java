@@ -16,15 +16,6 @@ public class JsonEOFExceptionConverter
         extends AbstractExceptionConverter<JsonEOFException>
         implements ClassifiedResultCode {
 
-    @Nullable
-    @Override
-    protected Object resolveArgs(JsonEOFException exception) {
-        //JSON parse error: Unexpected end-of-input in field name
-        //JsonLocation location = exception.getLocation();
-        //return new JsonInvalidInfo(location.getLineNr(), location.getColumnNr() - 1, '0', exception.getMessage());
-        return null;
-    }
-
     @Override
     public String getSupperCode() {
         return ResultTypes.PARAMETER_INVALID.getCode();

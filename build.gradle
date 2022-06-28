@@ -1,9 +1,45 @@
+plugins {
+    id "com.github.peacetrue.gradle.build-convention" version "${peaceGradleVersion}${tailSnapshot}"
+    id "test-report-aggregation"
+    id "jacoco-report-aggregation"
+}
+
 subprojects { project ->
     group "com.github.peacetrue.result"
     version "${peaceResultVersion}${tailSnapshot}"
     description "响应结果组件"
+    apply plugin: "com.github.peacetrue.gradle.build-convention"
+
+    dependencies {
+//        testImplementation "org.mockito:mockito-core:3.9.0"
+        testImplementation "org.mockito:mockito-inline:3.9.0"
+        testImplementation 'org.mockito:mockito-junit-jupiter:3.9.0'
+    }
 }
 
+dependencies {
+    implementation project(":peacetrue-result-core")
+    implementation project(":peacetrue-result-builder")
+    implementation project(":peacetrue-result-success")
+    implementation project(":peacetrue-result-exception")
+    implementation project(":peacetrue-result-exception-support")
+}
+
+test {
+    finalizedBy("testAggregateTestReport", "testCodeCoverageReport")
+}
+
+testAggregateTestReport.finalizedBy("copyTestResults")
+
+task copyTestResults(group: "peacetrue") {
+    doLast {
+        copy {
+            from subprojects*.layout*.buildDirectory*.dir("test-results")
+            include "**/*.xml"
+            into layout.buildDirectory.dir("test-results")
+        }
+    }
+}
 
 
 

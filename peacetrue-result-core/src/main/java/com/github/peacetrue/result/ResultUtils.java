@@ -1,21 +1,24 @@
 package com.github.peacetrue.result;
 
+import com.github.peacetrue.beans.properties.code.CodeAware;
+import com.github.peacetrue.beans.properties.data.DataAware;
+import com.github.peacetrue.beans.properties.data.DataCapable;
+
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
- * 响应结果工具类
+ * 响应结果工具类。
  *
  * @author peace
  */
-public abstract class ResultUtils {
+public class ResultUtils {
 
-    /** 抽象工具类，无需实例化 */
-    protected ResultUtils() {
+    private ResultUtils() {
     }
 
     /**
-     * 转换响应结果为字符串
+     * 转换响应结果为字符串。
      *
      * @param result 响应结果
      * @return 响应结果的字符串描述
@@ -25,7 +28,7 @@ public abstract class ResultUtils {
     }
 
     /**
-     * 转换数据响应结果为字符串
+     * 转换数据响应结果为字符串。
      *
      * @param dataResult 数据响应结果
      * @return 数据响应结果的字符串描述
@@ -52,27 +55,14 @@ public abstract class ResultUtils {
     }
 
     /**
-     * 构造响应结果，用于重新设置响应结果编码。
+     * 构造响应结果。
      *
-     * @param result 响应结果
-     * @param code   响应结果编码
+     * @param resultType 响应结果类型
+     * @param data       响应结果数据
      * @return 响应结果
      */
-    public static Result build(Result result, String code) {
-        return result instanceof DataResult
-                ? new DataResultImpl<>(code, result.getMessage(), ((DataResult<?>) result).getData())
-                : new ResultImpl(code, result.getMessage());
-    }
-
-    /**
-     * 构造响应结果
-     *
-     * @param result 响应结果
-     * @param data   响应结果数据
-     * @return 响应结果
-     */
-    private static Result build(Result result, @Nullable Object data) {
-        return data == null ? result : new DataResultImpl<>(result, data);
+    public static Result build(ResultType resultType, @Nullable Object data) {
+        return build(resultType.getCode(), resultType.getName(), data);
     }
 
     /**
@@ -89,18 +79,39 @@ public abstract class ResultUtils {
     }
 
     /**
-     * 构造响应结果
+     * 构造响应结果，用于重新设置响应结果编码。
      *
-     * @param resultType 响应结果类型
-     * @param data       响应结果数据
+     * @param result 响应结果
+     * @param code   响应结果编码
      * @return 响应结果
      */
-    public static Result build(ResultType resultType, @Nullable Object data) {
-        return build(resultType.getCode(), resultType.getName(), data);
+    public static Result setCode(Result result, String code) {
+        if (result instanceof CodeAware) {
+            ((CodeAware) result).setCode(code);
+            return result;
+        }
+        return result instanceof DataResult
+                ? new DataResultImpl<>(code, result.getMessage(), ((DataResult<?>) result).getData())
+                : new ResultImpl(code, result.getMessage());
     }
 
     /**
-     * 获取响应结果的数据
+     * 构造响应结果，用于重新设置响应结果数据。
+     *
+     * @param result 响应结果
+     * @param data   响应结果数据
+     * @return 响应结果
+     */
+    @SuppressWarnings("unchecked")
+    public static Result setData(Result result, @Nullable Object data) {
+        if (data == null) return result instanceof DataCapable ? new ResultImpl(result) : result;
+        if (!(result instanceof DataAware)) return new DataResultImpl<>(result, data);
+        ((DataAware<Object>) result).setData(data);
+        return result;
+    }
+
+    /**
+     * 获取响应结果的数据。
      *
      * @param result 响应结果
      * @param <T>    响应结果数据类型

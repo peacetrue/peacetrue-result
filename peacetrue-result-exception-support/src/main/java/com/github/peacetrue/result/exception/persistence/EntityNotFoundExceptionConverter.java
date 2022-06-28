@@ -1,5 +1,6 @@
 package com.github.peacetrue.result.exception.persistence;
 
+import com.github.peacetrue.lang.UncheckedException;
 import com.github.peacetrue.result.Parameter;
 import com.github.peacetrue.result.ResultTypes;
 import com.github.peacetrue.result.exception.AbstractExceptionConverter;
@@ -26,11 +27,11 @@ public class EntityNotFoundExceptionConverter
 
     private static final Pattern PATTERN = Pattern.compile("Unable to find (.+)? with id (.+)");
 
-    private static Class<?> forName(String className) {
+    static Class<?> forName(String className) {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
-            throw new IllegalStateException("Can't find class '" + className + "'");
+            throw new UncheckedException(e);
         }
     }
 

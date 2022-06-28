@@ -51,10 +51,6 @@ public class SuccessAutowireResponseBodyAdvice implements ResponseBodyAdvice<Obj
     private ResultCustomizer resultCustomizer;
     private ResultMessageBuilder resultMessageBuilder;
 
-    public SuccessAutowireResponseBodyAdvice() {
-        this(Collections.singleton(Result.class), Collections.emptySet());
-    }
-
     public SuccessAutowireResponseBodyAdvice(Set<Class<?>> resultTypes, Set<String> disabledMethods) {
         this.resultTypes = Objects.requireNonNull(resultTypes);
         this.disabledMethods = Objects.requireNonNull(disabledMethods);
@@ -62,12 +58,18 @@ public class SuccessAutowireResponseBodyAdvice implements ResponseBodyAdvice<Obj
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return !isAlreadyResult(returnType)
-                && !isDisabledAutowire(returnType)
-                && canConvertResult(converterType)
-                && !isDisabledMethod(returnType)
-                && (!isResponseEntity(returnType) || isOkResponseEntity(returnType))
-                ;
+        return trace("supports",
+                !trace("isAlreadyResult", isAlreadyResult(returnType))
+                        && !trace("isDisabledAutowire", isDisabledAutowire(returnType))
+                        && trace("canConvertResult", canConvertResult(converterType))
+                        && !trace("isDisabledMethod", isDisabledMethod(returnType))
+                        && (!trace("isResponseEntity", isResponseEntity(returnType)) || trace("isOkResponseEntity", isOkResponseEntity(returnType)))
+        );
+    }
+
+    private boolean trace(String method, boolean result) {
+        log.trace("{}: {}", method, result);
+        return result;
     }
 
     private boolean isAlreadyResult(MethodParameter returnType) {
@@ -90,8 +92,7 @@ public class SuccessAutowireResponseBodyAdvice implements ResponseBodyAdvice<Obj
 
     private boolean isDisabledMethod(MethodParameter returnType) {
         if (disabledMethods.isEmpty()) return false;
-        Method method = returnType.getMethod();
-        if (method == null) return false;
+        Method method = Objects.requireNonNull(returnType.getMethod());
         String name = method.getDeclaringClass().getName() + "." + method.getName();
         return disabledMethods.stream().anyMatch(name::startsWith);
     }
@@ -102,11 +103,9 @@ public class SuccessAutowireResponseBodyAdvice implements ResponseBodyAdvice<Obj
 
     private boolean isOkResponseEntity(MethodParameter returnType) {
         Field field = ReflectionUtils.findField(returnType.getClass(), "returnValue");
-        if (field == null) return false;
-        ReflectionUtils.makeAccessible(field);
+        ReflectionUtils.makeAccessible(Objects.requireNonNull(field));
         ResponseEntity<?> value = (ResponseEntity<?>) ReflectionUtils.getField(field, returnType);
-        if (value == null) return false;
-        return HttpStatus.OK == value.getStatusCode();
+        return HttpStatus.OK == Objects.requireNonNull(value).getStatusCode();
     }
 
     @Override

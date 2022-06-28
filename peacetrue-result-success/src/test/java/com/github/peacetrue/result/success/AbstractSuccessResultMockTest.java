@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,8 +33,12 @@ public class AbstractSuccessResultMockTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(testController)
-                .setMessageConverters(new MappingJackson2HttpMessageConverter())
+        mockMvc = buildMockMvc(new MappingJackson2HttpMessageConverter());
+    }
+
+    protected MockMvc buildMockMvc(HttpMessageConverter<?> messageConverter) {
+        return MockMvcBuilders.standaloneSetup(testController)
+                .setMessageConverters(messageConverter)
                 .setControllerAdvice(bodyAdvice)
                 .build();
     }

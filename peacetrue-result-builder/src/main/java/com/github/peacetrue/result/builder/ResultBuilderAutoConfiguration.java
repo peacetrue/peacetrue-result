@@ -57,14 +57,14 @@ public class ResultBuilderAutoConfiguration {
     @ConditionalOnMissingBean(name = RESULT_BUILDER_CONVERSION_SERVICE)
     public FormattingConversionService resultBuilderConversionService(@Autowired ClassPrinter classPrinter) {
         DefaultFormattingConversionService conversionService = new DefaultFormattingConversionService();
-        conversionService.addFormatterForFieldType(Class.class, classPrinter, (text, locale) -> Object.class);
+        conversionService.addFormatterForFieldType(Class.class, classPrinter, null);
         return conversionService;
     }
 
     @Bean
     @ConditionalOnMissingBean(ClassPrinter.class)
     public ClassPrinter classPrinter(MessageSource messageSource) {
-        return new MessageSourceClassPrinter(properties.getClassPrefix(), messageSource);
+        return new MessageSourceClassPrinter(messageSource, properties.getClassPrefix());
     }
 
     @Bean
@@ -74,7 +74,6 @@ public class ResultBuilderAutoConfiguration {
                 ? ResultCustomizer.DEFAULT
                 : new ResultCodeCustomizer(properties.getCustomCodes());
     }
-
 
     @Autowired
     public void registerMessageSourceBasename(AbstractResourceBasedMessageSource messageSource) {
