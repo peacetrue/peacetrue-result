@@ -292,7 +292,7 @@ class ExceptionConvertTest {
     //end::entityNotFound[]
 
     //tag::duplicate[]
-    @Test
+//    @Test
     void duplicate() {
         //javax.persistence.PersistenceException: org.hibernate.exception.ConstraintViolationException: could not execute statement
         //Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement
