@@ -24,7 +24,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -63,7 +62,7 @@ public class SuccessAutowireResponseBodyAdvice implements ResponseBodyAdvice<Obj
                         && !trace("isDisabledAutowire", isDisabledAutowire(returnType))
                         && trace("canConvertResult", canConvertResult(converterType))
                         && !trace("isDisabledMethod", isDisabledMethod(returnType))
-                        && (!trace("isResponseEntity", isResponseEntity(returnType)) || trace("isOkResponseEntity", isOkResponseEntity(returnType)))
+//                        && (!trace("isResponseEntity", isResponseEntity(returnType)) || trace("isOkResponseEntity", isOkResponseEntity(returnType)))
         );
     }
 
@@ -97,16 +96,18 @@ public class SuccessAutowireResponseBodyAdvice implements ResponseBodyAdvice<Obj
         return disabledMethods.stream().anyMatch(name::startsWith);
     }
 
-    private boolean isResponseEntity(MethodParameter returnType) {
-        return ResponseEntity.class.isAssignableFrom(returnType.getParameterType());
-    }
+//    private boolean isResponseEntity(MethodParameter returnType) {
+//        return ResponseEntity.class.isAssignableFrom(returnType.getParameterType());
+//    }
 
-    private boolean isOkResponseEntity(MethodParameter returnType) {
-        Field field = ReflectionUtils.findField(returnType.getClass(), "returnValue");
-        ReflectionUtils.makeAccessible(Objects.requireNonNull(field));
-        ResponseEntity<?> value = (ResponseEntity<?>) ReflectionUtils.getField(field, returnType);
-        return HttpStatus.OK == Objects.requireNonNull(value).getStatusCode();
-    }
+//    private boolean isOkResponseEntity(MethodParameter returnType) {
+//        Class<? extends MethodParameter> returnTypeClass = returnType.getClass();
+//        Field field = ReflectionUtils.findField(returnTypeClass, "returnValue");
+//        if (field == null) return false;
+//        ReflectionUtils.makeAccessible(field);
+//        ResponseEntity<?> value = (ResponseEntity<?>) ReflectionUtils.getField(field, returnType);
+//        return HttpStatus.OK == Objects.requireNonNull(value).getStatusCode();
+//    }
 
     @Override
     @Nullable

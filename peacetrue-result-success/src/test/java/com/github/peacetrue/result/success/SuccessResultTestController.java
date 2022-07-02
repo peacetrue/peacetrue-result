@@ -19,9 +19,10 @@ public class SuccessResultTestController {
     @ResponseBody
     @RequestMapping(value = "/enableSuccessAutowire", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object enableSuccessAutowire(String input) {
-        return "ResponseEntityOk".equals(input)
-                ? ResponseEntity.ok(input)
-                : ("ResponseEntityError".equals(input) ? ResponseEntity.badRequest().body(input) : input);
+//        return "ResponseEntityOk".equals(input)
+//                ? ResponseEntity.ok(input)
+//                : ("ResponseEntityError".equals(input) ? ResponseEntity.badRequest().body(input) : input);
+        return input;
     }
     //end::enableSuccessAutowire[]
 

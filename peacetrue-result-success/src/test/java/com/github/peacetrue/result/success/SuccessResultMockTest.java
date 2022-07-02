@@ -38,23 +38,23 @@ class SuccessResultMockTest extends AbstractSuccessResultMockTest {
                 .andExpect(jsonPath("$.data").value(input))
         ;
 
-        input = "ResponseEntityOk";
-        this.mockMvc.perform(get("/enableSuccessAutowire?input={0}", input)
-                .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.5")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(ResultTypes.SUCCESS.getCode()))
-                .andExpect(jsonPath("$.message").value("The operation succeeded"))
-                .andExpect(jsonPath("$.data").value(input))
-        ;
+//        input = "ResponseEntityOk";
+//        this.mockMvc.perform(get("/enableSuccessAutowire?input={0}", input)
+//                .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.5")
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.code").value(ResultTypes.SUCCESS.getCode()))
+//                .andExpect(jsonPath("$.message").value("The operation succeeded"))
+//                .andExpect(jsonPath("$.data").value(input))
+//        ;
 
-        input = "ResponseEntityError";
-        this.mockMvc.perform(get("/enableSuccessAutowire?input={0}", input)
-                .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.5")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$").value(input))
-        ;
+//        input = "ResponseEntityError";
+//        this.mockMvc.perform(get("/enableSuccessAutowire?input={0}", input)
+//                .header(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.5")
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isBadRequest())
+//                .andExpect(jsonPath("$").value(input))
+//        ;
 
         input = "1";
         buildMockMvc(new StringHttpMessageConverter())
