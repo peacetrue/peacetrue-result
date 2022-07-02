@@ -4,13 +4,10 @@ import com.github.peacetrue.result.builder.ResultBuilderAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractResourceBasedMessageSource;
@@ -81,21 +78,6 @@ public class ResultExceptionAutoConfiguration {
     @Bean
     public ConfiguredResultCodeClassifier configuredResultCodeClassifier() {
         return new ConfiguredResultCodeClassifier(properties.getClassifiedCodes());
-    }
-
-    /**
-     * Spring Boot 1 和 Spring Boot 2 中，{@link ErrorAttributes} 所在包不同，需要区别处理。
-     * {@link ResultErrorAttributes} 只支持 Spring Boot 2，不支持 Spring Boot 1。
-     */
-    @Configuration
-    @ConditionalOnClass(name = "org.springframework.boot.web.servlet.error.ErrorAttributes")
-    @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE + 3)
-    @AutoConfigureBefore(name = "org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration")
-    public static class ErrorAttributesConfiguration {
-        @Bean
-        public ResultErrorAttributes resultErrorAttributes() {
-            return new ResultErrorAttributes();
-        }
     }
 
     @Autowired

@@ -41,3 +41,23 @@ NOTE: 读者可以尝试 Spring Boot 1 系列其他版本，测试时仅验证�
 * 添加 *peacetrue-common* 依赖
 * 添加 *com.github.peacetrue.gradle.build-convention* 插件
 * 添加 GitHub 徽章
+
+== 2.1.2
+
+在实现 RESOURCE_NOT_FOUND 转换时，需要自定义 `ErrorAttributes`。
+
+而 `ErrorAttributes` 接口从 Spring Boot 2.0.0 升级到 2.7.0 之间，进行了不兼容的变更：
+
+.2.0.0
+[source%nowrap,java]
+----
+Map<String, Object> getErrorAttributes(WebRequest webRequest, boolean includeStackTrace);
+----
+
+.2.7.0
+[source%nowrap,java]
+----
+Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options);
+----
+
+使用 *org.javassist:javassist* 修改字节码实现同时支持以上版本。

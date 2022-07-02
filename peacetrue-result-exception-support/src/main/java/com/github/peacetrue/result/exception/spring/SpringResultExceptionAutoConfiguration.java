@@ -18,6 +18,11 @@ import org.springframework.web.servlet.FrameworkServlet;
 public class SpringResultExceptionAutoConfiguration {
 
     @Bean
+    public ResultErrorAttributes resultErrorAttributes() {
+        return ResultErrorAttributes.DEFAULT;
+    }
+
+    @Bean
     public MissingServletRequestParameterExceptionConverter missingServletRequestParameterExceptionConverter() {
         return new MissingServletRequestParameterExceptionConverter();
     }

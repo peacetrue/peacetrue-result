@@ -11,6 +11,7 @@ import com.github.peacetrue.result.exception.ResultExceptionAutoConfiguration;
 import com.github.peacetrue.result.exception.ResultExceptionSupportAutoConfiguration;
 import com.github.peacetrue.result.exception.jackson.JacksonResultExceptionAutoConfiguration;
 import com.github.peacetrue.result.exception.persistence.PersistenceResultExceptionAutoConfiguration;
+import com.github.peacetrue.result.exception.spring.ResultErrorAttributesUtils;
 import com.github.peacetrue.result.exception.spring.SpringResultExceptionAutoConfiguration;
 import com.github.peacetrue.result.exception.sql.SQLResultExceptionAutoConfiguration;
 import com.github.peacetrue.result.success.ResultSuccessAutoConfiguration;
@@ -76,6 +77,10 @@ import java.nio.file.Paths;
 @EntityScan
 @EnableJpaRepositories
 class UserTest {
+
+    static {
+        ResultErrorAttributesUtils.extendDefaultErrorAttributes();
+    }
 
     @Autowired
     private TestRestTemplate restTemplate;

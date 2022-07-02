@@ -1,4 +1,3 @@
-
 description "响应结果异常支持，处理各种具体的异常"
 
 dependencies {
@@ -11,7 +10,9 @@ dependencies {
     compileOnly "org.springframework:spring-webmvc"
     compileOnly "com.fasterxml.jackson.core:jackson-databind"
     compileOnly "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final"
-    compileOnly "com.github.peacetrue:peacetrue-common"
+    compileOnly "org.javassist:javassist"
+    implementation "com.github.peacetrue:peacetrue-common"
+    implementation "com.github.peacetrue.spring:peacetrue-spring-beans"
     compileOnly "com.github.peacetrue.spring:peacetrue-spring-signature"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
@@ -23,6 +24,7 @@ dependencies {
     testImplementation "com.github.peacetrue:peacetrue-validation"
     testImplementation "com.github.peacetrue:peacetrue-test"
     testImplementation "com.github.peacetrue.spring:peacetrue-spring-signature"
+    testImplementation "org.javassist:javassist"
     testImplementation "com.h2database:h2"
     testImplementation "mysql:mysql-connector-java"
 

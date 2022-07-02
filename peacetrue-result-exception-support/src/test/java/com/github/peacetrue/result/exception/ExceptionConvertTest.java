@@ -9,6 +9,7 @@ import com.github.peacetrue.result.builder.ResultBuilderAutoConfiguration;
 import com.github.peacetrue.result.builder.ResultMessageSourceAutoConfiguration;
 import com.github.peacetrue.result.exception.jackson.JacksonResultExceptionAutoConfiguration;
 import com.github.peacetrue.result.exception.persistence.PersistenceResultExceptionAutoConfiguration;
+import com.github.peacetrue.result.exception.spring.ResultErrorAttributesUtils;
 import com.github.peacetrue.result.exception.spring.SpringResultExceptionAutoConfiguration;
 import com.github.peacetrue.result.exception.sql.SQLResultExceptionAutoConfiguration;
 import com.github.peacetrue.test.SourcePathUtils;
@@ -54,6 +55,8 @@ import java.util.Map;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
         classes = {
+//                ResultErrorAttributesAutoConfiguration.class,
+
                 DataSourceAutoConfiguration.class,
                 HibernateJpaAutoConfiguration.class,
                 TransactionAutoConfiguration.class,
@@ -84,6 +87,10 @@ import java.util.Map;
 )
 @EntityScan
 class ExceptionConvertTest {
+
+    static {
+        ResultErrorAttributesUtils.extendDefaultErrorAttributes();
+    }
 
     private static final EasyRandom EASY_RANDOM = new EasyRandom();
     @Autowired
