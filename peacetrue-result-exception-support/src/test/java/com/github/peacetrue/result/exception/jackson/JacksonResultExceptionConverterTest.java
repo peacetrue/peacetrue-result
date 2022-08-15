@@ -45,12 +45,12 @@ class JacksonResultExceptionConverterTest {
 
     @Test
     void convert() {
-        LocaleContextHolder.setLocale(Locale.SIMPLIFIED_CHINESE);
+        LocaleContextHolder.setLocale(Locale.ENGLISH);
         JsonEOFException exception = Assertions.assertThrows(
                 JsonEOFException.class, () -> objectMapper.readValue("{", TestBean.class)
         );
         Result result = jsonEOFExceptionConverter.convert(exception);
         Assertions.assertEquals("JsonEOF", result.getCode());
-        Assertions.assertEquals("JSON 请求体缺少闭合标记", result.getMessage());
+        Assertions.assertEquals("JSON Request body is missing a closing tag", result.getMessage());
     }
 }
