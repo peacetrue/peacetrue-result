@@ -1,7 +1,19 @@
 = 简介
+:website: https://peacetrue.github.io
+:app-name: peacetrue-template
+:foresight-repo-id: 1f16fe7d-581e-4b91-a2e2-9dfac8983b87
+:imagesdir: docs/antora/modules/ROOT/assets/images
 
-*peacetrue-result*（响应结果组件）是一个处理接口返回数据的组件。
+image:https://img.shields.io/lgtm/grade/java/github/peacetrue/{app-name}["LGTM Grade",link="https://lgtm.com/projects/g/peacetrue/{app-name}"]
+image:https://snyk.io/test/github/peacetrue/{app-name}/badge.svg["Snyk",link="https://app.snyk.io/org/peacetrue"]
+image:https://img.shields.io/github/workflow/status/peacetrue/{app-name}/build/master["GitHub Workflow Status",link="https://github.com/peacetrue/{app-name}/actions"]
+image:https://foresight.service.thundra.io/public/api/v1/badge/success?repoId={foresight-repoId}["Foresight",link="https://foresight.thundra.io/repositories/github/peacetrue/{app-name}/test-runs"]
+image:https://img.shields.io/codecov/c/github/peacetrue/{app-name}/master["Codecov",link="https://app.codecov.io/gh/peacetrue/{app-name}"]
+
 //@formatter:off
+{website}/{app-name}/[{app-name}] 是一个响应结果组件，用于统一处理接口返回的数据。
+
+== 缘由
 
 服务端接口返回数据时，往往需要提供一些属性，指示服务端对此次请求的处理状态（响应状态）。
 如果处理成功，客户端可以正常执行接下来的业务；

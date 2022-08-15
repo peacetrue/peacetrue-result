@@ -1,8 +1,0 @@
-{
-  "code" : "success",
-  "message" : "操作成功",
-  "data" : {
-    "id" : 1,
-    "name" : "test"
-  }
-}

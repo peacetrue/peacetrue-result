@@ -1,0 +1,166 @@
+= 入门
+
+== 引入类库
+
+.成功类库，封装成功时返回的数据
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-success</artifactId>
+  <version>2.1.0</version>
+</dependency>
+----
+
+.异常支持类库，实现具体异常的转换
+[source%nowrap,maven]
+----
+<dependency>
+  <groupId>com.github.peacetrue.result</groupId>
+  <artifactId>peacetrue-result-exception-support</artifactId>
+  <version>2.1.0</version>
+</dependency>
+----
+
+== 开工
+
+编写一个常规的控制层方法，这里以用户为例说明：
+
+.UserController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/main/java/com/github/peacetrue/result/exception/quick_start/UserController.java[tags=getUser]
+----
+
+请求接口 */users*，传入有效的参数 `id=1`：
+
+.UserTest
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/test/java/com/github/peacetrue/result/exception/quick_start/UserTest.java[tags=success]
+----
+
+返回经过**响应结果**封装后的数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-sample/src/test/resources/com/github/peacetrue/result/exception/quick_start/success.json[]
+----
+
+== 自动异常处理
+
+组件会自动处理一些常规异常，详情可参考 xref:manual.adoc#ExceptionConvert[自动装配异常响应结果]。
+
+=== 请求资源不存在
+
+请求不存在的资源 */resource_not_found*：
+
+.UserTest
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/test/java/com/github/peacetrue/result/exception/quick_start/UserTest.java[tags=resourceNotFound]
+----
+
+返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-sample/src/test/resources/com/github/peacetrue/result/exception/quick_start/resourceNotFound.json[]
+----
+
+
+=== 参数缺失
+
+请求接口 */users*，不传入参数 `id`：
+
+.UserTest
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/test/java/com/github/peacetrue/result/exception/quick_start/UserTest.java[tags=missingServletRequestParameter]
+----
+
+返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-sample/src/test/resources/com/github/peacetrue/result/exception/quick_start/missingServletRequestParameter.json[]
+----
+
+=== 参数无效
+
+请求接口 */users*，传入类型错误的参数 `id=test`：
+
+.UserTest
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/test/java/com/github/peacetrue/result/exception/quick_start/UserTest.java[tags=methodArgumentTypeMismatch]
+----
+
+返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-sample/src/test/resources/com/github/peacetrue/result/exception/quick_start/methodArgumentTypeMismatch.json[]
+----
+
+=== 记录不存在
+
+请求接口 */users*，传入不存在的用户主键 `id=0`：
+
+.UserTest
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/test/java/com/github/peacetrue/result/exception/quick_start/UserTest.java[tags=entityNotFound]
+----
+
+返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-sample/src/test/resources/com/github/peacetrue/result/exception/quick_start/entityNotFound.json[]
+----
+
+== 业务异常处理
+
+在实际业务中，如果需要处理异常场景，可以使用 `ResultExceptionThrowService`。以登录时**用户不存在或密码错误**为例说明：
+
+首先，确定响应结果编码，假设为 *user_not_exist*；然后，在 *messages.properties* 中配置描述模板：
+
+.messages.properties
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/test/resources/messages.properties[tags=result-exception]
+----
+
+描述模板支持使用 SpEL 表达式，可以从异常时的上下文信息中获取变量值。
+
+请求接口 */login/result-exception*：
+
+.UserController
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/main/java/com/github/peacetrue/result/exception/quick_start/UserController.java[tags=result-exception]
+----
+
+传入错误的密码 `password=test`：
+
+.UserTest
+[source%nowrap,java]
+----
+include::example$peacetrue-result-sample/src/test/java/com/github/peacetrue/result/exception/quick_start/UserTest.java[tags=result-exception]
+----
+
+返回数据：
+
+.响应结果
+[source%nowrap,json]
+----
+include::example$peacetrue-result-sample/src/test/resources/com/github/peacetrue/result/exception/quick_start/result-exception.json[]
+----
+
+

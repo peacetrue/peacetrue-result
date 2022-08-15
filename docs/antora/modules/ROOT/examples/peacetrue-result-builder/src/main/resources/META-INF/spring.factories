@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.github.peacetrue.result.builder.ResultBuilderAutoConfiguration,\
-  com.github.peacetrue.result.builder.ResultMessageSourceAutoConfiguration
