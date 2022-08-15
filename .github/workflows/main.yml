@@ -37,6 +37,7 @@ jobs:
     # 单元测试
     - name: Analyze Test and/or Coverage Results
       uses: runforesight/foresight-test-kit-action@v1
+      if: ${{ always() }}
       with:
         api_key: 6d66f622-6961-4fff-a0a4-3c46a0ba8aee
         test_format: JUNIT
