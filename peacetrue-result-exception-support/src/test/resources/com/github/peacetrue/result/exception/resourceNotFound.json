@@ -1,0 +1,7 @@
+{
+  "code" : "resource_not_found",
+  "message" : "找不到请求资源'/resourceNotFound'",
+  "data" : {
+    "uri" : "/resourceNotFound"
+  }
+}
