@@ -4,6 +4,7 @@ dependencies {
     api project(":peacetrue-result-core")
     api project(":peacetrue-result-builder")
     api project(":peacetrue-result-exception")
+    implementation "org.slf4j:slf4j-api"
     compileOnly "org.springframework.boot:spring-boot-autoconfigure"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     compileOnly "javax.servlet:javax.servlet-api"
