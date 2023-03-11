@@ -9,7 +9,7 @@ image:https://img.shields.io/github/actions/workflow/status/peacetrue/{app-name}
 image:https://snyk.io/test/github/peacetrue/{app-name}/badge.svg["Snyk",link="https://app.snyk.io/org/peacetrue"]
 image:https://api-public.service.runforesight.com/api/v1/badge/success?repoId={foresight-repo-id}["Foresight",link="https://foresight.thundra.io/repositories/github/peacetrue/{app-name}/test-runs"]
 image:https://img.shields.io/codecov/c/github/peacetrue/{app-name}/master["Codecov",link="https://app.codecov.io/gh/peacetrue/{app-name}"]
-image:https://img.shields.io/nexus/r/{app-group}/{app-name}?label={app-name}&server=https%3A%2F%2Foss.sonatype.org%2F["{app-name}",link="https://search.maven.org/search?q={app-name}"]
+image:https://img.shields.io/nexus/r/{app-group}/{app-name}-core?label={app-name}&server=https%3A%2F%2Foss.sonatype.org%2F["{app-name}",link="https://central.sonatype.com/search?smo=true&q={app-group}"]
 
 //@formatter:off
 
