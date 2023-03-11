@@ -10,132 +10,12 @@
       "value" : null
     }
   }, {
-    "code" : "AssertTrue.assertTrue",
-    "message" : "参数'assertTrue'只能为true",
+    "code" : "PositiveOrZero.positiveOrZero",
+    "message" : "参数'positiveOrZero'必须是正数或零",
     "data" : {
-      "name" : "assertTrue",
-      "type" : null,
-      "value" : false
-    }
-  }, {
-    "code" : "PastOrPresent.pastOrPresent",
-    "message" : "参数'pastOrPresent'需要是一个过去或现在的时间",
-    "data" : {
-      "name" : "pastOrPresent",
-      "type" : null,
-      "value" : 1666763803656
-    }
-  }, {
-    "code" : "Null.nulls",
-    "message" : "参数'nulls'必须为null",
-    "data" : {
-      "name" : "nulls",
-      "type" : null,
-      "value" : 0
-    }
-  }, {
-    "code" : "Future.future",
-    "message" : "参数'future'需要是一个将来的时间",
-    "data" : {
-      "name" : "future",
-      "type" : null,
-      "value" : 1666762803656
-    }
-  }, {
-    "code" : "Digits.digits",
-    "message" : "参数'digits'数字的值超出了允许范围(只允许在1位整数和1位小数范围内)",
-    "data" : {
-      "name" : "digits",
-      "type" : null,
-      "value" : 10.01
-    }
-  }, {
-    "code" : "DecimalMin.decimalMin",
-    "message" : "参数'decimalMin'必须大于或等于0.0",
-    "data" : {
-      "name" : "decimalMin",
-      "type" : null,
-      "value" : -1.0
-    }
-  }, {
-    "code" : "NotBlank.notBlank",
-    "message" : "参数'notBlank'不能为空",
-    "data" : {
-      "name" : "notBlank",
-      "type" : null,
-      "value" : " "
-    }
-  }, {
-    "code" : "Email.email",
-    "message" : "参数'email'不是一个合法的电子邮件地址",
-    "data" : {
-      "name" : "email",
-      "type" : null,
-      "value" : "test.com"
-    }
-  }, {
-    "code" : "Max.max",
-    "message" : "参数'max'最大不能超过0",
-    "data" : {
-      "name" : "max",
-      "type" : null,
-      "value" : 1
-    }
-  }, {
-    "code" : "NegativeOrZero.negativeOrZero",
-    "message" : "参数'negativeOrZero'必须是负数或零",
-    "data" : {
-      "name" : "negativeOrZero",
-      "type" : null,
-      "value" : 1
-    }
-  }, {
-    "code" : "DecimalMax.decimalMax",
-    "message" : "参数'decimalMax'必须小于或等于0.0",
-    "data" : {
-      "name" : "decimalMax",
-      "type" : null,
-      "value" : 1.0
-    }
-  }, {
-    "code" : "FutureOrPresent.futureOrPresent",
-    "message" : "参数'futureOrPresent'需要是一个将来或现在的时间",
-    "data" : {
-      "name" : "futureOrPresent",
-      "type" : null,
-      "value" : 1666762803655
-    }
-  }, {
-    "code" : "Min.min",
-    "message" : "参数'min'最小不能小于0",
-    "data" : {
-      "name" : "min",
+      "name" : "positiveOrZero",
       "type" : null,
       "value" : -1
-    }
-  }, {
-    "code" : "NotEmpty.notEmpty",
-    "message" : "参数'notEmpty'不能为空",
-    "data" : {
-      "name" : "notEmpty",
-      "type" : null,
-      "value" : ""
-    }
-  }, {
-    "code" : "Past.past",
-    "message" : "参数'past'需要是一个过去的时间",
-    "data" : {
-      "name" : "past",
-      "type" : null,
-      "value" : 1666763803656
-    }
-  }, {
-    "code" : "Pattern.pattern",
-    "message" : "参数'pattern'需要匹配正则表达式\"\\w\"",
-    "data" : {
-      "name" : "pattern",
-      "type" : null,
-      "value" : "00"
     }
   }, {
     "code" : "Size.size",
@@ -154,10 +34,114 @@
       "value" : 0
     }
   }, {
+    "code" : "NotBlank.notBlank",
+    "message" : "参数'notBlank'不能为空",
+    "data" : {
+      "name" : "notBlank",
+      "type" : null,
+      "value" : " "
+    }
+  }, {
+    "code" : "DecimalMin.decimalMin",
+    "message" : "参数'decimalMin'必须大于或等于0.0",
+    "data" : {
+      "name" : "decimalMin",
+      "type" : null,
+      "value" : -1.0
+    }
+  }, {
+    "code" : "Min.min",
+    "message" : "参数'min'最小不能小于0",
+    "data" : {
+      "name" : "min",
+      "type" : null,
+      "value" : -1
+    }
+  }, {
+    "code" : "PastOrPresent.pastOrPresent",
+    "message" : "参数'pastOrPresent'需要是一个过去或现在的时间",
+    "data" : {
+      "name" : "pastOrPresent",
+      "type" : null,
+      "value" : 1667279728747
+    }
+  }, {
+    "code" : "NegativeOrZero.negativeOrZero",
+    "message" : "参数'negativeOrZero'必须是负数或零",
+    "data" : {
+      "name" : "negativeOrZero",
+      "type" : null,
+      "value" : 1
+    }
+  }, {
+    "code" : "Past.past",
+    "message" : "参数'past'需要是一个过去的时间",
+    "data" : {
+      "name" : "past",
+      "type" : null,
+      "value" : 1667279728747
+    }
+  }, {
+    "code" : "NotEmpty.notEmpty",
+    "message" : "参数'notEmpty'不能为空",
+    "data" : {
+      "name" : "notEmpty",
+      "type" : null,
+      "value" : ""
+    }
+  }, {
+    "code" : "Email.email",
+    "message" : "参数'email'不是一个合法的电子邮件地址",
+    "data" : {
+      "name" : "email",
+      "type" : null,
+      "value" : "test.com"
+    }
+  }, {
+    "code" : "Future.future",
+    "message" : "参数'future'需要是一个将来的时间",
+    "data" : {
+      "name" : "future",
+      "type" : null,
+      "value" : 1667278728747
+    }
+  }, {
+    "code" : "Max.max",
+    "message" : "参数'max'最大不能超过0",
+    "data" : {
+      "name" : "max",
+      "type" : null,
+      "value" : 1
+    }
+  }, {
+    "code" : "Pattern.pattern",
+    "message" : "参数'pattern'需要匹配正则表达式\"\\w\"",
+    "data" : {
+      "name" : "pattern",
+      "type" : null,
+      "value" : "00"
+    }
+  }, {
+    "code" : "FutureOrPresent.futureOrPresent",
+    "message" : "参数'futureOrPresent'需要是一个将来或现在的时间",
+    "data" : {
+      "name" : "futureOrPresent",
+      "type" : null,
+      "value" : 1667278728746
+    }
+  }, {
     "code" : "Negative.negative",
     "message" : "参数'negative'必须是负数",
     "data" : {
       "name" : "negative",
+      "type" : null,
+      "value" : 0
+    }
+  }, {
+    "code" : "Null.nulls",
+    "message" : "参数'nulls'必须为null",
+    "data" : {
+      "name" : "nulls",
       "type" : null,
       "value" : 0
     }
@@ -170,12 +154,28 @@
       "value" : true
     }
   }, {
-    "code" : "PositiveOrZero.positiveOrZero",
-    "message" : "参数'positiveOrZero'必须是正数或零",
+    "code" : "DecimalMax.decimalMax",
+    "message" : "参数'decimalMax'必须小于或等于0.0",
     "data" : {
-      "name" : "positiveOrZero",
+      "name" : "decimalMax",
       "type" : null,
-      "value" : -1
+      "value" : 1.0
+    }
+  }, {
+    "code" : "AssertTrue.assertTrue",
+    "message" : "参数'assertTrue'只能为true",
+    "data" : {
+      "name" : "assertTrue",
+      "type" : null,
+      "value" : false
+    }
+  }, {
+    "code" : "Digits.digits",
+    "message" : "参数'digits'数字的值超出了允许范围(只允许在1位整数和1位小数范围内)",
+    "data" : {
+      "name" : "digits",
+      "type" : null,
+      "value" : 10.01
     }
   } ]
 }
